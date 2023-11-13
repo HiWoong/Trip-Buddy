@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.enjoytrip.model.repo.BoardRepo">
+    <resultMap id="boards" type="BoardDto">
+        <result column="article_no" property="articleNo" />
+        <result column="user_id" property="userId" />
+        <result column="subject" property="subject" />
+        <result column="content" property="content" />
+        <result column="hit" property="hit" />
+        <result column="register_time" property="registerTime" />
+    </resultMap>
+
+    <insert id="writeArticle">
+        insert into boards (user_id, subject, content) values(#{userId}, #{subject}, #{content})
+    </insert>
+
+    <select id="listArticle" resultMap="boards">
+        select * from boards
+        <if test="key != '' and word != ''">
+            where ${key} like concat('%', #{word}, '%')
+        </if>
+        order by article_no desc limit #{start}, #{listsize}
+
+    </select>
+
+    <select id="getTotalArticleCount" parameterType="hashmap" resultType="int">
+        select count(article_no) from boards
+
+        <if test='#{key} != null and #{word} != null'>
+            <if test='#{key}.equals("subject")'>
+                where subject like concat('%', #{word}, '%')
+            </if>
+        </if>
+
+    </select>
+
+    <select id="getArticle" resultMap="boards">
+        select article_no, user_id, subject, content, hit, register_time from boards where article_no = #{articleNo}
+
+    </select>
+
+    <update id="updateHit">
+        update boards set hit = hit + 1 where article_no = #{articleNo}
+    </update>
+
+    <update id="modifyArticle" >
+        update boards set subject = #{subject}, content = #{content} where article_no = #{articleNo}
+    </update>
+
+    <delete id="deleteArticle">
+        delete from boards where article_no = #{articleNo}
+    </delete>
+
+</mapper>
