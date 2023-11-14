@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 @Mapper
 public interface AttractionRepo {
-	List<AttractionInfoDto> searchByTitle(String title, int sidoCode, int searchContent);
+	List<AttractionInfoDto> search(int area, int type, String word);
 
 }

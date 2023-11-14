@@ -16,19 +16,19 @@ public class AttractionServiceImpl implements AttractionService {
     private final AttractionRepo repo;
 
     @Override
-	public List<AttractionInfoDto> searchByTitle(String title, int sidoCode, int searchContent) {
-	
-		// quicksort
-		List<AttractionInfoDto> list = repo.searchByTitle(title, sidoCode, searchContent);
+    public List<AttractionInfoDto> search(int area, int type, String word) {
 
-		for (AttractionInfoDto l : list) {
+        // quicksort
+        List<AttractionInfoDto> list = repo.search(area, type, word);
+
+        for (AttractionInfoDto l : list) {
             double distance = Math.sqrt(Math.pow(Math.abs(37.0 - l.getLatitude()), 2) + Math.pow(Math.abs(127.0-l.getLongitude()), 2));
             l.setDistance(distance);
-			System.out.println(l.getDistance());
-		}
+            System.out.println(l.getDistance());
+        }
 
-		return quickSort(list);
-	}
+        return quickSort(list);
+    }
 	
 	public static List<AttractionInfoDto> quickSort(List<AttractionInfoDto> items) {
         if (items.size() < 2) {
