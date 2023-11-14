@@ -20,7 +20,7 @@ public class AttractionRestController {
     }
 
     @GetMapping("/search")
-    private ResponseEntity<?> kakao(@RequestParam String area, @RequestParam String type,@RequestParam String word) {
+    private ResponseEntity<?> kakao(@RequestParam String area, @RequestParam String type, @RequestParam String word) {
         List<AttractionInfoDto> attractions = attarctionService.search(Integer.parseInt(area), Integer.parseInt(type), word);
         System.out.println(attractions);
         if(attractions != null)

@@ -20,5 +20,5 @@ create table boards(
     content varchar(2000) not null,
     hit int not null default 0,
     register_time datetime not null default current_timestamp,
-    foreign key (userId) references member(userId)
+    foreign key (user_id) references member(user_id)
 );
