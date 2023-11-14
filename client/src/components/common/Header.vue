@@ -10,13 +10,14 @@ console.log(sessionStorage.getItem("userinfo"));
 const logout = () => {
   http.get("/userapi/logout").then(() => {
     sessionStorage.removeItem("userinfo");
-    router.push("/");
+    sessionStorage.setItem("isLogin", "true");
+    router.replace({ name: "HomeView" });
     router.go();
   });
 };
 
 const MoveMyPage = () => {
-  router.push({ name: "MyPage" });
+  router.replace({ name: "UserMyPage" });
 };
 </script>
 
@@ -60,11 +61,11 @@ const MoveMyPage = () => {
                   >여행게시판</RouterLink
                 >
               </li>
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <RouterLink class="nav-link active" aria-current="page" to="/sites"
                   >사이트맵</RouterLink
                 >
-              </li>
+              </li> -->
             </ul>
             <div v-if="userinfo == null" class="collapse navbar-collapse">
               <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">

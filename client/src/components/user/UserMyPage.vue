@@ -19,7 +19,7 @@ const deleteUser = () => {
     if (data === 1) {
       msg = "사용자 정보 삭제가 완료되었습니다.";
       sessionStorage.removeItem("userinfo");
-      router.push("/");
+      router.push({ name: "HomeView" });
     }
     alert(msg);
   });
@@ -124,14 +124,14 @@ const updateUser = () => {
           <input
             type="submit"
             id="btn-join"
-            class="btn btn-outline-primary mb-3"
+            class="btn btn-outline-primary mb-3 p-auto"
             value="수정하기"
             @click="updateUser"
           />
           <input
             type="button"
             id="btn-mv-join"
-            class="btn btn-outline-success mb-3"
+            class="btn btn-outline-success mb-3 p-auto"
             value="탈퇴하기"
             @click="deleteUser"
           />

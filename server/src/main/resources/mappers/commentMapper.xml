@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.enjoytrip.model.repo.CommentRepo">
+    <resultMap id="comments" type="CommentDto">
+        <result column="comment_id" property="commentId" />
+        <result column="user_id" property="userId" />
+        <result column="article_no" property="articleNo" />
+        <result column="content" property="content" />
+        <result column="created_date" property="createdDate" />
+    </resultMap>
+
+    <select id="list" resultMap="comments">
+        select * from comments where article_no = #{articleNo}
+    </select>
+
+
+
+</mapper>

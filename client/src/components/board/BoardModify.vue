@@ -44,7 +44,7 @@ const moveDetail = () => {
 </script>
 
 <template>
-  <div class="row justify-content-center">
+  <div class="row justify-content-center mt-5">
     <div class="col-lg-8 col-md-10 col-sm-12">
       <h2 class="my-3 py-3 shadow-sm bg-light text-center">
         <mark class="sky">글수정</mark>
