@@ -20,5 +20,16 @@ create table boards(
     content varchar(2000) not null,
     hit int not null default 0,
     register_time datetime not null default current_timestamp,
-    foreign key (user_id) references member(user_id)
+    foreign key (user_id) references members(user_id)
+);
+
+-- 코멘트 테이블
+create table comments (
+	comment_id int not null auto_increment primary key,
+    user_id varchar(20),
+    article_no int not null,
+    content varchar(500) not null,
+    created_date date not null default (current_date),
+    foreign key (user_id) references members(user_id) on delete set null,
+    foreign key (article_no) references boards(article_no)
 );
