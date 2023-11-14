@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/enjoytripapi/attractionapi")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin("*")
 @RequiredArgsConstructor
 public class AttractionRestController {
     private final AttractionService attarctionService;

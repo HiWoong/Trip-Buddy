@@ -9,7 +9,6 @@ import java.util.List;
 
 @Mapper
 public interface CommentRepo {
-
 	List<CommentDto> list(int articleNo) throws SQLException;
-
+	int writeComment(String content, String userId, int articleNo) throws Exception;
 }

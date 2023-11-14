@@ -14,6 +14,9 @@
         select * from comments where article_no = #{articleNo}
     </select>
 
+    <insert id="writeComment">
+        insert into comments(content, article_no, user_id) values(#{content}, #{articleNo}, #{userId})
+    </insert>
 
 
 </mapper>
