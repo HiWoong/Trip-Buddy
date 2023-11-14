@@ -10,23 +10,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @RestController
 @RequestMapping("/enjoytripapi/attractionapi")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequiredArgsConstructor
 public class AttractionRestController {
     private final AttractionService attarctionService;
+
     @GetMapping("/gokakao")
-    private String gokakao()  {
+    private String gokakao() {
         return "KakaoMap";
     }
 
     @GetMapping("/search")
     private ResponseEntity<?> kakao(@RequestParam String area, @RequestParam String type, @RequestParam String word) {
-        List<AttractionInfoDto> attractions = attarctionService.search(Integer.parseInt(area), Integer.parseInt(type), word);
+        List<AttractionInfoDto> attractions = attarctionService.search(Integer.parseInt(area), Integer.parseInt(type),
+                word);
         System.out.println(attractions);
-        if(attractions != null)
+        if (attractions != null)
             return new ResponseEntity<List<AttractionInfoDto>>(attractions, HttpStatus.OK);
-        else return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+        else
+            return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
 }
