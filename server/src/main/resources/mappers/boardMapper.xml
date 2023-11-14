@@ -21,7 +21,13 @@
             where ${key} like concat('%', #{word}, '%')
         </if>
         order by article_no desc limit #{start}, #{listsize}
+    </select>
 
+    <select id="getArticleCount">
+        select count(*) from boards
+        <if test="key != '' and word != ''">
+            where ${key} like concat('%', #{word}, '%')
+        </if>
     </select>
 
     <select id="getTotalArticleCount" parameterType="hashmap" resultType="int">

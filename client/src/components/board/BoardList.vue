@@ -12,7 +12,7 @@ const router = useRouter();
 const articles = ref([]);
 
 const currentPage = ref(1);
-const totalPage = ref(0);
+const totalPage = ref(10);
 const listSize = ref(20);
 
 const param = ref({
@@ -25,6 +25,7 @@ const onPageChange = (val) => {
   currentPage.value = val;
   param.value.pgno = val;
   getArticleList();
+  getTotalPage();
 };
 
 const key = ref("");
@@ -32,25 +33,16 @@ const word = ref("");
 const pgno = ref(1);
 
 const searchBoards = () => {
-  http
-    .get(
-      "/articleapi/list?pgno=" +
-        pgno.value +
-        "&key=" +
-        key.value +
-        "&word=" +
-        word.value +
-        "&spp=" +
-        param.value.spp
-    )
-    .then(({ data }) => {
-      console.log(data);
-      articles.value = data;
-    });
+  currentPage.value = 1;
+  getArticleList();
+  getTotalPage();
+  onPageChange(currentPage.value);
 };
+
 
 onMounted(() => {
   getArticleList();
+  getTotalPage();
 });
 
 const getArticleList = () => {
@@ -70,9 +62,17 @@ const getArticleList = () => {
     });
 };
 
-// http.get("/articleapi/list?pgno=1&key=&word=").then(({ data }) => {
-//   articles.value = data;
-// });
+const getTotalPage = () => {
+  http.get(
+    "/articleapi/articleCount?pgno=" +
+        "&key=" +
+        key.value +
+        "&word=" +
+        word.value
+  ).then(({ data }) => {
+    totalPage.value = Math.ceil(data / param.value.spp);
+  })
+}
 </script>
 
 <template>

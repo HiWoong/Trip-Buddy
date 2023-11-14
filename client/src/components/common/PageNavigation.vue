@@ -1,20 +1,29 @@
 <script setup>
 import { computed } from "vue";
 
-const props = defineProps({ currentPage: Number, totalPage: Number });
+const props = defineProps({ currentPage: Number, totalPage: Number});
 const emit = defineEmits(["pageChange"]);
 
-const navigationSize = 10;
+const navigationSize = props.totalPage;
 
 const startPage = computed(() => {
-  return parseInt((props.currentPage - 1) / navigationSize) * navigationSize + 1;
+  // return parseInt((props.currentPage - 1) / navigationSize) * navigationSize + 1;
+  let topPage = parseInt((props.currentPage - 1) / navigationSize) * navigationSize + 1;
+  console.log("topPage : " + topPage)
+  return topPage;
 });
 
 const endPage = computed(() => {
-  let lastPage =
+  let bottomPage =
     parseInt((props.currentPage - 1) / navigationSize) * navigationSize + navigationSize;
-  console.log(lastPage);
-  return props.totalPage < lastPage ? lastPage : props.totalPage;
+
+  // bottomPage = totalPage <= bottomPage ? totalPage : bottomPage;
+  bottomPage = bottomPage <= props.totalPage ? bottomPage : props.totalPage;
+  console.log("currentPage : ", props.currentPage);
+  console.log("bottomPage : ", bottomPage)
+  // return bottomPage;
+  return bottomPage;
+  // return props.totalPage < lastPage ? lastPage : props.totalPage;
 });
 
 const endRange = computed(() => {
@@ -28,7 +37,7 @@ function range(start, end) {
 }
 
 function onPageChange(pg) {
-  console.log(pg + "로 이동!!!");
+  console.log("onPageChange" + pg + "로 이동!!!");
   emit("pageChange", pg);
 }
 </script>
@@ -40,7 +49,7 @@ function onPageChange(pg) {
         <a class="page-link" @click="onPageChange(1)">최신</a>
       </li>
       <li class="page-item">
-        <a class="page-link" @click="onPageChange(startPage == 1 ? 1 : startPage - 1)">이전</a>
+        <a class="page-link" @click="onPageChange(startPage == 1 ? 1 : props.currentPage - 1)">이전</a>
       </li>
       <template v-for="pg in range(startPage, endPage)" :key="pg">
         <li :class="currentPage === pg ? 'page-item active' : 'page-item'">

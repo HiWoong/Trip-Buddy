@@ -25,46 +25,23 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public List<BoardDto> listArticle(Map<String, String> map) throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
-//		if("userid".equals(key))
-//			key = "user_id";
+
 		param.put("key", map.get("key").isEmpty() ? "" : map.get("key"));
 		param.put("word", map.get("word").isEmpty() ? "" : map.get("word"));
-		int pgno = Integer.parseInt(map.get("pgno"));
-		int start = pgno * SizeConstant.LIST_SIZE - SizeConstant.LIST_SIZE;
+		int pgno = Integer.parseInt(map.get("pgno")) - 1;
+		int spp = Integer.parseInt(map.get("spp"));
+		int start = pgno * spp;
 		param.put("start", start);
-		param.put("listsize", SizeConstant.LIST_SIZE);
+		param.put("listsize", spp);
 		System.out.println(param);
 		return repo.listArticle(param);
 	}
-	
+
 	@Override
-	public PageNavigation makePageNavigation(Map<String, String> map) throws Exception {
-		PageNavigation pageNavigation = new PageNavigation();
-
-		int naviSize = SizeConstant.NAVIGATION_SIZE;
-		int sizePerPage = SizeConstant.LIST_SIZE;
-		int currentPage = Integer.parseInt(map.get("pgno"));
-
-		pageNavigation.setCurrentPage(currentPage);
-		pageNavigation.setNaviSize(naviSize);
-		Map<String, Object> param = new HashMap<String, Object>();
-		String key = map.get("key");
-//		if ("userid".equals(key))
-//			key = "user_id";
-		param.put("key", key.isEmpty() ? "" : key);
-		param.put("word", map.get("word").isEmpty() ? "" : map.get("word"));
-		int totalCount = repo.getTotalArticleCount(param);
-		pageNavigation.setTotalCount(totalCount);
-		int totalPageCount = (totalCount - 1) / sizePerPage + 1;
-		pageNavigation.setTotalPageCount(totalPageCount);
-		boolean startRange = currentPage <= naviSize;
-		pageNavigation.setStartRange(startRange);
-		boolean endRange = (totalPageCount - 1) / naviSize * naviSize < currentPage;
-		pageNavigation.setEndRange(endRange);
-		pageNavigation.makeNavigator();
-
-		return pageNavigation;
+	public int getArticleCount(Map<String, String> map) throws Exception {
+		return repo.getArticleCount(map);
 	}
+
 
 	@Override
 	public BoardDto getArticle(int articleNo) throws Exception {

@@ -24,8 +24,8 @@ public class BoardRestController {
 	private final BoardService boardService;
 
 	@GetMapping("/list")
-	private ResponseEntity<?> list(@RequestParam String pgno, @RequestParam String key, @RequestParam String word, @RequestParam String spp, HttpSession session, Model model) throws Exception {
-		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
+	private ResponseEntity<?> list(@RequestParam String pgno, @RequestParam String key, @RequestParam String word, @RequestParam String spp) throws Exception {
+//		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
 //		System.out.println(pgno);
 //		System.out.println(key);
 //		System.out.println(word);
@@ -35,15 +35,25 @@ public class BoardRestController {
 		map.put("word", word);
 		map.put("spp", spp);
 		List<BoardDto> list = boardService.listArticle(map);
-		model.addAttribute("articles", list);
-		PageNavigation pageNavigation = boardService.makePageNavigation(map);
-		model.addAttribute("navigation", pageNavigation);
-		System.out.println(list);
+//		model.addAttribute("articles", list);
+//		PageNavigation pageNavigation = boardService.makePageNavigation(map);
+//		model.addAttribute("navigation", pageNavigation);
+//		System.out.println(list);
 		return new ResponseEntity<List<BoardDto>>(list, HttpStatus.OK);
 	}
 
+	@GetMapping("/articleCount")
+	private ResponseEntity<?> listSize(@RequestParam String key, @RequestParam String word) throws Exception {
+		Map<String, String> map = new HashMap<>();
+		map.put("key", key);
+		map.put("word", word);
+
+		int size = boardService.getArticleCount(map);
+		return new ResponseEntity<Integer>(size, HttpStatus.OK);
+	}
+
 	@GetMapping("/view/{articleNo}")
-	private ResponseEntity<?> view(@PathVariable("articleNo") String articleNo, HttpSession session, Model model) throws Exception {
+	private ResponseEntity<?> view(@PathVariable("articleNo") String articleNo) throws Exception {
 		int an = Integer.parseInt(articleNo);
 		int result = boardService.updateHit(an);
 		BoardDto boardDto = boardService.getArticle(an);
@@ -51,7 +61,7 @@ public class BoardRestController {
 	}
 
 	@PostMapping("/write")
-	private ResponseEntity<?> write(@RequestBody BoardDto boardDto, HttpSession session, Model model) throws Exception {
+	private ResponseEntity<?> write(@RequestBody BoardDto boardDto) throws Exception {
 
 //		boardDto.setUserId(((MemberDto) session.getAttribute("userinfo")).getUserId());
 
@@ -64,7 +74,7 @@ public class BoardRestController {
 	}
 
 	@PostMapping("/modify")
-	private ResponseEntity<?> modify(@RequestBody BoardDto boardDto, HttpSession session, Model model) throws Exception {
+	private ResponseEntity<?> modify(@RequestBody BoardDto boardDto) throws Exception {
 
 		int result = boardService.modifyArticle(boardDto);
 		if (result == 1)
@@ -74,7 +84,7 @@ public class BoardRestController {
 	}
 
 	@GetMapping("/delete/{articleNo}")
-	private ResponseEntity<?> delete(@PathVariable("articleNo") String articleNo, HttpSession session, Model model) throws Exception {
+	private ResponseEntity<?> delete(@PathVariable("articleNo") String articleNo) throws Exception {
 
 		int an = Integer.parseInt(articleNo);
 		int result = boardService.deleteArticle(an);
