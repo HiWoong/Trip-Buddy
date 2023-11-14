@@ -1,12 +1,13 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import Comment from "@/components/comment/Comment.vue";
 import { RouterView } from "vue-router";
 import http from "@/util/http-common.js";
 
 const router = useRouter();
 const route = useRoute();
-
+const userinfo = sessionStorage.getItem("userinfo");
 const article = ref({
   articleNo: Number,
   userId: String,
@@ -16,8 +17,17 @@ const article = ref({
   registerTime: String,
 });
 
-http.get("/articleapi/view/" + route.params.articleNo).then(({ data }) => {
-  article.value = data;
+const comments = ref([]);
+onMounted(async () => {
+  await http.get("/articleapi/view/" + route.params.articleNo).then(({ data }) => {
+    article.value = data;
+  });
+
+  await http
+    .get("/commentapi/list", { params: { articleNo: article.value.articleNo } })
+    .then(({ data }) => {
+      comments.value = data;
+    });
 });
 
 const deleteArticle = () => {
@@ -40,7 +50,7 @@ const moveList = () => {
 </script>
 
 <template>
-  <div class="row justify-content-center">
+  <div class="row justify-content-center mt-5">
     <div class="col-lg-8 col-md-10 col-sm-12">
       <h2 class="my-3 py-3 shadow-sm bg-light text-center">
         <mark class="sky">글보기</mark>
@@ -48,7 +58,7 @@ const moveList = () => {
     </div>
     <div class="col-lg-8 col-md-10 col-sm-12">
       <div class="row my-2">
-        <h2 class="text-secondary px-5">{{ article.subject }}</h2>
+        <h2 class="text-secondary">{{ article.subject }}</h2>
       </div>
       <div class="row">
         <div class="col-md-8">
@@ -73,12 +83,11 @@ const moveList = () => {
           <button type="button" id="btn-list" class="btn btn-outline-primary mb-3">
             <RouterLink class="nav-link active" aria-current="page" to="/board">글목록</RouterLink>
           </button>
-          <!-- <c:if test="${userinfo.userId eq article.userId}"> -->
           <button type="button" id="btn-mv-modify" class="btn btn-outline-success mb-3 ms-1">
             <RouterLink
               class="nav-link active"
               aria-current="page"
-              :to="{ name: 'BoardModify', params: { articleNo } }"
+              :to="{ name: 'BoardModify', params: { articleNo: article.articleNo } }"
             >
               글수정
             </RouterLink>
@@ -91,9 +100,25 @@ const moveList = () => {
           >
             글삭제
           </button>
-          <!-- </c:if> -->
         </div>
       </div>
+      <template v-if="comments != null">
+        <Comment v-for="comment in comments" :key="comment.commentId" v-bind="comment" />
+      </template>
+      <template v-if="userinfo != null">
+        <label for="comment">Comments:</label>
+        <textarea class="form-control" rows="5" id="comment" name="text"></textarea>
+        <div class="d-flex">
+          <button
+            type="button"
+            id="btn-register"
+            class="btn btn-outline-warning mt-2 ms-auto"
+            @click="createComment"
+          >
+            작성하기
+          </button>
+        </div>
+      </template>
     </div>
   </div>
 </template>
