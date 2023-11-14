@@ -39,7 +39,7 @@ const MoveMyPage = () => {
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+            <ul class="navbar-nav mb-2 mb-lg-0 ms-lg-4">
               <li class="nav-item">
                 <RouterLink class="nav-link active" aria-current="page" to="/attraction"
                   >지역별여행지</RouterLink
@@ -66,25 +66,27 @@ const MoveMyPage = () => {
                 >
               </li>
             </ul>
-            <ul class="navbar-nav">
-              <div v-if="userinfo == null" class="row">
-                <li class="nav-item col">
+            <div v-if="userinfo == null" class="collapse navbar-collapse">
+              <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
+                <li class="nav-item">
                   <RouterLink class="nav-link" id="navJoin" to="/user/join">회원가입</RouterLink>
                 </li>
-                <li class="nav-item col">
+                <li class="nav-item">
                   <RouterLink class="nav-link" id="navLogin" to="/user/login">로그인</RouterLink>
                 </li>
-              </div>
-              <div v-else class="row">
-                <li class="nav-item col">
+              </ul>
+            </div>
+            <div v-else class="collapse navbar-collapse">
+              <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
+                <li class="nav-item">
                   <button class="nav-link" @click="MoveMyPage" id="navMypage">마이페이지</button>
                 </li>
-                <li class="nav-item col">
+                <li class="nav-item">
                   <!-- to="/member?action=logout" -->
                   <button class="nav-link" @click="logout" id="navLogout">로그아웃</button>
                 </li>
-              </div>
-            </ul>
+              </ul>
+            </div>
           </div>
         </div>
       </nav>
