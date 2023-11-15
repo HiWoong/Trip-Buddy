@@ -3,7 +3,6 @@ package com.ssafy.enjoytrip.model.repo;
 import com.ssafy.enjoytrip.dto.AttractionInfoDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 

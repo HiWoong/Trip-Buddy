@@ -1,16 +1,12 @@
 package com.ssafy.enjoytrip.controller;
 
 import com.ssafy.enjoytrip.dto.BoardDto;
-import com.ssafy.enjoytrip.dto.MemberDto;
 import com.ssafy.enjoytrip.model.service.BoardService;
-import com.ssafy.enjoytrip.util.PageNavigation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,20 +21,12 @@ public class BoardRestController {
 
 	@GetMapping("/list")
 	private ResponseEntity<?> list(@RequestParam String pgno, @RequestParam String key, @RequestParam String word, @RequestParam String spp) throws Exception {
-//		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
-//		System.out.println(pgno);
-//		System.out.println(key);
-//		System.out.println(word);
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("pgno", pgno + "");
 		map.put("key", key);
 		map.put("word", word);
 		map.put("spp", spp);
 		List<BoardDto> list = boardService.listArticle(map);
-//		model.addAttribute("articles", list);
-//		PageNavigation pageNavigation = boardService.makePageNavigation(map);
-//		model.addAttribute("navigation", pageNavigation);
-//		System.out.println(list);
 		return new ResponseEntity<List<BoardDto>>(list, HttpStatus.OK);
 	}
 

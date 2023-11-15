@@ -2,8 +2,6 @@ package com.ssafy.enjoytrip.model.service;
 
 import com.ssafy.enjoytrip.dto.BoardDto;
 import com.ssafy.enjoytrip.model.repo.BoardRepo;
-import com.ssafy.enjoytrip.util.PageNavigation;
-import com.ssafy.enjoytrip.util.SizeConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
