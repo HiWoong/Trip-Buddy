@@ -2,7 +2,7 @@
 import { useRouter } from "vue-router";
 import { onMounted } from "vue";
 const router = useRouter();
-onMounted(async () => {
+onMounted(() => {
   if (sessionStorage.getItem("isLogin") != null) {
     sessionStorage.removeItem("isLogin");
     router.go();
