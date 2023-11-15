@@ -37,4 +37,26 @@ public class CommentRestController {
         if(result == 1) return new ResponseEntity<Integer>(result, HttpStatus.CREATED);
         else return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
+
+    @PostMapping("/modify")
+    private ResponseEntity<?> modify(@RequestBody CommentDto commentDto) throws Exception {
+        System.out.println(commentDto);
+        String content = commentDto.getContent();
+        int commentId = commentDto.getCommentId();
+        int result = commentService.modifyComment(content, commentId);
+        if(result == 1) return new ResponseEntity<Integer>(result, HttpStatus.CREATED);
+        else return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/delete/{commentId}")
+    private ResponseEntity<?> delete(@PathVariable("commentId") String commentId) throws Exception {
+        System.out.println(commentId);
+        int ci = Integer.parseInt(commentId);
+        int result = commentService.deleteComment(ci);
+
+        if (result == 1) {
+            return new ResponseEntity<Integer>(result, HttpStatus.OK);
+        }
+        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+    }
 }

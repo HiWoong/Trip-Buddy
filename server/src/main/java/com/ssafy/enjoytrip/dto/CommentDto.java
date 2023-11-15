@@ -15,5 +15,6 @@ public class CommentDto {
 	private int articleNo;
 	private String content;
 	private String createdDate;
+	private String updatedDate;
 
 }
