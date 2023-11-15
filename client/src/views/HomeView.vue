@@ -16,7 +16,6 @@ onMounted(() => {
       <h2 class="my-3 py-3 shadow-sm bg-light text-center">
         <mark class="orange">메인 페이지</mark>
       </h2>
-      <RouterLink :to="{ name: 'AttractionPlan' }">abc</RouterLink>
     </div>
   </div>
 </template>
