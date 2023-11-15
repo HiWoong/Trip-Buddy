@@ -2,7 +2,6 @@
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import CommentList from "@/components/comment/CommentList.vue";
-import { RouterView } from "vue-router";
 import http from "@/util/http-common.js";
 import CommentWrite from "@/components/comment/CommentWrite.vue";
 
@@ -20,11 +19,9 @@ const article = ref({
 
 const comments = ref([]);
 onMounted(async () => {
-  await http
-    .get("/articleapi/view/" + route.params.articleNo)
-    .then(({ data }) => {
-      article.value = data;
-    });
+  await http.get("/articleapi/view/" + route.params.articleNo).then(({ data }) => {
+    article.value = data;
+  });
 
   await http
     .get("/commentapi/list", { params: { articleNo: article.value.articleNo } })
@@ -78,25 +75,15 @@ const moveList = () => {
             </p>
           </div>
         </div>
-        <div class="col-md-4 align-self-center text-end">댓글 : 0</div>
+        <div class="col-md-4 align-self-center text-end">댓글 : {{ comments.length }}</div>
         <div class="divider mb-3"></div>
-        <div class="text-secondary">{{ article.content }}</div>
+        <div class="text-body">{{ article.content }}</div>
         <div class="divider mt-3 mb-3"></div>
         <div class="d-flex justify-content-end">
-          <button
-            type="button"
-            id="btn-list"
-            class="btn btn-outline-primary mb-3"
-          >
-            <RouterLink class="nav-link active" aria-current="page" to="/board"
-              >글목록</RouterLink
-            >
+          <button type="button" id="btn-list" class="btn btn-outline-primary mb-3">
+            <RouterLink class="nav-link active" aria-current="page" to="/board">글목록</RouterLink>
           </button>
-          <button
-            type="button"
-            id="btn-mv-modify"
-            class="btn btn-outline-success mb-3 ms-1"
-          >
+          <button type="button" id="btn-mv-modify" class="btn btn-outline-success mb-3 ms-1">
             <RouterLink
               class="nav-link active"
               aria-current="page"
@@ -120,16 +107,14 @@ const moveList = () => {
       </div>
       <template v-if="comments != null">
         <CommentList
-          v-for="comment in comments"
+          v-for="(comment, index) in comments"
           :key="comment.commentId"
           v-bind="comment"
+          :index="index + 1"
         />
       </template>
       <template v-if="userinfo != null">
-        <CommentWrite
-          :user-id="userinfo.userId"
-          :article-no="article.articleNo"
-        />
+        <CommentWrite :user-id="userinfo.userId" :article-no="Number(article.articleNo)" />
       </template>
     </div>
   </div>

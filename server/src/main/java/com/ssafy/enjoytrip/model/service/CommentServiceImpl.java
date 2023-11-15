@@ -20,4 +20,14 @@ public class CommentServiceImpl implements CommentService {
     public int writeComment(String content, String userId, int articleNo) throws Exception {
         return repo.writeComment(content, userId, articleNo);
     }
+
+    @Override
+    public int modifyComment(String content, int commentId) throws Exception {
+        return repo.modifyComment(content, commentId);
+    }
+
+    @Override
+    public int deleteComment(int ci) throws Exception {
+        return repo.deleteComment(ci);
+    }
 }
