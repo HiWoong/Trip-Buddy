@@ -8,12 +8,24 @@
         <result column="article_no" property="articleNo" />
         <result column="content" property="content" />
         <result column="created_date" property="createdDate" />
+        <result column="updated_date" property="updatedDate" />
     </resultMap>
 
     <select id="list" resultMap="comments">
         select * from comments where article_no = #{articleNo}
     </select>
 
+    <insert id="writeComment">
+        insert into comments(content, article_no, user_id) values(#{content}, #{articleNo}, #{userId})
+    </insert>
+
+    <update id="modifyComment">
+        update comments set content=#{content}, updated_date=current_date where comment_id = #{commentId}
+    </update>
+
+    <delete id="deleteComment">
+        delete from comments where comment_id = #{ci}
+    </delete>
 
 
 </mapper>

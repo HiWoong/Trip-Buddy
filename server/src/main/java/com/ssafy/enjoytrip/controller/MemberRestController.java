@@ -13,7 +13,7 @@ import java.sql.SQLException;
 
 @RestController
 @RequestMapping("/enjoytripapi/userapi")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin("*")
 @RequiredArgsConstructor
 public class MemberRestController {
 

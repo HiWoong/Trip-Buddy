@@ -16,7 +16,11 @@ const logout = () => {
   });
 };
 
-const MoveMyPage = () => {
+const moveHome = () => {
+  router.replace({ name: "HomeView" });
+};
+
+const moveMyPage = () => {
   router.replace({ name: "UserMyPage" });
 };
 </script>
@@ -27,7 +31,7 @@ const MoveMyPage = () => {
       <!-- header -->
       <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top border-bottom">
         <div class="container px-4 px-lg-5">
-          <RouterLink class="navbar-brand" to="/">Enjoy Trip</RouterLink>
+          <RouterLink class="navbar-brand" to="" @click="moveHome">Enjoy Trip</RouterLink>
           <button
             class="navbar-toggler"
             type="button"
@@ -80,7 +84,7 @@ const MoveMyPage = () => {
             <div v-else class="collapse navbar-collapse">
               <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
                 <li class="nav-item">
-                  <button class="nav-link" @click="MoveMyPage" id="navMypage">마이페이지</button>
+                  <button class="nav-link" @click="moveMyPage" id="navMypage">마이페이지</button>
                 </li>
                 <li class="nav-item">
                   <!-- to="/member?action=logout" -->

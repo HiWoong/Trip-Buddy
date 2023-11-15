@@ -1,13 +1,13 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import Comment from "@/components/comment/Comment.vue";
-import { RouterView } from "vue-router";
+import CommentList from "@/components/comment/CommentList.vue";
 import http from "@/util/http-common.js";
+import CommentWrite from "@/components/comment/CommentWrite.vue";
 
 const router = useRouter();
 const route = useRoute();
-const userinfo = sessionStorage.getItem("userinfo");
+const userinfo = JSON.parse(sessionStorage.getItem("userinfo"));
 const article = ref({
   articleNo: Number,
   userId: String,
@@ -75,9 +75,9 @@ const moveList = () => {
             </p>
           </div>
         </div>
-        <div class="col-md-4 align-self-center text-end">댓글 : 0</div>
+        <div class="col-md-4 align-self-center text-end">댓글 : {{ comments.length }}</div>
         <div class="divider mb-3"></div>
-        <div class="text-secondary">{{ article.content }}</div>
+        <div class="text-body">{{ article.content }}</div>
         <div class="divider mt-3 mb-3"></div>
         <div class="d-flex justify-content-end">
           <button type="button" id="btn-list" class="btn btn-outline-primary mb-3">
@@ -87,7 +87,10 @@ const moveList = () => {
             <RouterLink
               class="nav-link active"
               aria-current="page"
-              :to="{ name: 'BoardModify', params: { articleNo: article.articleNo } }"
+              :to="{
+                name: 'BoardModify',
+                params: { articleNo: article.articleNo },
+              }"
             >
               글수정
             </RouterLink>
@@ -103,21 +106,15 @@ const moveList = () => {
         </div>
       </div>
       <template v-if="comments != null">
-        <Comment v-for="comment in comments" :key="comment.commentId" v-bind="comment" />
+        <CommentList
+          v-for="(comment, index) in comments"
+          :key="comment.commentId"
+          v-bind="comment"
+          :index="index + 1"
+        />
       </template>
       <template v-if="userinfo != null">
-        <label for="comment">Comments:</label>
-        <textarea class="form-control" rows="5" id="comment" name="text"></textarea>
-        <div class="d-flex">
-          <button
-            type="button"
-            id="btn-register"
-            class="btn btn-outline-warning mt-2 ms-auto"
-            @click="createComment"
-          >
-            작성하기
-          </button>
-        </div>
+        <CommentWrite :user-id="userinfo.userId" :article-no="Number(article.articleNo)" />
       </template>
     </div>
   </div>
