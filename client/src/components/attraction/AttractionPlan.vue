@@ -14,7 +14,7 @@ onMounted(() => {
   }
 });
 
-function loadMap() {
+const loadMap = () => {
   const container = document.getElementById("map");
   const options = {
     center: new kakao.maps.LatLng(33.450701, 126.570667),
@@ -27,7 +27,7 @@ function loadMap() {
 
   var zoomControl = new kakao.maps.ZoomControl();
   map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
-}
+};
 
 const loadScript = () => {
   const script = document.createElement("script");
