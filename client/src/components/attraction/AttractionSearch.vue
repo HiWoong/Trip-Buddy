@@ -250,7 +250,7 @@ const loadScript = () => {
   script.src =
     "//dapi.kakao.com/v2/maps/sdk.js?appkey=" +
     import.meta.env.VITE_KAKAO_API_TOKEN +
-    "&autoload=false";
+    "&autoload=false&libraries=services";
   script.onload = () => window.kakao.maps.load(() => loadMap());
 
   document.head.appendChild(script);

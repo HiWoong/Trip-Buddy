@@ -51,7 +51,7 @@ const moveMyPage = () => {
                 >
               </li>
               <li class="nav-item">
-                <RouterLink class="nav-link active" aria-current="page" to="#"
+                <RouterLink class="nav-link active" aria-current="page" to="/attraction/plan"
                   >나의여행계획</RouterLink
                 >
               </li>
