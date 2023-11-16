@@ -26,71 +26,38 @@ const moveMyPage = () => {
 </script>
 
 <template>
-  <div class="d-flex flex-column">
-    <div class="flex-shrink-0">
+  <div>
+    <div>
       <!-- header -->
-      <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top border-bottom">
-        <div class="container px-4 px-lg-5">
-          <RouterLink class="navbar-brand" to="" @click="moveHome">Enjoy Trip</RouterLink>
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mb-2 mb-lg-0 ms-lg-4">
-              <li class="nav-item">
-                <RouterLink class="nav-link active" aria-current="page" to="/attraction"
-                  >지역별여행지</RouterLink
-                >
-              </li>
-              <li class="nav-item">
-                <RouterLink class="nav-link active" aria-current="page" to="/attraction/plan"
-                  >나의여행계획</RouterLink
-                >
-              </li>
-              <li class="nav-item">
-                <RouterLink class="nav-link active" aria-current="page" to="#"
-                  >핫플자랑하기</RouterLink
-                >
-              </li>
-              <li class="nav-item">
-                <RouterLink class="nav-link active" aria-current="page" to="/board"
-                  >여행게시판</RouterLink
-                >
-              </li>
-              <!-- <li class="nav-item">
-                <RouterLink class="nav-link active" aria-current="page" to="/sites"
-                  >사이트맵</RouterLink
-                >
-              </li> -->
-            </ul>
-            <div v-if="userinfo == null" class="collapse navbar-collapse">
-              <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
-                <li class="nav-item">
-                  <RouterLink class="nav-link" id="navJoin" to="/user/join">회원가입</RouterLink>
-                </li>
-                <li class="nav-item">
-                  <RouterLink class="nav-link" id="navLogin" to="/user/login">로그인</RouterLink>
-                </li>
-              </ul>
+      <nav>
+        <div class="grid-container">
+          <div>
+            <RouterLink to="" @click="moveHome">Enjoy Trip</RouterLink>
+          </div>
+          <div>
+            <div>
+              <RouterLink aria-current="page" to="/attraction">지역별여행지</RouterLink>
             </div>
-            <div v-else class="collapse navbar-collapse">
-              <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
-                <li class="nav-item">
-                  <button class="nav-link" @click="moveMyPage" id="navMypage">마이페이지</button>
-                </li>
-                <li class="nav-item">
-                  <!-- to="/member?action=logout" -->
-                  <button class="nav-link" @click="logout" id="navLogout">로그아웃</button>
-                </li>
-              </ul>
+            <div>
+              <RouterLink aria-current="page" to="/attraction/plan">나의여행계획</RouterLink>
+            </div>
+            <div>
+              <RouterLink aria-current="page" to="#">핫플자랑하기</RouterLink>
+            </div>
+            <div>
+              <RouterLink aria-current="page" to="/board">여행게시판</RouterLink>
+            </div>
+            <div v-if="userinfo == null">
+              <div>
+                <RouterLink id="navJoin" to="/user/join">회원가입</RouterLink>
+              </div>
+              <div>
+                <RouterLink id="navLogin" to="/user/login">로그인</RouterLink>
+              </div>
+            </div>
+            <div v-else>
+              <button @click="moveMyPage" id="navMypage">마이페이지</button>
+              <button @click="logout" id="navLogout">로그아웃</button>
             </div>
           </div>
         </div>
@@ -99,4 +66,14 @@ const moveMyPage = () => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto auto;
+}
+</style>

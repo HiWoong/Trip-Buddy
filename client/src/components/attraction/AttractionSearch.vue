@@ -2,9 +2,10 @@
   <div class="container mt-5 pt-3">
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow">
       <div class="container">
+        <!-- style="font-family: 'NanumSquare'; font-size: 25px" -->
         <div
           class="text-center fw-bold ms-5"
-          style="font-family: 'NanumSquare'; font-size: 25px"
+          style="font-family: sans-serif; font-size: 25px"
           role="alert"
         >
           전국 관광지 정보
@@ -191,10 +192,10 @@
 .info .link {
   color: #5085bb;
 }
-@font-face {
+/* @font-face {
   font-family: "NanumSquare";
   src: url("../../assets/fonts/NanumSquareR.ttf") format("truetype");
-}
+} */
 </style>
 <script setup>
 import http from "@/util/http-common.js";

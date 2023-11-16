@@ -127,30 +127,45 @@ function searchPlaces() {
   // 검색결과 항목을 Element로 반환하는 함수입니다
   function getListItem(index, places) {
     let el = document.createElement("li");
-    let itemStr =
-      '<span class="markerbg marker_' +
-      (index + 1) +
-      '"></span>' +
-      '<div class="info">' +
-      "   <h5>" +
-      places.place_name +
-      "</h5>";
 
+    let markerbg = document.createElement("span");
+    markerbg.className = "markerbg marker_" + (index + 1);
+
+    let info = document.createElement("div");
+    info.className = "info";
+    let place_name = document.createElement("h5");
+    place_name.innerHTML = places.place_name;
+    info.appendChild(place_name);
     if (places.road_address_name) {
-      itemStr +=
-        "    <span>" +
-        places.road_address_name +
-        "</span>" +
-        '   <span class="jibun gray">' +
-        places.address_name +
-        "</span>";
+      let road = document.createElement("span");
+      road.innerHTML = places.road_address_name;
+      let jibun = document.createElement("span");
+      jibun.innerHTML = places.address_name;
+
+      info.appendChild(road);
+      info.appendChild(jibun);
     } else {
-      itemStr += "    <span>" + places.address_name + "</span>";
+      let address = document.createElement("span");
+      address.innerHTML = places.address_name;
+
+      info.appendChild(address);
     }
+    let tel = document.createElement("span");
+    tel.className = "tel";
+    tel.innerHTML = places.phone;
+    info.appendChild(tel);
 
-    itemStr += '  <span class="tel">' + places.phone + "</span>" + "</div>";
-
-    el.innerHTML = itemStr;
+    let pick = document.createElement("button");
+    pick.className = "pick btn btn-success";
+    pick.innerHTML = "담기";
+    pick.onclick = () => {
+      alert(index + 1);
+    };
+    info.appendChild(pick);
+    // console.log(markerbg + info);
+    // el.innerHTML = markerbg + info;
+    el.appendChild(markerbg);
+    el.appendChild(info);
     el.className = "item";
 
     return el;
@@ -264,13 +279,21 @@ function searchPlaces() {
   }
 }
 </script>
-
+<!-------------------------------------------------------------------------------------------------------------->
+<!-------------------------------------------------------------------------------------------------------------->
+<!-------------------------------------------------------------------------------------------------------------->
 <template>
-  <div class="container d-flex justify-content-center mt-5 pt-5">
-    <div id="map" class="mt-3 pt-3"></div>
+  <div id="contents" class="mt-3 pt-2">
+    <div class="container mt-4">
+      <div id="map"></div>
+    </div>
+    <div id="menu_plan">
+      <h3>여행계획</h3>
+      <div id="selectPlaces"></div>
+    </div>
   </div>
-  <div id="menu_wrap" class="bg_white" style="width: 330px">
-    <div class="option" style="padding-left: 0; font-family: 'NanumSquare'">
+  <div id="menu_wrap" class="bg_white">
+    <div class="option">
       <h5>^__^ 검색해라</h5>
       <div>
         <input type="text" v-model="keyword" id="keyword" />
@@ -284,32 +307,24 @@ function searchPlaces() {
     <div id="pagination"></div>
   </div>
 </template>
-
+<!-------------------------------------------------------------------------------------------------------------->
+<!-------------------------------------------------------------------------------------------------------------->
+<!-------------------------------------------------------------------------------------------------------------->
 <style>
 .map_wrap,
 .map_wrap * {
   margin: 0;
   padding: 0;
-  font-family: "NanumSquare", dotum, "돋움", sans-serif;
+  /* font-family: "NanumSquare", dotum, "돋움", sans-serif; */
+  font-family: dotum, "돋움", sans-serif;
   font-size: 12px;
-}
-.map_wrap a,
-.map_wrap a:hover,
-.map_wrap a:active {
-  color: #000;
-  text-decoration: none;
-}
-.map_wrap {
-  position: relative;
-  width: 100%;
-  height: 500px;
 }
 #menu_wrap {
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
-  width: 250px;
+  width: 330px;
   margin: 60px 0 30px 10px;
   padding: 5px;
   overflow-y: auto;
@@ -330,6 +345,8 @@ function searchPlaces() {
 }
 #menu_wrap .option {
   text-align: left;
+  padding-left: 0;
+  font-family: "NanumSquare";
 }
 #menu_wrap .option p {
   margin: 10px 0;
@@ -445,7 +462,8 @@ function searchPlaces() {
 .wrap * {
   padding: 0;
   margin: 0;
-  font-family: "NanumSquare";
+  /* font-family: "NanumSquare"; */
+  font-family: sans-serif;
   font-weight: 400;
 }
 .wrap .info {
@@ -505,17 +523,38 @@ function searchPlaces() {
   background: #ccc;
   outline: 0;
 }
-@font-face {
+/* @font-face {
   font-family: "NanumSquare";
   src: url("../../assets/fonts/NanumSquareR.ttf") format("truetype");
 }
+@font-face {
+  font-family: "NanumSquareB";
+  src: url("../../assets/fonts/NanumSquareB.ttf") format("truetype");
+} */
 #keyword {
   width: 70%;
   height: 30px;
   font-size: 16px;
 }
+#contents {
+  width: 100%;
+  display: flex;
+}
 #map {
-  width: 1240px;
-  height: 800px;
+  width: 1275px;
+  height: 905px;
+  margin: 10px 0 0 190px;
+}
+#menu_plan {
+  margin: 35px 0 0 20px;
+  width: 300px;
+  height: 904px;
+  background-color: antiquewhite;
+  text-align: center;
+  /* font-family: "NanumSquareB"; */
+  font-family: sans-serif;
+}
+.pick {
+  float: right;
 }
 </style>
