@@ -1,6 +1,7 @@
 <script setup>
 import { useRouter, RouterView } from "vue-router";
-import Header from "./components/common/Header.vue";
+import Header from "@/components/common/Header.vue";
+import Footer from "@/components/common/Footer.vue";
 </script>
 
 <template>
@@ -10,6 +11,9 @@ import Header from "./components/common/Header.vue";
   <body>
     <router-view></router-view>
   </body>
+  <footer>
+    <Footer />
+  </footer>
 </template>
 
 <style>

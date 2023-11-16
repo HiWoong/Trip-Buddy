@@ -27,15 +27,11 @@ const test = (title) => {
 <template>
   <!-- fixed-height="863px" -->
   <vueper-slides
-    id="slideShow"
     fixed-height="400px"
-    fractions
-    progress
-    fade
-    :touchable="false"
-    :dragging-distance="70"
-    prevent-y-scroll
+    class="no-shadow"
     autoplay
+    arrows-outside
+    transition-speed="250"
   >
     <!-- @click="test(slide.title)" -->
     <vueper-slide
@@ -45,11 +41,8 @@ const test = (title) => {
       :title="slide.title"
       :content="slide.content"
     />
-    <template #pause>
-      <i class="icon pause_circle_outline"></i>
-    </template>
   </vueper-slides>
-  <div class="logo">Enjoy Trip</div>
+  <!-- <div class="logo">Enjoy Trip</div> -->
   <div class="cards">
     <div class="card">
       <img src="../assets/img/default.jpg" alt="" />
@@ -83,7 +76,7 @@ const test = (title) => {
   margin-top: 57px;
 } */
 .vueperslides__arrow {
-  color: yellow;
+  color: black;
 }
 .vueperslides__arrow svg {
   stroke-width: 2;
@@ -102,17 +95,21 @@ const test = (title) => {
   color: yellowgreen;
   margin: 0 0 770px 1350px;
 }
-.logo {
+.vueperslides__inner {
+  width: 1520px;
+  margin: 10px auto;
+}
+/* .logo {
   width: 100%;
-  height: 135px;
+  height: 100px;
   text-align: center;
   display: block;
-  font-size: 80px;
-}
+  font-size: 60px;
+} */
 .cards {
-  width: 90%;
-  height: 500px;
-  margin: 0 auto;
+  width: 80%;
+  height: 400px;
+  margin: 10px auto;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -121,7 +118,7 @@ const test = (title) => {
 .card {
   background-color: rgb(222, 222, 222);
   display: inline-block;
-  width: 350px;
+  width: 300px;
   height: 400px;
   border-radius: 2vh;
   margin-bottom: 3vh;
@@ -129,7 +126,7 @@ const test = (title) => {
 }
 
 img {
-  width: 350px;
+  width: 297px;
   height: 250px;
 }
 .title {

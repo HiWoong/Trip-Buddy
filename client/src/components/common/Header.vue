@@ -35,10 +35,14 @@ const moveMyPage = () => {
             <RouterLink to="" @click="moveHome">Enjoy Trip</RouterLink>
           </div>
           <div class="menu">
-            <RouterLink aria-current="page" to="/attraction">여행지 검색</RouterLink>
+            <RouterLink aria-current="page" to="/attraction"
+              >여행지 검색</RouterLink
+            >
           </div>
           <div class="menu">
-            <RouterLink aria-current="page" to="/attraction/plan">여행 플래너</RouterLink>
+            <RouterLink aria-current="page" to="/attraction/plan"
+              >여행 플래너</RouterLink
+            >
           </div>
           <div class="menu">
             <RouterLink aria-current="page" to="#">핫플 자랑</RouterLink>
@@ -56,8 +60,12 @@ const moveMyPage = () => {
             </div>
           </div>
           <div v-else>
-            <button @click="moveMyPage" id="navMypage">마이페이지</button>
-            <button @click="logout" id="navLogout">로그아웃</button>
+            <button class="user" @click="moveMyPage" id="navMypage">
+              마이페이지
+            </button>
+            <button class="user" @click="logout" id="navLogout">
+              로그아웃
+            </button>
           </div>
         </div>
       </nav>
@@ -90,7 +98,7 @@ a {
   grid-template-columns: 200px 100px 100px 100px 100px 1150px 150px;
   position: fixed;
   background-color: white;
-  border: 1px solid black;
+  border: 1px solid gainsboro;
   border-radius: 3px;
 }
 #logo {
