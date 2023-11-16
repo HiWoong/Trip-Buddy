@@ -6,6 +6,10 @@ import { jwtDecode } from "jwt-decode";
 import { join, login, logout, update, withdraw, getUserInfo, tokenRegeneration } from "@/api/userApi";
 import { httpStatusCode } from "@/util/http-status";
 
+// cookies
+import { useCookies } from "vue3-cookies";
+const { cookies } = useCookies();
+
 export const useUserStore = defineStore("userStore", () => {
   const router = useRouter();
 
@@ -34,8 +38,11 @@ export const useUserStore = defineStore("userStore", () => {
           isValidToken.value = true;
           // sessionStorage.setItem("accessToken", accessToken);
           // sessionStorage.setItem("refreshToken", refreshToken);
-          this.$cookies.set("accessToken", accessToken);
-          this.$cookies.set("refreshToken", refreshToken);
+          // this.$cookies.set("accessToken", accessToken);
+          // this.$cookies.set("refreshToken", refreshToken);
+          cookies.set("accessToken", accessToken);
+          cookies.set("refreshToken", refreshToken);
+
         } else {
           console.log("로그인 실패했다");
           isLogin.value = false;

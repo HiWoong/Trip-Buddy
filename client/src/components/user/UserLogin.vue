@@ -5,8 +5,13 @@ import { storeToRefs } from "pinia";
 import { useUserStore } from "@/stores/userStore.js";
 import { jwtDecode } from "jwt-decode";
 
+// cookies
+import { useCookies } from "vue3-cookies";
+const { cookies } = useCookies();
+
 const router = useRouter();
 const userStore = useUserStore();
+
 
 const { isLogin } = storeToRefs(userStore);
 const { userLogin, loginUserId } = userStore;
@@ -42,7 +47,8 @@ const login = async () => {
   console.log("userinfo : ", userinfo.value.userId, userinfo.value.userPwd);
   await userLogin(userinfo.value);
   // let token = sessionStorage.getItem("accessToken");
-  let accessToken = this.$cookies.get("accessToken");
+  // let accessToken = this.$cookies.get("accessToken");
+  let accessToken = cookies.get("accessToken");
   console.log("111. ", accessToken);
   console.log("isLogin: ", isLogin.value);
   if (isLogin) {
