@@ -51,6 +51,7 @@ public class MemberRestController {
 
 			resultMap.put("accessToken", accessToken);
 			resultMap.put("refreshToken", refreshToken);
+			System.out.println("resultMap = " + resultMap);
 			status = HttpStatus.CREATED;
 		} else {
 			resultMap.put("message", "아이디 혹은 패스워드가 잘못되었습니다.");
@@ -114,15 +115,15 @@ public class MemberRestController {
 	}
 
 	@PostMapping("/refresh")
-	public ResponseEntity<?> refreshToken(@RequestBody MemberDto memberDto, HttpServletRequest request)
+	public ResponseEntity<?> refreshToken(@RequestBody String userId, HttpServletRequest request)
 			throws Exception {
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
 		String token = request.getHeader("refreshToken");
-		log.debug("token : {}, memberDto : {}", token, memberDto);
+		log.debug("token : {}, userId : {}", token, userId);
 		if (jwtUtil.checkToken(token)) {
-			if (token.equals(memberService.getRefreshToken(memberDto.getUserId()))) {
-				String accessToken = jwtUtil.createAccessToken(memberDto.getUserId());
+			if (token.equals(memberService.getRefreshToken(userId))) {
+				String accessToken = jwtUtil.createAccessToken(userId);
 				log.debug("token : {}", accessToken);
 				log.debug("정상적으로 액세스토큰 재발급!!!");
 				resultMap.put("access-token", accessToken);

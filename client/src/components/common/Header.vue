@@ -2,10 +2,16 @@
 import http from "@/util/http-common.js";
 import { ref } from "vue";
 import { RouterLink, useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "@/stores/userStore.js";
+
+const userStore = useUserStore();
+const { isLogin } = storeToRefs(userStore);
+
 const router = useRouter();
 
-const userinfo = ref(sessionStorage.getItem("userinfo"));
-console.log(sessionStorage.getItem("userinfo"));
+// const userinfo = ref(sessionStorage.getItem("userinfo"));
+// console.log(sessionStorage.getItem("userinfo"));
 
 const logout = () => {
   http.get("/userapi/logout").then(() => {
@@ -23,6 +29,8 @@ const moveHome = () => {
 const moveMyPage = () => {
   router.replace({ name: "UserMyPage" });
 };
+
+console.log("header var : isLogin : ", isLogin.value);
 </script>
 
 <template>
@@ -71,17 +79,7 @@ const moveMyPage = () => {
                 >
               </li> -->
             </ul>
-            <div v-if="userinfo == null" class="collapse navbar-collapse">
-              <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
-                <li class="nav-item">
-                  <RouterLink class="nav-link" id="navJoin" to="/user/join">회원가입</RouterLink>
-                </li>
-                <li class="nav-item">
-                  <RouterLink class="nav-link" id="navLogin" to="/user/login">로그인</RouterLink>
-                </li>
-              </ul>
-            </div>
-            <div v-else class="collapse navbar-collapse">
+            <div v-if="isLogin" class="collapse navbar-collapse">
               <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
                 <li class="nav-item">
                   <button class="nav-link" @click="moveMyPage" id="navMypage">마이페이지</button>
@@ -89,6 +87,16 @@ const moveMyPage = () => {
                 <li class="nav-item">
                   <!-- to="/member?action=logout" -->
                   <button class="nav-link" @click="logout" id="navLogout">로그아웃</button>
+                </li>
+              </ul>
+            </div>
+            <div v-else class="collapse navbar-collapse">
+              <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
+                <li class="nav-item">
+                  <RouterLink class="nav-link" id="navJoin" to="/user/join">회원가입</RouterLink>
+                </li>
+                <li class="nav-item">
+                  <RouterLink class="nav-link" id="navLogin" to="/user/login">로그인</RouterLink>
                 </li>
               </ul>
             </div>

@@ -1,31 +1,56 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import http from "@/util/http-common.js";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "@/stores/userStore.js";
+import { jwtDecode } from "jwt-decode";
+
 const router = useRouter();
+const userStore = useUserStore();
+
+const { isLogin } = storeToRefs(userStore);
+const { userLogin, loginUserId } = userStore;
+
 const userinfo = ref({
   userId: "",
   userPwd: "",
 });
 
-const loginUser = () => {
-  http
-    .post("/userapi/login", {
-      userId: userinfo.value.userId,
-      userPwd: userinfo.value.userPwd,
-      savdId: "",
-    })
-    .then(({ data }) => {
-      console.log(data);
-      let msg = "로그인 처리시 문제가 발생했습니다.";
-      if (data != null) {
-        msg = "로그인이 완료되었습니다.";
-        sessionStorage.setItem("userinfo", JSON.stringify(data));
-        sessionStorage.setItem("isLogin", "true");
-        router.replace({ name: "HomeView" });
-      }
-      alert(msg);
-    });
+
+// const loginUser = () => {
+//   http
+//     .post("/userapi/login", {
+//       userId: userinfo.value.userId,
+//       userPwd: userinfo.value.userPwd,
+//       savdId: "",
+//     })
+//     .then(({ data }) => {
+//       console.log(data);
+//       let msg = "로그인 처리시 문제가 발생했습니다.";
+//       if (data != null) {
+//         msg = "로그인이 완료되었습니다.";
+//         sessionStorage.setItem("userinfo", JSON.stringify(data));
+//         sessionStorage.setItem("isLogin", "true");
+//         router.replace({ name: "HomeView" });
+//       }
+//       alert(msg);
+//     });
+// };
+
+const login = async () => {
+  console.log("login ing!!!! !!!");
+  console.log("userinfo : ", userinfo.value.userId, userinfo.value.userPwd);
+  await userLogin(userinfo.value);
+  // let token = sessionStorage.getItem("accessToken");
+  let accessToken = this.$cookies.get("accessToken");
+  console.log("111. ", accessToken);
+  console.log("isLogin: ", isLogin.value);
+  if (isLogin) {
+    console.log("로그인 성공");
+    // getUserInfo(token);
+    // changeMenuState();
+  }
+  router.push("/");
 };
 </script>
 
@@ -70,7 +95,7 @@ const loginUser = () => {
             id="btn-login"
             class="btn btn-outline-primary mb-3"
             value="로그인"
-            @click="loginUser"
+            @click="login"
           />
           <input
             type="button"
