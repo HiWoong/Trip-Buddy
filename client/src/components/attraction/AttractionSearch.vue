@@ -1,12 +1,16 @@
 <template>
-  <div class="container mt-5 pt-5">
+  <div class="container mt-5 pt-3">
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow">
       <div class="container">
-        <div class="alert alert-primary mt-3 text-center fw-bold" role="alert">
+        <div
+          class="text-center fw-bold ms-5"
+          style="font-family: 'NanumSquare'; font-size: 25px"
+          role="alert"
+        >
           전국 관광지 정보
         </div>
         <!-- 관광지 검색 start -->
-        <form class="d-flex my-3" onsubmit="return false;" role="search" id="search-form">
+        <form class="d-flex" onsubmit="return false;" role="search" id="search-form">
           <select
             id="search-area"
             name="search-area"
@@ -186,6 +190,10 @@
 }
 .info .link {
   color: #5085bb;
+}
+@font-face {
+  font-family: "NanumSquare";
+  src: url("../../assets/fonts/NanumSquareR.ttf") format("truetype");
 }
 </style>
 <script setup>

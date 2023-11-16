@@ -226,7 +226,8 @@ function searchPlaces() {
 
     let title = document.createElement("div");
     title.className = "title";
-    title.innerHTML = place_name;
+    if (place_name.length > 10) title.innerHTML = place_name.substring(0, 10) + "...";
+    else title.innerHTML = place_name;
 
     let body = document.createElement("div");
     body.className = "body";
@@ -265,15 +266,17 @@ function searchPlaces() {
 </script>
 
 <template>
-  <div class="container d-flex justify-content-end mt-5 pt-5">
-    <div id="map" class="mt-3 pt-3" style="width: 70%; height: 600px"></div>
+  <div class="container d-flex justify-content-center mt-5 pt-5">
+    <div id="map" class="mt-3 pt-3"></div>
   </div>
-  <div id="menu_wrap" class="bg_white mt-5 pt-5" style="width: 300px">
-    <div class="option">
+  <div id="menu_wrap" class="bg_white" style="width: 330px">
+    <div class="option" style="padding-left: 0; font-family: 'NanumSquare'">
+      <h5>^__^ 검색해라</h5>
       <div>
-        키워드 :
         <input type="text" v-model="keyword" id="keyword" />
-        <button @click="searchPlaces" @keypress="() => searchPlaces()">검색하기</button>
+        <button id="searchButton" @click="searchPlaces" @keypress="() => searchPlaces()">
+          검색하기
+        </button>
       </div>
     </div>
     <hr />
@@ -287,7 +290,7 @@ function searchPlaces() {
 .map_wrap * {
   margin: 0;
   padding: 0;
-  font-family: "Malgun Gothic", dotum, "돋움", sans-serif;
+  font-family: "NanumSquare", dotum, "돋움", sans-serif;
   font-size: 12px;
 }
 .map_wrap a,
@@ -307,7 +310,7 @@ function searchPlaces() {
   left: 0;
   bottom: 0;
   width: 250px;
-  margin: 10px 0 30px 10px;
+  margin: 60px 0 30px 10px;
   padding: 5px;
   overflow-y: auto;
   background: rgba(255, 255, 255, 0.7);
@@ -326,13 +329,16 @@ function searchPlaces() {
   margin: 3px 0;
 }
 #menu_wrap .option {
-  text-align: center;
+  text-align: left;
 }
 #menu_wrap .option p {
   margin: 10px 0;
 }
 #menu_wrap .option button {
   margin-left: 5px;
+}
+#placesList {
+  padding-left: 0;
 }
 #placesList li {
   list-style: none;
@@ -435,12 +441,15 @@ function searchPlaces() {
   cursor: default;
   color: #777;
 }
+
 .wrap * {
   padding: 0;
   margin: 0;
+  font-family: "NanumSquare";
+  font-weight: 400;
 }
 .wrap .info {
-  width: max-content;
+  width: 100%;
   height: 75px;
   border-radius: 5px;
   border-bottom: 2px solid #ccc;
@@ -450,16 +459,20 @@ function searchPlaces() {
 }
 .info .title {
   padding: 0 0 0 3px;
+  min-width: 150px;
+  width: 100%;
   height: 25px;
   background: #eee;
   border-bottom: 1px solid #ddd;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   position: relative;
 }
+
 .info .body {
   position: relative;
   overflow: hidden;
+  padding: 0 10px 0 0;
 }
 .info .desc {
   position: relative;
@@ -474,5 +487,35 @@ function searchPlaces() {
 .jibun {
   color: #009900;
   font-size: 15px;
+}
+#searchButton {
+  transition: 0.5s;
+  cursor: pointer;
+  text-align: center;
+  border: none;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  width: 80px;
+  height: 30px;
+  float: right;
+}
+#searchButton:active,
+#searchButton:hover,
+#searchButton:focus {
+  background: #ccc;
+  outline: 0;
+}
+@font-face {
+  font-family: "NanumSquare";
+  src: url("../../assets/fonts/NanumSquareR.ttf") format("truetype");
+}
+#keyword {
+  width: 70%;
+  height: 30px;
+  font-size: 16px;
+}
+#map {
+  width: 1240px;
+  height: 800px;
 }
 </style>

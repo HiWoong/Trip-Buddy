@@ -13,8 +13,6 @@ import Header from "./components/common/Header.vue";
 
 <template>
   <Header />
-  <!-- <HomeView /> -->
-  <!-- <RouterLink></RouterLink> -->
   <router-view></router-view>
 </template>
 
