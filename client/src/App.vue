@@ -1,19 +1,24 @@
 <script setup>
 import { useRouter, RouterView } from "vue-router";
 import Header from "./components/common/Header.vue";
-
-// const script = document.createElement("script");
-// script.src =
-//   "//dapi.kakao.com/v2/maps/sdk.js?appkey=" +
-//   import.meta.env.VITE_KAKAO_API_TOKEN +
-//   "?autoload=false&libraries=services,clusterer,drawing";
-// script.onload = () => window.kakao.maps.load();
-// document.head.appendChild(script);
 </script>
 
 <template>
-  <Header />
-  <router-view></router-view>
+  <header>
+    <Header />
+  </header>
+  <body>
+    <router-view></router-view>
+  </body>
 </template>
 
-<style scoped></style>
+<style>
+header {
+  z-index: 2;
+  position: relative;
+}
+body {
+  z-index: 1;
+  position: relative;
+}
+</style>

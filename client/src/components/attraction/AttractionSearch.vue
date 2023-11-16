@@ -1,31 +1,15 @@
 <template>
-  <div class="container mt-5 pt-3">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow">
-      <div class="container">
+  <div>
+    <nav>
+      <div>
         <!-- style="font-family: 'NanumSquare'; font-size: 25px" -->
-        <div
-          class="text-center fw-bold ms-5"
-          style="font-family: sans-serif; font-size: 25px"
-          role="alert"
-        >
-          전국 관광지 정보
-        </div>
+        <div style="font-family: sans-serif; font-size: 25px" role="alert">전국 관광지 정보</div>
         <!-- 관광지 검색 start -->
-        <form class="d-flex" onsubmit="return false;" role="search" id="search-form">
-          <select
-            id="search-area"
-            name="search-area"
-            class="form-select me-2"
-            v-model="searchOptions.area"
-          >
+        <form onsubmit="return false;" role="search" id="search-form">
+          <select id="search-area" name="search-area" v-model="searchOptions.area">
             <option value="0" selected>선택해주세요</option>
           </select>
-          <select
-            id="search-content-id"
-            name="search-content-id"
-            class="form-select me-2"
-            v-model="searchOptions.type"
-          >
+          <select id="search-content-id" name="search-content-id" v-model="searchOptions.type">
             <option value="0" selected>관광지 유형</option>
             <option value="12">관광지</option>
             <option value="14">문화시설</option>
@@ -39,27 +23,21 @@
           <input
             id="searchkeyword"
             name="searchkeyword"
-            class="form-control me-2"
             type="search"
             placeholder="검색어"
             aria-label="검색어"
             v-model="searchOptions.word"
           />
-          <button
-            id="btn-search"
-            class="btn btn-outline-success"
-            type="button"
-            @click="searchAttractions(searchOptions)"
-          >
+          <button id="btn-search" type="button" @click="searchAttractions(searchOptions)">
             검색
           </button>
         </form>
       </div>
     </nav>
-    <div id="map" class="mt-3 pt-3" style="width: 100%; height: 530px"></div>
+    <div id="map" style="width: 100%; height: 530px"></div>
   </div>
   <div v-if="attractions[0] != null">
-    <div class="container px-4 px-lg-5 mt-5">
+    <div>
       <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
         <div v-for="attraction in attractions" :key="attraction.title">
           <div class="col mb-5" style="height: 400px">

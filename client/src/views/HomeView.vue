@@ -25,10 +25,10 @@ const test = (title) => {
 </script>
 
 <template>
+  <!-- fixed-height="863px" -->
   <vueper-slides
     id="slideShow"
-    width="500px"
-    fixed-height="906px"
+    fixed-height="400px"
     fractions
     progress
     fade
@@ -49,6 +49,29 @@ const test = (title) => {
       <i class="icon pause_circle_outline"></i>
     </template>
   </vueper-slides>
+  <div class="logo">Enjoy Trip</div>
+  <div class="cards">
+    <div class="card">
+      <img src="../assets/img/default.jpg" alt="" />
+      <div class="title">주인장 추천</div>
+      <div class="content">한 번 잡숴봐</div>
+    </div>
+    <div class="card">
+      <img src="../assets/img/default.jpg" alt="" />
+      <div class="title">별점순</div>
+      <div class="content">이게 진짜 좋은거라니까</div>
+    </div>
+    <div class="card">
+      <img src="../assets/img/default.jpg" alt="" />
+      <div class="title">좋아요순</div>
+      <div class="content">내가 먹으려다 안먹고 양보하는거여</div>
+    </div>
+    <div class="card">
+      <img src="../assets/img/default.jpg" alt="" />
+      <div class="title">조회수순</div>
+      <div class="content">으잉? 진짜 안먹을겨?</div>
+    </div>
+  </div>
 </template>
 
 <style>
@@ -56,9 +79,9 @@ const test = (title) => {
   margin: 0;
   padding: 0;
 }
-#slideShow {
+/* #slideShow {
   margin-top: 57px;
-}
+} */
 .vueperslides__arrow {
   color: yellow;
 }
@@ -70,13 +93,52 @@ const test = (title) => {
   color: rgb(255, 181, 23);
 }
 .vueperslide__title {
-  margin: 0 0 0 900px;
+  margin: 0 0 0 1500px;
   font-size: 50px;
   color: yellowgreen;
 }
 .vueperslide__content {
   font-size: 20px;
   color: yellowgreen;
-  margin: 0 0 800px 780px;
+  margin: 0 0 770px 1350px;
+}
+.logo {
+  width: 100%;
+  height: 135px;
+  text-align: center;
+  display: block;
+  font-size: 80px;
+}
+.cards {
+  width: 90%;
+  height: 500px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  /* background-color: antiquewhite; */
+}
+.card {
+  background-color: rgb(222, 222, 222);
+  display: inline-block;
+  width: 350px;
+  height: 400px;
+  border-radius: 2vh;
+  margin-bottom: 3vh;
+  box-shadow: 2px 10px 10px 2px rgb(199, 199, 199);
+}
+
+img {
+  width: 350px;
+  height: 250px;
+}
+.title {
+  text-align: center;
+  font-size: 30px;
+}
+.content {
+  margin: auto 0;
+  text-align: center;
+  font-size: 20px;
 }
 </style>

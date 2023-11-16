@@ -283,28 +283,26 @@ function searchPlaces() {
 <!-------------------------------------------------------------------------------------------------------------->
 <!-------------------------------------------------------------------------------------------------------------->
 <template>
-  <div id="contents" class="mt-3 pt-2">
-    <div class="container mt-4">
-      <div id="map"></div>
+  <div id="contents">
+    <div id="menu_wrap">
+      <div class="option">
+        <h5>^__^ 검색해라</h5>
+        <div>
+          <input type="text" v-model="keyword" id="keyword" />
+          <button id="searchButton" @click="searchPlaces" @keypress="() => searchPlaces()">
+            검색하기
+          </button>
+        </div>
+      </div>
+      <hr />
+      <ul id="placesList"></ul>
+      <div id="pagination"></div>
     </div>
+    <div id="map"></div>
     <div id="menu_plan">
       <h3>여행계획</h3>
       <div id="selectPlaces"></div>
     </div>
-  </div>
-  <div id="menu_wrap" class="bg_white">
-    <div class="option">
-      <h5>^__^ 검색해라</h5>
-      <div>
-        <input type="text" v-model="keyword" id="keyword" />
-        <button id="searchButton" @click="searchPlaces" @keypress="() => searchPlaces()">
-          검색하기
-        </button>
-      </div>
-    </div>
-    <hr />
-    <ul id="placesList"></ul>
-    <div id="pagination"></div>
   </div>
 </template>
 <!-------------------------------------------------------------------------------------------------------------->
@@ -325,13 +323,14 @@ function searchPlaces() {
   left: 0;
   bottom: 0;
   width: 330px;
-  margin: 60px 0 30px 10px;
+  margin: 30px 0 30px 10px;
   padding: 5px;
   overflow-y: auto;
   background: rgba(255, 255, 255, 0.7);
   z-index: 1;
   font-size: 12px;
   border-radius: 10px;
+  flex: 4;
 }
 .bg_white {
   background: #fff;
@@ -462,8 +461,8 @@ function searchPlaces() {
 .wrap * {
   padding: 0;
   margin: 0;
-  /* font-family: "NanumSquare"; */
-  font-family: sans-serif;
+  font-family: "NanumSquare";
+  /* font-family: sans-serif; */
   font-weight: 400;
 }
 .wrap .info {
@@ -523,14 +522,14 @@ function searchPlaces() {
   background: #ccc;
   outline: 0;
 }
-/* @font-face {
+@font-face {
   font-family: "NanumSquare";
   src: url("../../assets/fonts/NanumSquareR.ttf") format("truetype");
 }
 @font-face {
   font-family: "NanumSquareB";
   src: url("../../assets/fonts/NanumSquareB.ttf") format("truetype");
-} */
+}
 #keyword {
   width: 70%;
   height: 30px;
@@ -539,11 +538,13 @@ function searchPlaces() {
 #contents {
   width: 100%;
   display: flex;
+  justify-content: space-between;
 }
 #map {
-  width: 1275px;
-  height: 905px;
-  margin: 10px 0 0 190px;
+  /* width: 1275px;
+    height: 905px; */
+  margin: 35px 0 0 350px;
+  flex: 2;
 }
 #menu_plan {
   margin: 35px 0 0 20px;
@@ -551,8 +552,9 @@ function searchPlaces() {
   height: 904px;
   background-color: antiquewhite;
   text-align: center;
-  /* font-family: "NanumSquareB"; */
-  font-family: sans-serif;
+  font-family: "NanumSquareB";
+  /* font-family: sans-serif; */
+  flex: 1;
 }
 .pick {
   float: right;
