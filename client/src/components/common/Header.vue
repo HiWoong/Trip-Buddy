@@ -31,7 +31,7 @@ const moveMyPage = () => {
       <!-- header -->
       <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top border-bottom">
         <div class="container px-4 px-lg-5">
-          <RouterLink class="navbar-brand" to="" @click="moveHome">Enjoy Trip</RouterLink>
+          <RouterLink class="navbar-brand" to="" @click="moveHome">Trip Buddy</RouterLink>
           <button
             class="navbar-toggler"
             type="button"

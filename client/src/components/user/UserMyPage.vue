@@ -69,6 +69,7 @@ const updateUser = () => {
             placeholder="아이디..."
             v-model="newUser.userId"
             readonly
+            disabled
           />
         </div>
         <div id="result-view" class="mb-3"></div>
