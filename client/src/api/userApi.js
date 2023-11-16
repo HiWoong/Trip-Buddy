@@ -13,7 +13,6 @@ async function join(user, success, fail) {
 
 async function login(user, success, fail) {
   http.defaults.headers["Authorization"] = cookies.get("accessToken");
-  // http.defaults.headers["Authorization"] = sessionStorage.getItem("accessToken");
   await http.post(`/userapi/login`, user).then(success).catch(fail);
 }
 
@@ -22,22 +21,22 @@ async function logout(userId, success, fail) {
 }
 
 async function update(user, success, fail) {
-  http.defaults.headers["Authorization"] = sessionStorage.getItem("accessToken");
+  http.defaults.headers["Authorization"] = cookies.get("accessToken");
   await http.post(`/userapi/update`, user).then(success).catch(fail);
 }
 
 async function withdraw(userId, success, fail) {
-  http.defaults.headers["Authorization"] = sessionStorage.getItem("accessToken");
+  http.defaults.headers["Authorization"] = cookies.get("accessToken");
   await http.get(`/userapi/delete/${userId}`).then(success).catch(fail);
 }
 
 async function info(userId, success, fail) {
-  http.defaults.headers["Authorization"] = sessionStorage.getItem("accessToken");
+  http.defaults.headers["Authorization"] = cookies.get("accessToken");
   await http.get(`/userapi/info/${userId}`).then(success).catch(fail);
 }
 
 async function tokenRegeneration(userId, success, fail) {
-  http.defaults.headers["refreshToken"] = sessionStorage.getItem("refreshToken"); //axios header에 refresh-token 셋팅
+  http.defaults.headers["refreshToken"] = cookies.get("refreshToken"); //axios header에 refresh-token 셋팅
   await http.post(`/userapi/refresh`, userId).then(success).catch(fail);
 }
 

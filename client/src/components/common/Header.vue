@@ -4,22 +4,27 @@ import { ref, onMounted } from "vue";
 import { RouterLink, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "@/stores/userStore.js";
+// cookies
+import { useCookies } from "vue3-cookies";
+const { cookies } = useCookies();
 
 const userStore = useUserStore();
 
-const { isLogin, userInfo } = storeToRefs(userStore);
-const { getLoginStatus } = userStore;
+const { isLogin } = storeToRefs(userStore);
+const { userLogoutStore } = userStore;
 
 const router = useRouter();
 
-const logout = () => {
-  http.get("/userapi/logout").then(() => {
-    
-    sessionStorage.removeItem("userinfo");
-    sessionStorage.setItem("isLogin", "true");
-    router.replace({ name: "HomeView" });
-    router.go();
-  });
+onMounted(async () => {
+  const ui = cookies.get("userId");
+  if (ui){
+    isLogin.value = true;
+  }
+});
+
+const logout = async() => {
+  await userLogoutStore(cookies.get("userId"));
+  router.replace({ name: "HomeView" });
 };
 
 const moveHome = () => {
@@ -30,9 +35,9 @@ const moveMyPage = () => {
   router.replace({ name: "UserMyPage" });
 };
 
-console.log("status : ", getLoginStatus());
-isLogin.value = getLoginStatus() ? true : false;
-console.log("header var : isLogin : ", isLogin.value);
+// console.log("status : ", getLoginStatus());
+// isLogin.value = getLoginStatus() ? true : false;
+// console.log("header var : isLogin : ", isLogin.value);
 </script>
 
 <template>

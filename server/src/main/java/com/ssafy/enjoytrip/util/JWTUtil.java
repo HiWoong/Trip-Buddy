@@ -80,7 +80,7 @@ public class JWTUtil {
 //			Json Web Signature? 서버에서 인증을 근거로 인증정보를 서버의 private key로 서명 한것을 토큰화 한것
 //			setSigningKey : JWS 서명 검증을 위한  secret key 세팅
 //			parseClaimsJws : 파싱하여 원본 jws 만들기
-            System.out.println("token = " + token);
+//            System.out.println("token = " + token);
             Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(token);
 //			Claims 는 Map의 구현체 형태
             log.debug("claims: {}", claims);

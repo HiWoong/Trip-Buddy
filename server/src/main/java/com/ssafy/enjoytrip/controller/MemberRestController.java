@@ -51,7 +51,7 @@ public class MemberRestController {
 
 			resultMap.put("accessToken", accessToken);
 			resultMap.put("refreshToken", refreshToken);
-			System.out.println("resultMap = " + resultMap);
+//			System.out.println("resultMap = " + resultMap);
 			status = HttpStatus.CREATED;
 		} else {
 			resultMap.put("message", "아이디 혹은 패스워드가 잘못되었습니다.");
@@ -66,7 +66,7 @@ public class MemberRestController {
 //		Map<String, Object> resultMap = new HashMap<String, Object>();
 		memberService.deleteRefreshToken(userId);
 
-		return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
 	@PostMapping("/update")
@@ -88,10 +88,11 @@ public class MemberRestController {
 
 		if (jwtUtil.checkToken(request.getHeader("Authorization"))){
 			int result = memberService.deleteMember(userId);
-			if(result == 1)
+			if(result == 1){
 				return new ResponseEntity<Integer>(result, HttpStatus.NO_CONTENT);
-			else
-				return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
+			}
+
+			return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
 		}
 
 		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -101,8 +102,10 @@ public class MemberRestController {
 	private ResponseEntity<?> info(@PathVariable("userId") String userId, HttpServletRequest request) throws Exception {
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
+		System.out.println("userId = " + userId);
+		System.out.println(request.getHeader("Authorization"));
 		if (jwtUtil.checkToken(request.getHeader("Authorization"))) {
-			log.info("사용 가능한 토큰!!!");
+//			log.info("사용 가능한 토큰!!!");
 //          로그인 사용자 정보.
 			MemberDto memberDto = memberService.getUserInfo(userId);
 			resultMap.put("userInfo", memberDto);
