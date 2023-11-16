@@ -3,7 +3,7 @@ import { useRouter } from "vue-router";
 import { defineStore } from "pinia";
 import { jwtDecode } from "jwt-decode";
 
-import { join, login, logout, update, withdraw, getUserInfo, tokenRegeneration } from "@/api/userApi";
+import { join, login, logout, update, withdraw, info, tokenRegeneration } from "@/api/userApi";
 import { httpStatusCode } from "@/util/http-status";
 
 // cookies
@@ -17,8 +17,6 @@ export const useUserStore = defineStore("userStore", () => {
   const isLoginError = ref(false);
   const userInfo = ref(null);
   const isValidToken = ref(false);
-
-  const loginUserId = ref("");
 
   const userLogin = async (loginUser) => {
     await login(
@@ -40,7 +38,8 @@ export const useUserStore = defineStore("userStore", () => {
           // sessionStorage.setItem("refreshToken", refreshToken);
           // this.$cookies.set("accessToken", accessToken);
           // this.$cookies.set("refreshToken", refreshToken);
-          cookies.set("accessToken", accessToken);
+          console.log(userInfo.value);
+          cookies.set("accessToken", accessToken, 600);
           cookies.set("refreshToken", refreshToken);
 
         } else {
@@ -55,49 +54,49 @@ export const useUserStore = defineStore("userStore", () => {
       }
       );
     };
-    
-    const userLogout = async (userid) => {
-      await logout(
-        userid,
-        (response) => {
-          if (response.status === httpStatusCode.OK) {
-            isLogin.value = false;
-            userInfo.value = null;
-            isValidToken.value = false;
-          } else {
-            console.error("유저 정보 없음!!!!");
-          }
-        },
-        (error) => {
-          console.log(error);
+
+  const userLogout = async (userid) => {
+    await logout(
+      userid,
+      (response) => {
+        if (response.status === httpStatusCode.OK) {
+          isLogin.value = false;
+          userInfo.value = null;
+          isValidToken.value = false;
+        } else {
+          console.error("유저 정보 없음!!!!");
         }
-      );
-    };
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  };
 
-  // const getUserInfo = (token) => {
-  //   let decodeToken = jwtDecode(token);
-  //   console.log("2. decodeToken", decodeToken);
-  //   findById(
-  //     decodeToken.userId,
-  //     (response) => {
-  //       if (response.status === httpStatusCode.OK) {
-  //         userInfo.value = response.data.userInfo;
-  //         console.log("3. getUserInfo data >> ", response.data);
-  //       } else {
-  //         console.log("유저 정보 없음!!!!");
-  //       }
-  //     },
-  //     async (error) => {
-  //       console.error(
-  //         "getUserInfo() error code [토큰 만료되어 사용 불가능.] ::: ",
-  //         error.response.status
-  //       );
-  //       isValidToken.value = false;
+  const getUserInfo = (token) => {
+    let decodeToken = jwtDecode(token);
+    console.log("2. decodeToken", decodeToken);
+    info(
+      decodeToken.userId,
+      (response) => {
+        if (response.status === httpStatusCode.OK) {
+          userInfo.value = response.data.userInfo;
+          console.log("3. getUserInfo data >> ", response.data);
+        } else {
+          console.log("유저 정보 없음!!!!");
+        }
+      },
+      async (error) => {
+        console.error(
+          "getUserInfo() error code [토큰 만료되어 사용 불가능.] ::: ",
+          error.response.status
+        );
+        isValidToken.value = false;
 
-  //       await tokenRegenerate();
-  //     }
-  //   );
-  // };
+        // await tokenRegenerate();
+      }
+    );
+  };
 
   // const tokenRegenerate = async () => {
   //   console.log("토큰 재발급 >> 기존 토큰 정보 : {}", sessionStorage.getItem("accessToken"));
@@ -141,16 +140,33 @@ export const useUserStore = defineStore("userStore", () => {
   //   );
   // };
 
+  const getLoginStatus = () => {
+    const token = cookies.get("accessToken");
+    console.log("getLoginStatus -> accesstoken : ", token);
+    if (token == null){
+      return false;
+    }
+    
+    return true;
+  }
+
+  // const getLoginUserId = () => {
+  //   const token = cookies.get("accessToken");
+  //   const temp = jwtDecode(token);
+  //   console.log("getUserId -> temp : ", temp);
+  //   return temp;
+  // }
 
   return {
     isLogin,
     isLoginError,
     userInfo,
     isValidToken,
-    loginUserId,
     userLogin,
     userLogout,
-    // getUserInfo,
+    getUserInfo,
     // tokenRegenerate,
+    getLoginStatus,
+    // getLoginUserId,
   };
 });

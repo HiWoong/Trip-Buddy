@@ -1,20 +1,20 @@
 <script setup>
 import http from "@/util/http-common.js";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { RouterLink, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "@/stores/userStore.js";
 
 const userStore = useUserStore();
-const { isLogin } = storeToRefs(userStore);
+
+const { isLogin, userInfo } = storeToRefs(userStore);
+const { getLoginStatus } = userStore;
 
 const router = useRouter();
 
-// const userinfo = ref(sessionStorage.getItem("userinfo"));
-// console.log(sessionStorage.getItem("userinfo"));
-
 const logout = () => {
   http.get("/userapi/logout").then(() => {
+    
     sessionStorage.removeItem("userinfo");
     sessionStorage.setItem("isLogin", "true");
     router.replace({ name: "HomeView" });
@@ -30,6 +30,8 @@ const moveMyPage = () => {
   router.replace({ name: "UserMyPage" });
 };
 
+console.log("status : ", getLoginStatus());
+isLogin.value = getLoginStatus() ? true : false;
 console.log("header var : isLogin : ", isLogin.value);
 </script>
 

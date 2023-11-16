@@ -14,7 +14,7 @@ const userStore = useUserStore();
 
 
 const { isLogin } = storeToRefs(userStore);
-const { userLogin, loginUserId } = userStore;
+const { userLogin, loginUserId, getUserInfo } = userStore;
 
 const userinfo = ref({
   userId: "",
@@ -53,7 +53,7 @@ const login = async () => {
   console.log("isLogin: ", isLogin.value);
   if (isLogin) {
     console.log("로그인 성공");
-    // getUserInfo(token);
+    getUserInfo(accessToken);
     // changeMenuState();
   }
   router.push("/");
