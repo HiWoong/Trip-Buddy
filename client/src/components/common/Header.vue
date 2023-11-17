@@ -41,71 +41,41 @@ const moveMyPage = () => {
 </script>
 
 <template>
-  <div class="d-flex flex-column">
-    <div class="flex-shrink-0">
+  <div>
+    <div>
       <!-- header -->
-      <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top border-bottom">
-        <div class="container px-4 px-lg-5">
-          <RouterLink class="navbar-brand" to="" @click="moveHome">Enjoy Trip</RouterLink>
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mb-2 mb-lg-0 ms-lg-4">
-              <li class="nav-item">
-                <RouterLink class="nav-link active" aria-current="page" to="/attraction"
-                  >지역별여행지</RouterLink
-                >
-              </li>
-              <li class="nav-item">
-                <RouterLink class="nav-link active" aria-current="page" to="#"
-                  >나의여행계획</RouterLink
-                >
-              </li>
-              <li class="nav-item">
-                <RouterLink class="nav-link active" aria-current="page" to="#"
-                  >핫플자랑하기</RouterLink
-                >
-              </li>
-              <li class="nav-item">
-                <RouterLink class="nav-link active" aria-current="page" to="/board"
-                  >여행게시판</RouterLink
-                >
-              </li>
-              <!-- <li class="nav-item">
-                <RouterLink class="nav-link active" aria-current="page" to="/sites"
-                  >사이트맵</RouterLink
-                >
-              </li> -->
-            </ul>
-            <div v-if="isLogin" class="collapse navbar-collapse">
-              <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
-                <li class="nav-item">
-                  <button class="nav-link" @click="moveMyPage" id="navMypage">마이페이지</button>
-                </li>
-                <li class="nav-item">
-                  <!-- to="/member?action=logout" -->
-                  <button class="nav-link" @click="logout" id="navLogout">로그아웃</button>
-                </li>
-              </ul>
+      <nav>
+        <div class="grid-container">
+          <div id="logo">
+            <RouterLink to="" @click="moveHome">Enjoy Trip</RouterLink>
+          </div>
+          <div class="menu">
+            <RouterLink aria-current="page" to="/attraction">여행지 검색</RouterLink>
+          </div>
+          <div class="menu">
+            <RouterLink aria-current="page" to="/attraction/plan">여행 플래너</RouterLink>
+          </div>
+          <div class="menu">
+            <RouterLink aria-current="page" to="#">핫플 자랑</RouterLink>
+          </div>
+          <div class="menu">
+            <RouterLink aria-current="page" to="/board">Q&A게시판</RouterLink>
+          </div>
+          <div class="menu"></div>
+          <div id="user_menu" class="menu" v-if="isLogin">
+            <div class="user">
+              <RouterLink id="navJoin" to="/user/join">회원가입</RouterLink>
             </div>
-            <div v-else class="collapse navbar-collapse">
-              <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
-                <li class="nav-item">
-                  <RouterLink class="nav-link" id="navJoin" to="/user/join">회원가입</RouterLink>
-                </li>
-                <li class="nav-item">
-                  <RouterLink class="nav-link" id="navLogin" to="/user/login">로그인</RouterLink>
-                </li>
-              </ul>
+            <div class="user">
+              <RouterLink id="navLogin" to="/user/login">로그인</RouterLink>
+            </div>
+          </div>
+          <div v-else id="user_menu" class="menu">
+            <div class="user">
+              <RouterLink id="navMyPage" to="" @click="moveMyPage">마이페이지</RouterLink>
+            </div>
+            <div class="user">
+              <RouterLink id="navLogout" to="" @click="logout">로그아웃</RouterLink>
             </div>
           </div>
         </div>
@@ -114,4 +84,58 @@ const moveMyPage = () => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+@font-face {
+  font-family: "NanumSquare";
+  src: url("../../assets/fonts/NanumSquareR.ttf") format("truetype");
+}
+@font-face {
+  font-family: "NanumSquareB";
+  src: url("../../assets/fonts/NanumSquareB.ttf") format("truetype");
+}
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "NanumSquare";
+  height: 100px;
+}
+a {
+  text-decoration-line: none;
+  color: black;
+}
+.grid-container {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 200px 100px 100px 100px 100px 1150px 150px;
+  position: fixed;
+  background-color: white;
+  border: 1px solid gainsboro;
+  border-radius: 3px;
+}
+#logo {
+  display: block;
+  width: 100%;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+  font-family: "NanumSquareB";
+  font-size: 30px;
+  font-weight: 1000;
+}
+.menu {
+  display: block;
+  width: 100%;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+  font-family: "NanumSquare";
+}
+#user_menu {
+  flex-wrap: wrap;
+  display: flex;
+}
+.user {
+  flex: 1;
+  font-family: "NanumSquare";
+}
+</style>
