@@ -1,31 +1,37 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import http from "@/util/http-common.js";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "@/stores/userStore.js";
+import { jwtDecode } from "jwt-decode";
+
+// cookies
+import { useCookies } from "vue3-cookies";
+const { cookies } = useCookies();
+
 const router = useRouter();
+
+const userStore = useUserStore();
+// const { isLogin } = storeToRefs(userStore);
+const { userLoginStore } = userStore;
+
 const userinfo = ref({
   userId: "",
   userPwd: "",
 });
 
-const loginUser = () => {
-  http
-    .post("/userapi/login", {
-      userId: userinfo.value.userId,
-      userPwd: userinfo.value.userPwd,
-      savdId: "",
-    })
-    .then(({ data }) => {
-      console.log(data);
-      let msg = "로그인 처리시 문제가 발생했습니다.";
-      if (data != null) {
-        msg = "로그인이 완료되었습니다.";
-        sessionStorage.setItem("userinfo", JSON.stringify(data));
-        sessionStorage.setItem("isLogin", "true");
-        router.replace({ name: "HomeView" });
-      }
-      alert(msg);
-    });
+const login = async () => {
+  console.log("login ing!!!! !!!");
+  console.log("userinfo : ", userinfo.value.userId, userinfo.value.userPwd);
+  await userLoginStore(userinfo.value);
+  // let accessToken = cookies.get("accessToken");
+  // console.log("111. ", accessToken);
+  // console.log("isLogin: ", isLogin.value);
+  // if (userId) {
+  //   console.log("로그인 성공");
+  //   makeUserIdCookieStore(accessToken);
+  // }
+  // router.push("/");
 };
 </script>
 
@@ -70,7 +76,7 @@ const loginUser = () => {
             id="btn-login"
             class="btn btn-outline-primary mb-3"
             value="로그인"
-            @click="loginUser"
+            @click="login"
           />
           <input
             type="button"

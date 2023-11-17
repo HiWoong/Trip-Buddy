@@ -1,7 +1,14 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import http from "@/util/http-common.js";
+// import { storeToRefs } from "pinia";
+import { useUserStore } from "@/stores/userStore.js";
+// import http from "@/util/http-common.js";
+
+const userStore = useUserStore();
+// const { isLogin } = storeToRefs(userStore);
+const { userJoinStore } = userStore;
+
 const router = useRouter();
 const user = ref({
   userId: "",
@@ -12,14 +19,23 @@ const user = ref({
 });
 
 const joinUser = () => {
-  http.post("/userapi/join", user.value).then(({ data }) => {
-    let msg = "사용자 정보 등록에 문제가 발생했습니다.";
-    if (data === 1) {
-      msg = "사용자 정보 등록이 완료되었습니다.";
-      router.push("/");
-    }
-    alert(msg);
-  });
+  if (user.value.userId == "" || user.value.userName == "" || user.value.userPwd == "" ||
+    user.value.emailId == "" || user.value.emailDomain == ""){
+    alert("모든 항목을 기입해주세요");
+    
+  }
+
+  else {
+    userJoinStore(user.value);
+    // http.post("/userapi/join", user.value).then(({ data }) => {
+    //   let msg = "중복된 아이디 입니다";
+    //   if (data === 1) {
+    //     msg = "사용자 정보 등록이 완료되었습니다.";
+    //     router.push("/");
+    //   }
+    //   alert(msg);
+    // });
+  }
 };
 </script>
 

@@ -5,11 +5,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestControllerAdvice
 public class ExceptionRestController {
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<?> error(Exception e){
-		e.printStackTrace();
-		return new ResponseEntity<String>("Exception "+e.getCause(), HttpStatus.INTERNAL_SERVER_ERROR);
+		Map<String, Object> map = new HashMap<>();
+		map.put("message", e.getMessage());
+		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

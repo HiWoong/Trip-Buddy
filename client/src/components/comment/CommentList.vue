@@ -2,8 +2,15 @@
 import { ref } from "vue";
 import http from "@/util/http-common.js";
 import { useRouter } from "vue-router";
+
+import { useCookies } from "vue3-cookies";
+const { cookies } = useCookies();
+
 const router = useRouter();
 const userinfo = JSON.parse(sessionStorage.getItem("userinfo"));
+
+const uid = cookies.get("userId");
+
 const props = defineProps({
   articleNo: Number,
   commentId: Number,
@@ -50,12 +57,15 @@ const modifyComment = () => {
         <div class="clearfix align-content-center">
           <span class="fw-bold">{{ props.index }}</span>
           <span style="color: gray"> | </span>
+          <span class="fw-bold">{{ props.userId }}</span>
+          <span style="color: gray"> | </span>
           <span class="text-secondary fw-light"> {{ props.updatedDate }} </span>
           <div class="text-secondary">{{ props.content }}</div>
         </div>
       </div>
     </div>
-    <span v-if="userinfo != null && userinfo.userId == userId" class="d-flex justify-content-end">
+    <!-- <span v-if="userinfo != null && userinfo.userId == userId" class="d-flex justify-content-end"> -->
+    <span v-if="uid == userId" class="d-flex justify-content-end">
       <button
         class="btn btn-outline-success ms-1"
         data-bs-toggle="modal"

@@ -4,6 +4,8 @@ import { ref, watch, onMounted } from "vue";
 var map;
 const keyword = ref("역삼역");
 const markers = ref([]);
+const result = ref([]);
+const idx = ref(0);
 onMounted(() => {
   if (window.kakao && window.kakao.maps) {
     console.log("loadMap");
@@ -13,6 +15,66 @@ onMounted(() => {
     loadScript();
   }
 });
+
+watch(result.value, () => {
+  let resultList = document.getElementById("selectPlaces");
+  resultList.innerHTML = "";
+  result.value.forEach((data) => {
+    let lists = document.createElement("div");
+    lists.className = "pickPlace";
+
+    let place_name = document.createElement("div");
+    place_name.innerHTML = data.place_name;
+
+    let road_address_name = document.createElement("div");
+    road_address_name.innerHTML = data.road_address_name;
+
+    let address_name = document.createElement("div");
+    address_name.innerHTML = data.address_name;
+
+    place_name.appendChild(road_address_name);
+    place_name.appendChild(address_name);
+
+    if (data.phone != "" && data.phone != null) {
+      let phone = document.createElement("div");
+      phone.innerHTML = data.phone;
+      place_name.appendChild(phone);
+    }
+    lists.appendChild(place_name);
+
+    let removePick = document.createElement("button");
+    removePick.className = "removePick";
+    removePick.innerHTML = "삭제";
+    removePick.onclick = () => {
+      removePickPlace(data.address_name, data.index);
+    };
+    lists.appendChild(place_name);
+    lists.appendChild(removePick);
+    resultList.appendChild(lists);
+  });
+  console.log(result.value);
+});
+
+const addPickPlace = (places) => {
+  result.value.push({
+    place_name: places.place_name,
+    road_address_name: places.road_address_name,
+    address_name: places.address_name,
+    phone: places.phone,
+    index: idx.value++,
+  });
+};
+
+const removePickPlace = (address_name, index) => {
+  for (let i = 0; i < result.value.length; i++) {
+    console.log(result.value);
+    if (result.value[i].address_name == address_name && result.value[i].index == index) {
+      result.value.splice(i, 1);
+      break;
+    }
+  }
+  console.log(result.value);
+};
 
 const loadMap = () => {
   const container = document.getElementById("map");
@@ -127,30 +189,43 @@ function searchPlaces() {
   // 검색결과 항목을 Element로 반환하는 함수입니다
   function getListItem(index, places) {
     let el = document.createElement("li");
-    let itemStr =
-      '<span class="markerbg marker_' +
-      (index + 1) +
-      '"></span>' +
-      '<div class="info">' +
-      "   <h5>" +
-      places.place_name +
-      "</h5>";
 
+    let markerbg = document.createElement("span");
+    markerbg.className = "markerbg marker_" + (index + 1);
+
+    let info = document.createElement("div");
+    info.className = "info";
+    let place_name = document.createElement("h5");
+    place_name.innerHTML = places.place_name;
+    info.appendChild(place_name);
     if (places.road_address_name) {
-      itemStr +=
-        "    <span>" +
-        places.road_address_name +
-        "</span>" +
-        '   <span class="jibun gray">' +
-        places.address_name +
-        "</span>";
+      let road = document.createElement("span");
+      road.innerHTML = places.road_address_name;
+      let jibun = document.createElement("span");
+      jibun.innerHTML = places.address_name;
+
+      info.appendChild(road);
+      info.appendChild(jibun);
     } else {
-      itemStr += "    <span>" + places.address_name + "</span>";
+      let address = document.createElement("span");
+      address.innerHTML = places.address_name;
+
+      info.appendChild(address);
     }
+    let tel = document.createElement("span");
+    tel.className = "tel";
+    tel.innerHTML = places.phone;
+    info.appendChild(tel);
 
-    itemStr += '  <span class="tel">' + places.phone + "</span>" + "</div>";
-
-    el.innerHTML = itemStr;
+    let pick = document.createElement("button");
+    pick.className = "pick";
+    pick.innerHTML = "담기";
+    pick.onclick = () => {
+      addPickPlace(places);
+    };
+    info.appendChild(pick);
+    el.appendChild(markerbg);
+    el.appendChild(info);
     el.className = "item";
 
     return el;
@@ -264,59 +339,58 @@ function searchPlaces() {
   }
 }
 </script>
-
+<!-------------------------------------------------------------------------------------------------------------->
+<!-------------------------------------------------------------------------------------------------------------->
+<!-------------------------------------------------------------------------------------------------------------->
 <template>
-  <div class="container d-flex justify-content-center mt-5 pt-5">
-    <div id="map" class="mt-3 pt-3"></div>
-  </div>
-  <div id="menu_wrap" class="bg_white" style="width: 330px">
-    <div class="option" style="padding-left: 0; font-family: 'NanumSquare'">
-      <h5>^__^ 검색해라</h5>
-      <div>
-        <input type="text" v-model="keyword" id="keyword" />
-        <button id="searchButton" @click="searchPlaces" @keypress="() => searchPlaces()">
-          검색하기
-        </button>
+  <div id="contents">
+    <div id="menu_wrap">
+      <div class="option">
+        <h5>검색이 하고싶어?</h5>
+        <div>
+          <input type="text" v-model="keyword" id="keyword" />
+          <button id="searchButton" @click="searchPlaces" @keypress="() => searchPlaces()">
+            검색하기
+          </button>
+        </div>
       </div>
+      <hr />
+      <ul id="placesList"></ul>
+      <div id="pagination"></div>
     </div>
-    <hr />
-    <ul id="placesList"></ul>
-    <div id="pagination"></div>
+    <div id="map"></div>
+    <div id="menu_plan">
+      <h3>여행 계획</h3>
+      <div id="selectPlaces"></div>
+    </div>
   </div>
 </template>
-
+<!-------------------------------------------------------------------------------------------------------------->
+<!-------------------------------------------------------------------------------------------------------------->
+<!-------------------------------------------------------------------------------------------------------------->
 <style>
 .map_wrap,
 .map_wrap * {
   margin: 0;
   padding: 0;
-  font-family: "NanumSquare", dotum, "돋움", sans-serif;
+  /* font-family: "NanumSquare", dotum, "돋움", sans-serif; */
+  font-family: dotum, "돋움", sans-serif;
   font-size: 12px;
-}
-.map_wrap a,
-.map_wrap a:hover,
-.map_wrap a:active {
-  color: #000;
-  text-decoration: none;
-}
-.map_wrap {
-  position: relative;
-  width: 100%;
-  height: 500px;
 }
 #menu_wrap {
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
-  width: 250px;
-  margin: 60px 0 30px 10px;
+  width: 330px;
+  margin: 10px 0 30px 10px;
   padding: 5px;
   overflow-y: auto;
   background: rgba(255, 255, 255, 0.7);
   z-index: 1;
   font-size: 12px;
   border-radius: 10px;
+  flex: 4;
 }
 .bg_white {
   background: #fff;
@@ -330,6 +404,8 @@ function searchPlaces() {
 }
 #menu_wrap .option {
   text-align: left;
+  padding-left: 0;
+  font-family: "NanumSquare";
 }
 #menu_wrap .option p {
   margin: 10px 0;
@@ -446,6 +522,7 @@ function searchPlaces() {
   padding: 0;
   margin: 0;
   font-family: "NanumSquare";
+  /* font-family: sans-serif; */
   font-weight: 400;
 }
 .wrap .info {
@@ -509,13 +586,87 @@ function searchPlaces() {
   font-family: "NanumSquare";
   src: url("../../assets/fonts/NanumSquareR.ttf") format("truetype");
 }
+@font-face {
+  font-family: "NanumSquareB";
+  src: url("../../assets/fonts/NanumSquareB.ttf") format("truetype");
+}
 #keyword {
   width: 70%;
   height: 30px;
   font-size: 16px;
 }
+#contents {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
 #map {
-  width: 1240px;
-  height: 800px;
+  /* width: 1275px;
+    height: 905px; */
+  margin: 10px 0 0 350px;
+  flex: 2;
+}
+#menu_plan {
+  margin: 10px 0 0 20px;
+  width: 300px;
+  height: 904px;
+  background-color: ghostwhite;
+  text-align: center;
+  font-family: "NanumSquareB";
+  /* font-family: sans-serif; */
+  flex: 0.5;
+  border: 2px solid gray;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.pick {
+  float: right;
+  border: 3px solid #77af9c;
+  color: darkgray;
+  box-sizing: border-box;
+  padding: 5px 15px;
+  border-radius: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  font-weight: 800;
+  transition: 0.25s;
+}
+.pick:hover {
+  background-color: #77af9c;
+  color: #d7fff1;
+}
+.pickPlace {
+  margin: 0 10px 30px 10px;
+  padding: 10px 10px;
+  text-align: start;
+  border: 2px dotted black;
+  border-radius: 10px;
+}
+
+.removePick {
+  border: 2px solid #ff823a;
+  color: darkgray;
+  box-sizing: border-box;
+  padding: 2px 8px;
+  border-radius: 7px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  font-weight: 800;
+  transition: 0.25s;
+  width: 100%;
+}
+.removePick:hover {
+  background-color: #ff823a;
+  color: #000a07;
+}
+h3 {
+  background-color: rgb(252, 227, 118);
+}
+input {
+  border: 1px solid gray;
+  border-radius: 5px;
+  padding: 0 0 0 4px;
 }
 </style>
