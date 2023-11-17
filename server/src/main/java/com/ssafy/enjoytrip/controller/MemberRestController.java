@@ -43,6 +43,9 @@ public class MemberRestController {
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
 
+		System.out.println("memberDto : " + memberDto);
+		System.out.println("loginMember = " + loginMember);
+
 		if(loginMember != null) {
 			String accessToken = jwtUtil.createAccessToken(loginMember.getUserId());
 			String refreshToken = jwtUtil.createAccessToken(loginMember.getUserId());
@@ -51,7 +54,7 @@ public class MemberRestController {
 
 			resultMap.put("accessToken", accessToken);
 			resultMap.put("refreshToken", refreshToken);
-//			System.out.println("resultMap = " + resultMap);
+			System.out.println("resultMap = " + resultMap);
 			status = HttpStatus.CREATED;
 		} else {
 			resultMap.put("message", "아이디 혹은 패스워드가 잘못되었습니다.");

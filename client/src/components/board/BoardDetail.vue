@@ -5,9 +5,16 @@ import CommentList from "@/components/comment/CommentList.vue";
 import http from "@/util/http-common.js";
 import CommentWrite from "@/components/comment/CommentWrite.vue";
 
+import { useCookies } from "vue3-cookies";
+const { cookies } = useCookies();
+
 const router = useRouter();
 const route = useRoute();
 const userinfo = JSON.parse(sessionStorage.getItem("userinfo"));
+
+const uid = cookies.get("userId");
+console.log(uid);
+
 const article = ref({
   articleNo: Number,
   userId: String,
@@ -83,26 +90,30 @@ const moveList = () => {
           <button type="button" id="btn-list" class="btn btn-outline-primary mb-3">
             <RouterLink class="nav-link active" aria-current="page" to="/board">글목록</RouterLink>
           </button>
-          <button type="button" id="btn-mv-modify" class="btn btn-outline-success mb-3 ms-1">
-            <RouterLink
-              class="nav-link active"
-              aria-current="page"
-              :to="{
-                name: 'BoardModify',
-                params: { articleNo: article.articleNo },
-              }"
+          <span v-if="uid == article.userId">
+            <button type="button" id="btn-mv-modify" class="btn btn-outline-success mb-3 ms-1">
+              <RouterLink
+                class="nav-link active"
+                aria-current="page"
+                :to="{
+                  name: 'BoardModify',
+                  params: { articleNo: article.articleNo },
+                }"
+              >
+                글수정
+              </RouterLink>
+            </button>
+          </span>
+          <span v-if="uid == article.userId">
+            <button
+              type="button"
+              id="btn-delete"
+              class="btn btn-outline-danger mb-3 ms-1"
+              @click="deleteArticle"
             >
-              글수정
-            </RouterLink>
-          </button>
-          <button
-            type="button"
-            id="btn-delete"
-            class="btn btn-outline-danger mb-3 ms-1"
-            @click="deleteArticle"
-          >
-            글삭제
-          </button>
+              글삭제
+            </button>
+          </span>
         </div>
       </div>
       <template v-if="comments != null">
@@ -113,8 +124,8 @@ const moveList = () => {
           :index="index + 1"
         />
       </template>
-      <template v-if="userinfo != null">
-        <CommentWrite :user-id="userinfo.userId" :article-no="Number(article.articleNo)" />
+      <template v-if="true">
+        <CommentWrite :user-id="uid" :article-no="Number(article.articleNo)" />
       </template>
     </div>
   </div>

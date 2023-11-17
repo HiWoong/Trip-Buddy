@@ -87,6 +87,10 @@ const deleteUser = async() => {
 // };
 
 const updateUser = () => {
+  /* 
+    여기에서 사용자 정보란이 꽉 찼는지 확인하는 if 문을 넣어야됨.
+    아래 post 는 else 
+  */
   console.log(newUser.value);
   http.post("/userapi/update", newUser.value).then(({ data }) => {
     let msg = "사용자 정보 수정에 문제가 발생했습니다.";

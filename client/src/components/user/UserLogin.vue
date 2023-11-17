@@ -12,8 +12,8 @@ const { cookies } = useCookies();
 const router = useRouter();
 
 const userStore = useUserStore();
-const { isLogin } = storeToRefs(userStore);
-const { userLoginStore, makeUserIdCookieStore } = userStore;
+// const { isLogin } = storeToRefs(userStore);
+const { userLoginStore } = userStore;
 
 const userinfo = ref({
   userId: "",
@@ -24,15 +24,14 @@ const login = async () => {
   console.log("login ing!!!! !!!");
   console.log("userinfo : ", userinfo.value.userId, userinfo.value.userPwd);
   await userLoginStore(userinfo.value);
-  let accessToken = cookies.get("accessToken");
-  console.log("111. ", accessToken);
-  console.log("isLogin: ", isLogin.value);
-  if (userId) {
-    console.log("로그인 성공");
-    makeUserIdCookieStore(accessToken);
-    // getUserInfo()
-  }
-  router.push("/");
+  // let accessToken = cookies.get("accessToken");
+  // console.log("111. ", accessToken);
+  // console.log("isLogin: ", isLogin.value);
+  // if (userId) {
+  //   console.log("로그인 성공");
+  //   makeUserIdCookieStore(accessToken);
+  // }
+  // router.push("/");
 };
 </script>
 

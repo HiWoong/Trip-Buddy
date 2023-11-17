@@ -6,9 +6,7 @@ const { cookies } = useCookies();
 // const local = localAxios();
 
 async function join(user, success, fail) {
-  console.log("param", param);
   await http.post(`/userapi/join`, user).then(success).catch(fail);
-  console.log("userConfirm ok");
 }
 
 async function login(user, success, fail) {

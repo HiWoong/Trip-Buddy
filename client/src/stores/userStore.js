@@ -22,8 +22,8 @@ export const useUserStore = defineStore("userStore", () => {
     await login(
       loginUser,
       (response) => {
-        // console.log("login ok!!!!", response.status);
-        // console.log("login ok!!!!", httpStatusCode.CREATE);
+        console.log("login ok!!!!", response.status);
+        console.log("login ok!!!!", httpStatusCode.CREATE);
         if (response.status === httpStatusCode.CREATE) {
           let { data } = response;
           // console.log("data", data);
@@ -37,7 +37,8 @@ export const useUserStore = defineStore("userStore", () => {
           console.log(userInfo.value);
           cookies.set("accessToken", accessToken, 600);
           cookies.set("refreshToken", refreshToken);
-
+          makeUserIdCookieStore(cookies.get("accessToken"));
+          router.push("/");
         } else {
           console.log("로그인 실패했다");
           isLogin.value = false;
@@ -46,16 +47,16 @@ export const useUserStore = defineStore("userStore", () => {
         }
       },
       (error) => {
+        console.log("아이디와 비밀번호를 다시 확인하도록");
+        alert("아이디와 비밀번호를 확인하도록");
         console.error(error);
       }
       );
     };
 
   const userLogoutStore = async (userId) => {
-
     // console.log(userInfo.value);
     // console.log(userId);
-
     await logout(
       userId,
       (response) => {
@@ -65,10 +66,11 @@ export const useUserStore = defineStore("userStore", () => {
           cookies.remove("accessToken");
           cookies.remove("refreshToken");
         } else {
-          console.error("유저 정보 없음!!!!");
+          alert.error("유저 정보가 없습니다.");
         }
       },
       (error) => {
+        alert("아이디와 비밀번호를 확인해주세요 !");
         console.log(error);
       }
     );
@@ -76,8 +78,7 @@ export const useUserStore = defineStore("userStore", () => {
 
   const userDeleteStore = async (userId) => {
 
-    console.log("userStore.userDeleteStore => userId : ", userId);
-
+    // console.log("userStore.userDeleteStore => userId : ", userId);
     await withdraw(
       userId,
       (response) => {
@@ -101,6 +102,24 @@ export const useUserStore = defineStore("userStore", () => {
     let decodeToken = jwtDecode(token);
     console.log(decodeToken.userId);
     cookies.set("userId", decodeToken.userId, 600);
+  }
+
+  const userJoinStore = async (joinUser) => {
+    join(
+      joinUser,
+      (response) => {
+        if (response.status === httpStatusCode.CREATE) {
+          alert("사용자 정보 등록이 완료되었습니다.");
+          router.push("/");
+        } else {
+          console.log("Error status : ", response.status);
+        }
+      },
+      (error) => {
+        alert("중복된 아이디입니다!");
+      }
+
+    )
   }
 
   // const getUserInfo = async (userId) => {
@@ -179,6 +198,7 @@ export const useUserStore = defineStore("userStore", () => {
     userLoginStore,
     userLogoutStore,
     userDeleteStore,
+    userJoinStore,
     // getUserInfo,
     makeUserIdCookieStore,
   };
