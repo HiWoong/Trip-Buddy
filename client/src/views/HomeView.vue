@@ -24,7 +24,7 @@ const slides = ref([
   {
     title: "Temp Image3",
     content: "Temp Image1",
-    image: "src/assets/img/temp3.jpg",
+    image: "src/assets/img/temp1.jpg",
   },
 ]);
 const test = (title) => {

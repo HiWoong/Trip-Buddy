@@ -35,6 +35,10 @@ const router = useRouter();
 
 const newUser = ref([]);
 
+// temp
+const profileImg = ref("https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg");
+//
+
 onMounted(async () => {
   console.log("gogo getUserInfo : ", cookies.get("userId"));
   getUserInfo(cookies.get("userId"));
@@ -48,7 +52,12 @@ const getUserInfo = async (userId) => {
       if (response.status === httpStatusCode.OK) {
         console.log("3. getUserInfo data >> ", response.data.userInfo);
         newUser.value = response.data.userInfo;
-        console.log("new User : ", newUser.value);
+        if (newUser.value.profileImage == ""){
+          newUser.value.profileImage = "https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg";
+        }
+
+        // console.log("new User", newUser.value);
+        // console.log("new User ProfileImg : ", newUser.value.profileImage);
       } else {
         console.log("유저 정보 없음!!!!");
       }
@@ -103,6 +112,42 @@ const updateUser = () => {
   });
 };
 
+const imageUpload = async (files) => {
+  // console.log("files : ", files[0]);
+  imageToBase64(files[0]);
+  // profileImg.value = files[0].name;
+  // profileImg.value = "https://image.yes24.com/goods/105020756/XL";
+  // console.log("profileImg : ", profileImg.value);
+  // this.fileName = files[0];
+  // await this.base64(this.fileName);
+};
+
+function imageToBase64(f) {
+  var reader = new FileReader();
+  reader.readAsDataURL(f);
+  reader.onload = function(e) {
+    // console.log(e);
+    // profileImg.value = e.target.result;
+    newUser.value.profileImage = e.target.result;
+    // console.log("imageToBase64, newUser.value.profileImg : ", newUser.value.profileImg)
+  }
+}
+
+// const base64 = (file) => {
+//   return new Promise(resolve => {
+//     // 업로드된 파일을 읽기 위한 FileReader() 객체 생성
+//     let a = new FileReader()
+//     // 읽기 동작이 성공적으로 완료됐을 때 발생
+//     a.onload = e => {
+//       resolve(e.target.result)
+// 			// 썸네일을 보여주고자 하는 <img>에 id값을 가져와 src에 결과값을 넣어준다.
+//       const previewImage = document.getElementById('preview')
+//       previewImage.src = e.target.result
+//     }
+// 		// file 데이터를 base64로 인코딩한 문자열. 이 문자열을 브라우저가 인식하여 원래 데이터로 만들어준다.
+//     a.readAsDataURL(file)
+//   })
+// };
 </script>
 
 <template>
@@ -115,14 +160,15 @@ const updateUser = () => {
       </div>
       <div class="col-lg-8 col-md-10 col-sm-12">
         <!-- 파일 업로드 -->
-        <!-- <div class="mb-3"></div>
+        <div class="mb-3"></div>
           <img
               class="avatar me-2 float-md-start bg-light p-2"
-              src="https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg"
+              v-bind:src="newUser.profileImage"
             />
         <div class="mb-3">
-          <input multiple @change="imageUpload()" ref="images" type="file" />
-        </div> -->
+          <input multiple @change="imageUpload($event.target.files)" accept="image/*" type="file" />
+          <!-- ref="images" -->
+        </div>
         <!--  -->
         <div class="mb-3">
           <label for="username" class="form-label">이름 : </label>

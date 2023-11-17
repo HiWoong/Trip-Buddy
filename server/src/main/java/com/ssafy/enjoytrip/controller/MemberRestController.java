@@ -76,6 +76,9 @@ public class MemberRestController {
 	private ResponseEntity<?> update(@RequestBody MemberDto memberDto, HttpServletRequest request) throws Exception {
 
 		if (jwtUtil.checkToken(request.getHeader("Authorization"))){
+
+//			System.out.println("memberDto.getProfileImage() = " + memberDto.getProfileImage());
+			
 			int result = memberService.updateMember(memberDto);
 			if(result == 1)
 				return new ResponseEntity<Integer>(result, HttpStatus.CREATED);
@@ -105,16 +108,18 @@ public class MemberRestController {
 	private ResponseEntity<?> info(@PathVariable("userId") String userId, HttpServletRequest request) throws Exception {
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
-		System.out.println("userId = " + userId);
-		System.out.println(request.getHeader("Authorization"));
+//		System.out.println("userId = " + userId);
+//		System.out.println(request.getHeader("Authorization"));
 		if (jwtUtil.checkToken(request.getHeader("Authorization"))) {
 //			log.info("사용 가능한 토큰!!!");
 //          로그인 사용자 정보.
 			MemberDto memberDto = memberService.getUserInfo(userId);
 			resultMap.put("userInfo", memberDto);
+//			System.out.println("memberDto.getProfileImage() = " + memberDto.getProfileImage());
 			status = HttpStatus.OK;
 		} else {
 			log.error("사용 불가능 토큰!!!");
+//			System.out.println("fdifsjlnfseifesflseifseifksfsfjskfsjhjfksfhjeskfesf");
 			status = HttpStatus.UNAUTHORIZED;
 		}
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
