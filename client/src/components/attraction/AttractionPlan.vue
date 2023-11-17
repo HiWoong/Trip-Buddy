@@ -1,11 +1,13 @@
 <script setup>
 import http from "@/util/http-common.js";
 import { ref, watch, onMounted } from "vue";
+import { VueDraggableNext } from "vue-draggable-next";
 var map;
 const keyword = ref("역삼역");
 const markers = ref([]);
 const result = ref([]);
 const idx = ref(0);
+const nowDay = ref(2);
 onMounted(() => {
   if (window.kakao && window.kakao.maps) {
     console.log("loadMap");
@@ -14,46 +16,75 @@ onMounted(() => {
     console.log("loadScript");
     loadScript();
   }
+  let resultList = document.getElementById("firstDay");
+  let lists = document.createElement("div");
+  lists.className = "nowDay";
+  lists.innerHTML = 1 + "일차";
+  resultList.appendChild(lists);
+  nowDay.value = 2;
 });
 
 watch(result.value, () => {
-  let resultList = document.getElementById("selectPlaces");
+  let resultList = document.getElementById("draggable");
   resultList.innerHTML = "";
   result.value.forEach((data) => {
-    let lists = document.createElement("div");
-    lists.className = "pickPlace";
+    if (data.nowDay == null) {
+      let lists = document.createElement("div");
+      lists.className = "pickPlace";
 
-    let place_name = document.createElement("div");
-    place_name.innerHTML = data.place_name;
+      let place_name = document.createElement("div");
+      place_name.innerHTML = "도착지: " + data.place_name;
+      place_name.className = "pickPlaceName";
 
-    let road_address_name = document.createElement("div");
-    road_address_name.innerHTML = data.road_address_name;
+      let road_address_name = document.createElement("div");
+      road_address_name.innerHTML = data.road_address_name;
 
-    let address_name = document.createElement("div");
-    address_name.innerHTML = data.address_name;
+      let address_name = document.createElement("div");
+      address_name.innerHTML = data.address_name;
+      lists.appendChild(place_name);
+      lists.appendChild(road_address_name);
+      lists.appendChild(address_name);
 
-    place_name.appendChild(road_address_name);
-    place_name.appendChild(address_name);
+      if (data.phone != "" && data.phone != null) {
+        let phone = document.createElement("div");
+        phone.innerHTML = data.phone;
+        lists.appendChild(phone);
+      }
 
-    if (data.phone != "" && data.phone != null) {
-      let phone = document.createElement("div");
-      phone.innerHTML = data.phone;
-      place_name.appendChild(phone);
+      let removePick = document.createElement("button");
+      removePick.className = "removePick";
+      removePick.innerHTML = "삭제";
+      removePick.onclick = () => {
+        removePickPlace(data.address_name, data.index);
+      };
+      lists.appendChild(removePick);
+      resultList.appendChild(lists);
+    } else {
+      let lists = document.createElement("div");
+      lists.className = "nowDay";
+      lists.innerHTML = data.nowDay + "일차";
+      lists.ondblclick = () => {
+        removeNowDay(data.nowDay);
+      };
+      resultList.appendChild(lists);
     }
-    lists.appendChild(place_name);
-
-    let removePick = document.createElement("button");
-    removePick.className = "removePick";
-    removePick.innerHTML = "삭제";
-    removePick.onclick = () => {
-      removePickPlace(data.address_name, data.index);
-    };
-    lists.appendChild(place_name);
-    lists.appendChild(removePick);
-    resultList.appendChild(lists);
   });
   console.log(result.value);
 });
+
+const removeNowDay = (target) => {
+  if (target != nowDay.value - 1) {
+    alert("가장 뒤 날짜부터 제거해야 합니다.");
+  } else {
+    for (let i = 0; i < result.value.length; i++) {
+      if (result.value[i].nowDay == target) {
+        result.value.splice(i, 1);
+        break;
+      }
+    }
+    nowDay.value--;
+  }
+};
 
 const addPickPlace = (places) => {
   result.value.push({
@@ -338,6 +369,19 @@ function searchPlaces() {
     }
   }
 }
+
+const addDay = () => {
+  result.value.push({
+    nowDay: nowDay.value,
+  });
+  nowDay.value++;
+};
+
+const addPlan = () => {
+  // 보낼 때 맨 앞에 {nowDay: 1}을 해줘야 함
+  // http.post("url", result.value);
+  alert("계획 저장하기");
+};
 </script>
 <!-------------------------------------------------------------------------------------------------------------->
 <!-------------------------------------------------------------------------------------------------------------->
@@ -360,8 +404,20 @@ function searchPlaces() {
     </div>
     <div id="map"></div>
     <div id="menu_plan">
-      <h3>여행 계획</h3>
-      <div id="selectPlaces"></div>
+      <div id="dayImgSection">
+        <button style="border: none; background-color: rgb(252, 227, 118)">
+          <img id="submitImg" src="@/assets/img/day.png" @click="addDay" />
+        </button>
+        <div style="font-weight: bold; font-size: 25px">여행 계획</div>
+        <button style="border: none; background-color: rgb(252, 227, 118)">
+          <img id="submitImg" src="@/assets/img/store.png" @click="addPlan" />
+        </button>
+      </div>
+      <div id="selectPlaces">
+        <div id="firstDay"></div>
+        <VueDraggableNext id="draggable" class="dragArea" :list="result" :sort="true">
+        </VueDraggableNext>
+      </div>
     </div>
   </div>
 </template>
@@ -369,12 +425,14 @@ function searchPlaces() {
 <!-------------------------------------------------------------------------------------------------------------->
 <!-------------------------------------------------------------------------------------------------------------->
 <style>
-.map_wrap,
-.map_wrap * {
+* {
   margin: 0;
   padding: 0;
-  /* font-family: "NanumSquare", dotum, "돋움", sans-serif; */
-  font-family: dotum, "돋움", sans-serif;
+  font-family: "NanumSquare", dotum, "돋움", sans-serif;
+  /* font-family: dotum, "돋움", sans-serif; */
+}
+.map_wrap,
+.map_wrap * {
   font-size: 12px;
 }
 #menu_wrap {
@@ -383,7 +441,7 @@ function searchPlaces() {
   left: 0;
   bottom: 0;
   width: 330px;
-  margin: 10px 0 30px 10px;
+  margin: 10px 0 0px 10px;
   padding: 5px;
   overflow-y: auto;
   background: rgba(255, 255, 255, 0.7);
@@ -565,6 +623,45 @@ function searchPlaces() {
   color: #009900;
   font-size: 15px;
 }
+#selectPlaces {
+  overflow-y: auto;
+}
+
+#selectPlaces::-webkit-scrollbar {
+  width: 10px; /* 스크롤바의 너비 */
+}
+#selectPlaces::-webkit-scrollbar-thumb {
+  height: 10%;
+  background: rgb(252, 227, 118); /* 스크롤바의 색상 */
+  border-radius: 15px;
+}
+#selectPlaces::-webkit-scrollbar-track {
+  background: rgba(233, 214, 161, 0.5); /*스크롤바 뒷 배경 색상*/
+}
+#menu_wrap::-webkit-scrollbar {
+  width: 10px; /* 스크롤바의 너비 */
+}
+#menu_wrap::-webkit-scrollbar-thumb {
+  height: 10%; /* 스크롤바의 길이 */
+  background: rgb(252, 227, 118); /* 스크롤바의 색상 */
+  border-radius: 15px;
+}
+#menu_wrap::-webkit-scrollbar-track {
+  background: rgba(233, 214, 161, 0.5); /*스크롤바 뒷 배경 색상*/
+}
+#dayImgSection {
+  height: 50px;
+  background-color: rgb(252, 227, 118);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+#submitImg {
+  width: 35px;
+  height: 35px;
+  left: 0;
+  margin: 0 10px;
+}
 #searchButton {
   transition: 0.5s;
   cursor: pointer;
@@ -597,19 +694,24 @@ function searchPlaces() {
 }
 #contents {
   width: 100%;
+  height: 850px;
   display: flex;
   justify-content: space-between;
+  margin-bottom: 20px;
 }
 #map {
   /* width: 1275px;
     height: 905px; */
+  height: 100%;
   margin: 10px 0 0 350px;
   flex: 2;
+  border-radius: 10px;
 }
 #menu_plan {
-  margin: 10px 0 0 20px;
-  width: 300px;
-  height: 904px;
+  margin: 10px 0 0 10px;
+  width: 310px;
+  height: 100%;
+  /* height: 904px; */
   background-color: ghostwhite;
   text-align: center;
   font-family: "NanumSquareB";
@@ -638,11 +740,19 @@ function searchPlaces() {
   color: #d7fff1;
 }
 .pickPlace {
-  margin: 0 10px 30px 10px;
+  margin: 5px 10px 10px 10px;
   padding: 10px 10px;
   text-align: start;
   border: 2px dotted black;
   border-radius: 10px;
+}
+
+.pickPlaceName {
+  /* text-align: center; */
+  font-size: 20px;
+  font-weight: bold;
+  font-family: "NanumSquareB";
+  color: steelblue;
 }
 
 .removePick {
@@ -661,12 +771,16 @@ function searchPlaces() {
   background-color: #ff823a;
   color: #000a07;
 }
-h3 {
-  background-color: rgb(252, 227, 118);
-}
 input {
   border: 1px solid gray;
   border-radius: 5px;
   padding: 0 0 0 4px;
+}
+.nowDay {
+  height: 27px;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.2);
+  margin: 2px 0 0 0;
+  align-items: center;
 }
 </style>
