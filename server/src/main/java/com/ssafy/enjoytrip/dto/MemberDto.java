@@ -16,5 +16,6 @@ public class MemberDto {
 	private String emailId;
 	private String emailDomain;
 	private String joinDate;
-
+	private String refreshToken;
+	private String profileImage;
 }

@@ -1,7 +1,6 @@
 package com.ssafy.enjoytrip.model.service;
 
 import com.ssafy.enjoytrip.dto.BoardDto;
-import com.ssafy.enjoytrip.util.PageNavigation;
 
 import java.util.List;
 import java.util.Map;

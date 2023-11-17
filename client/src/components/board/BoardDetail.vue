@@ -1,11 +1,19 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { RouterView } from "vue-router";
+import CommentList from "@/components/comment/CommentList.vue";
 import http from "@/util/http-common.js";
+import CommentWrite from "@/components/comment/CommentWrite.vue";
+
+import { useCookies } from "vue3-cookies";
+const { cookies } = useCookies();
 
 const router = useRouter();
 const route = useRoute();
+const userinfo = JSON.parse(sessionStorage.getItem("userinfo"));
+
+const uid = cookies.get("userId");
+console.log(uid);
 
 const article = ref({
   articleNo: Number,
@@ -16,8 +24,17 @@ const article = ref({
   registerTime: String,
 });
 
-http.get("/articleapi/view/" + route.params.articleNo).then(({ data }) => {
-  article.value = data;
+const comments = ref([]);
+onMounted(async () => {
+  await http.get("/articleapi/view/" + route.params.articleNo).then(({ data }) => {
+    article.value = data;
+  });
+
+  await http
+    .get("/commentapi/list", { params: { articleNo: article.value.articleNo } })
+    .then(({ data }) => {
+      comments.value = data;
+    });
 });
 
 const deleteArticle = () => {
@@ -40,7 +57,7 @@ const moveList = () => {
 </script>
 
 <template>
-  <div class="row justify-content-center">
+  <div class="row justify-content-center mt-5">
     <div class="col-lg-8 col-md-10 col-sm-12">
       <h2 class="my-3 py-3 shadow-sm bg-light text-center">
         <mark class="sky">글보기</mark>
@@ -48,7 +65,7 @@ const moveList = () => {
     </div>
     <div class="col-lg-8 col-md-10 col-sm-12">
       <div class="row my-2">
-        <h2 class="text-secondary px-5">{{ article.subject }}</h2>
+        <h2 class="text-secondary">{{ article.subject }}</h2>
       </div>
       <div class="row">
         <div class="col-md-8">
@@ -65,35 +82,51 @@ const moveList = () => {
             </p>
           </div>
         </div>
-        <div class="col-md-4 align-self-center text-end">댓글 : 0</div>
+        <div class="col-md-4 align-self-center text-end">댓글 : {{ comments.length }}</div>
         <div class="divider mb-3"></div>
-        <div class="text-secondary">{{ article.content }}</div>
+        <div class="text-body">{{ article.content }}</div>
         <div class="divider mt-3 mb-3"></div>
         <div class="d-flex justify-content-end">
           <button type="button" id="btn-list" class="btn btn-outline-primary mb-3">
             <RouterLink class="nav-link active" aria-current="page" to="/board">글목록</RouterLink>
           </button>
-          <!-- <c:if test="${userinfo.userId eq article.userId}"> -->
-          <button type="button" id="btn-mv-modify" class="btn btn-outline-success mb-3 ms-1">
-            <RouterLink
-              class="nav-link active"
-              aria-current="page"
-              :to="{ name: 'BoardModify', params: { articleNo } }"
+          <span v-if="uid == article.userId">
+            <button type="button" id="btn-mv-modify" class="btn btn-outline-success mb-3 ms-1">
+              <RouterLink
+                class="nav-link active"
+                aria-current="page"
+                :to="{
+                  name: 'BoardModify',
+                  params: { articleNo: article.articleNo },
+                }"
+              >
+                글수정
+              </RouterLink>
+            </button>
+          </span>
+          <span v-if="uid == article.userId">
+            <button
+              type="button"
+              id="btn-delete"
+              class="btn btn-outline-danger mb-3 ms-1"
+              @click="deleteArticle"
             >
-              글수정
-            </RouterLink>
-          </button>
-          <button
-            type="button"
-            id="btn-delete"
-            class="btn btn-outline-danger mb-3 ms-1"
-            @click="deleteArticle"
-          >
-            글삭제
-          </button>
-          <!-- </c:if> -->
+              글삭제
+            </button>
+          </span>
         </div>
       </div>
+      <template v-if="comments != null">
+        <CommentList
+          v-for="(comment, index) in comments"
+          :key="comment.commentId"
+          v-bind="comment"
+          :index="index + 1"
+        />
+      </template>
+      <template v-if="true">
+        <CommentWrite :user-id="uid" :article-no="Number(article.articleNo)" />
+      </template>
     </div>
   </div>
 </template>

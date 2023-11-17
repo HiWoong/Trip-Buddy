@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
 import UserView from "@/views/UserView.vue";
 import BoardView from "@/views/BoardView.vue";
-import Attraction from "@/components/attraction/Attraction.vue";
+import AttractionView from "@/views/AttractionView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,8 +14,20 @@ const router = createRouter({
     },
     {
       path: "/attraction",
-      name: "Attraction",
-      component: Attraction,
+      name: "AttractionView",
+      component: AttractionView,
+      children: [
+        {
+          path: "",
+          name: "searchView",
+          component: () => import("@/components/attraction/AttractionSearch.vue"),
+        },
+        {
+          path: "plan",
+          name: "AttractionPlan",
+          component: () => import("@/components/attraction/AttractionPlan.vue"),
+        },
+      ],
     },
     {
       path: "/user",
@@ -24,18 +36,18 @@ const router = createRouter({
       children: [
         {
           path: "login",
-          name: "Login",
-          component: () => import("@/components/user/Login.vue"),
+          name: "UserLogin",
+          component: () => import("@/components/user/UserLogin.vue"),
         },
         {
           path: "myPage",
-          name: "MyPage",
-          component: () => import("@/components/user/MyPage.vue"),
+          name: "UserMyPage",
+          component: () => import("@/components/user/UserMyPage.vue"),
         },
         {
           path: "join",
-          name: "Join",
-          component: () => import("@/components/user/Join.vue"),
+          name: "UserJoin",
+          component: () => import("@/components/user/UserJoin.vue"),
         },
       ],
     },

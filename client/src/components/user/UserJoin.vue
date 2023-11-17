@@ -1,41 +1,41 @@
 <script setup>
-import http from "@/util/http-common.js";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+// import { storeToRefs } from "pinia";
+import { useUserStore } from "@/stores/userStore.js";
+// import http from "@/util/http-common.js";
+
+const userStore = useUserStore();
+// const { isLogin } = storeToRefs(userStore);
+const { userJoinStore } = userStore;
+
 const router = useRouter();
-const userinfo = JSON.parse(sessionStorage.getItem("userinfo"));
-const newUser = ref({
-  userId: userinfo.userId,
-  userName: userinfo.userName,
-  userPwd: userinfo.userPwd,
-  emailId: userinfo.emailId,
-  emailDomain: userinfo.emailDomain,
-  joinDate: userinfo.joinDate,
+const user = ref({
+  userId: "",
+  userName: "",
+  userPwd: "",
+  emailId: "",
+  emailDomain: "",
 });
 
-const deleteUser = () => {
-  http.get("/userapi/delete?userId=" + newUser.value.userId).then(({ data }) => {
-    let msg = "사용자 정보 삭제에 문제가 발생했습니다.";
-    if (data === 1) {
-      msg = "사용자 정보 삭제가 완료되었습니다.";
-      sessionStorage.removeItem("userinfo");
-      router.push("/");
-    }
-    alert(msg);
-  });
-};
+const joinUser = () => {
+  if (user.value.userId == "" || user.value.userName == "" || user.value.userPwd == "" ||
+    user.value.emailId == "" || user.value.emailDomain == ""){
+    alert("모든 항목을 기입해주세요");
+    
+  }
 
-const updateUser = () => {
-  console.log(newUser.value);
-  http.post("/userapi/update", newUser.value).then(({ data }) => {
-    let msg = "사용자 정보 수정에 문제가 발생했습니다.";
-    if (data === 1) {
-      msg = "사용자 정보 수정이 완료되었습니다.";
-      sessionStorage.setItem("userinfo", JSON.stringify(newUser.value));
-      router.go();
-    }
-    alert(msg);
-  });
+  else {
+    userJoinStore(user.value);
+    // http.post("/userapi/join", user.value).then(({ data }) => {
+    //   let msg = "중복된 아이디 입니다";
+    //   if (data === 1) {
+    //     msg = "사용자 정보 등록이 완료되었습니다.";
+    //     router.push("/");
+    //   }
+    //   alert(msg);
+    // });
+  }
 };
 </script>
 
@@ -44,7 +44,7 @@ const updateUser = () => {
     <div class="row justify-content-center mt-5">
       <div class="col-lg-8 col-md-10 col-sm-12">
         <h2 class="my-3 py-3 shadow-sm bg-light text-center">
-          <mark class="orange">마이페이지</mark>
+          <mark class="orange">회원가입</mark>
         </h2>
       </div>
       <div class="col-lg-8 col-md-10 col-sm-12">
@@ -56,7 +56,7 @@ const updateUser = () => {
             id="userName"
             name="userName"
             placeholder="이름..."
-            v-model="newUser.userName"
+            v-model="user.userName"
           />
         </div>
         <div class="mb-3">
@@ -64,11 +64,10 @@ const updateUser = () => {
           <input
             type="text"
             class="form-control"
-            id="userId"
+            id="userid"
             name="userId"
             placeholder="아이디..."
-            v-model="newUser.userId"
-            readonly
+            v-model="user.userId"
           />
         </div>
         <div id="result-view" class="mb-3"></div>
@@ -77,10 +76,10 @@ const updateUser = () => {
           <input
             type="password"
             class="form-control"
-            id="userPwd"
+            id="userpwd"
             name="userPwd"
             placeholder="비밀번호..."
-            v-model="newUser.userPwd"
+            v-model="user.userPwd"
           />
         </div>
         <div class="mb-3">
@@ -88,9 +87,9 @@ const updateUser = () => {
           <input
             type="password"
             class="form-control"
-            id="pwdCheck"
+            id="pwdcheck"
             placeholder="비밀번호확인..."
-            v-model="newUser.userPwd"
+            v-model="user.userPwd"
           />
         </div>
         <div class="mb-3">
@@ -99,20 +98,20 @@ const updateUser = () => {
             <input
               type="text"
               class="form-control"
-              id="emailId"
+              id="emailid"
               name="emailId"
               placeholder="이메일아이디"
-              v-model="newUser.emailId"
+              v-model="user.emailId"
             />
-            <span class="input-group-text"></span>
+            <span class="input-group-text">@</span>
             <select
               class="form-select"
-              id="emailDomain"
+              id="emaildomain"
               name="emailDomain"
               aria-label="이메일 도메인 선택"
-              v-model="newUser.emailDomain"
+              v-model="user.emailDomain"
             >
-              <option selected>{{ newUser.emailDomain }}</option>
+              <option selected>선택</option>
               <option value="ssafy.com">싸피</option>
               <option value="google.com">구글</option>
               <option value="naver.com">네이버</option>
@@ -125,16 +124,10 @@ const updateUser = () => {
             type="submit"
             id="btn-join"
             class="btn btn-outline-primary mb-3"
-            value="수정하기"
-            @click="updateUser"
+            value="회원가입"
+            @click="joinUser"
           />
-          <input
-            type="button"
-            id="btn-mv-join"
-            class="btn btn-outline-success mb-3"
-            value="탈퇴하기"
-            @click="deleteUser"
-          />
+          <input type="reset" class="btn btn-outline-success mb-3" value="초기화" />
         </div>
       </div>
     </div>
