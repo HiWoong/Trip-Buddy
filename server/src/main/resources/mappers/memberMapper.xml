@@ -17,10 +17,11 @@
         <result property="emailDomain" column="email_domain" />
         <result property="joinDate" column="join_date" />
         <result property="refreshToken" column="token"/>
+        <result property="profileImage" column="profile_image" />
     </resultMap>
 
     <select id="getUserInfo" parameterType="map" resultMap="memberDto">
-        select user_name, user_id, email_id, email_domain, join_date from members
+        select user_name, user_id, email_id, email_domain, join_date, profile_image from members
         where user_id = #{userId}
     </select>
 
@@ -35,7 +36,8 @@
     </insert>
 
     <update id="updateMember" >
-        update members SET user_name = #{userName}, user_password = #{userPwd}, email_id = #{emailId}, email_domain = #{emailDomain}
+        update members SET user_name = #{userName}, user_password = #{userPwd},
+        email_id = #{emailId}, email_domain = #{emailDomain}, profile_image = #{profileImage}
         where user_id = #{userId}
     </update>
 
