@@ -12,34 +12,47 @@ onMounted(() => {
 });
 const slides = ref([
   {
-    title: "Temp Image1",
-    content: "Temp Image1",
-    image: "src/assets/img/temp1.jpg",
+    title: "Seoul",
+    content: "Seoul Seoul",
+    image: "src/assets/img/Seoul.jpg",
   },
   {
-    title: "Temp Image2",
-    content: "Temp Image2",
-    image: "src/assets/img/temp2.jpg",
+    title: "Incheon",
+    content: "Incheon Incheon",
+    image: "src/assets/img/Incheon.jpg",
   },
   {
-    title: "Temp Image3",
-    content: "Temp Image1",
-    image: "src/assets/img/temp3.jpg",
+    title: "Busan",
+    content: "Busan Busan",
+    image: "src/assets/img/Busan.jpg",
+  },
+  {
+    title: "Daejeon",
+    content: "Daejeon Daejeon",
+    image: "src/assets/img/Daejeon.jpg",
+  },
+  {
+    title: "Daegu",
+    content: "Daegu Daegu",
+    image: "src/assets/img/Daegu.jpg",
+  },
+  {
+    title: "Gwangju",
+    content: "Gwangju Gwangju",
+    image: "src/assets/img/Gwangju.jpg",
   },
 ]);
-const test = (title) => {
-  alert(title);
-};
 </script>
 
 <template>
   <!-- fixed-height="863px" -->
   <vueper-slides
     fixed-height="400px"
-    class="no-shadow"
     autoplay
     arrows-outside
     transition-speed="250"
+    fade
+    :touchable="false"
   >
     <!-- @click="test(slide.title)" -->
     <vueper-slide
@@ -93,16 +106,15 @@ const test = (title) => {
   background: rgba(0, 0, 0, 0.25);
   color: rgb(255, 181, 23);
 }
-/* .vueperslide__title {
-  margin: 0 0 0 1500px;
-  font-size: 50px;
-  color: yellowgreen;
+.vueperslide__title {
+  font-size: 80px;
+  font-weight: bold;
+  color: whitesmoke;
 }
 .vueperslide__content {
-  font-size: 20px;
-  color: yellowgreen;
-  margin: 0 0 770px 1350px;
-} */
+  font-size: 50px;
+  color: whitesmoke;
+}
 .vueperslides__inner {
   width: 1520px;
   margin: 10px auto;
