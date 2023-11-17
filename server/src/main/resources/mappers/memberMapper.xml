@@ -3,11 +3,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- name space는 MemberRepo의 fully qualified name으로 설정한다. -->
 <mapper namespace="com.ssafy.enjoytrip.model.repo.MemberRepo">
-    <resultMap type="MemberDto" id="loginMember">
-        <id property="userId" column="user_id" />
-        <result property="userPwd" column="user_password" />
-        <result property="userName" column="user_name" />
-    </resultMap>
+<!--    <resultMap type="MemberDto" id="loginMember">-->
+<!--        <id property="userId" column="user_id" />-->
+<!--        <result property="userPwd" column="user_password" />-->
+<!--        <result property="userName" column="user_name" />-->
+<!--    </resultMap>-->
 
     <resultMap type="MemberDto" id="memberDto">
         <id property="userId" column="user_id"/>
@@ -16,10 +16,17 @@
         <result property="emailId" column="email_id" />
         <result property="emailDomain" column="email_domain" />
         <result property="joinDate" column="join_date" />
+        <result property="refreshToken" column="token"/>
     </resultMap>
 
-    <select id="loginMember" resultMap="memberDto">
-        select * from members where user_id=#{userId}
+    <select id="getUserInfo" parameterType="map" resultMap="memberDto">
+        select user_name, user_id, email_id, email_domain, join_date from members
+        where user_id = #{userId}
+    </select>
+
+    <select id="loginMember" parameterType="map" resultMap="memberDto">
+        select user_id, user_name, token from members
+        where user_id= #{userId} and user_password = #{userPwd}
     </select>
 
     <insert id="joinMember">
@@ -35,6 +42,25 @@
     <delete id="deleteMember" >
         delete from members where user_id = #{userId}
     </delete>
+
+    <update id="saveRefreshToken" parameterType="map">
+        update members
+        set token = #{token}
+        where user_id = #{userId}
+    </update>
+
+    <select id="getRefreshToken" parameterType="string" resultType="string">
+        select token
+        from members
+        where user_id = #{userId}
+    </select>
+
+    <update id="deleteRefreshToken" parameterType="map">
+        update members
+        set token = #{token, jdbcType=VARCHAR}
+        where user_id = #{userId}
+    </update>
+
 
 
 </mapper>
