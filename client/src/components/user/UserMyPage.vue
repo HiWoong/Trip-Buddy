@@ -102,6 +102,7 @@ const updateUser = () => {
     alert(msg);
   });
 };
+
 </script>
 
 <template>
@@ -113,6 +114,16 @@ const updateUser = () => {
         </h2>
       </div>
       <div class="col-lg-8 col-md-10 col-sm-12">
+        <!-- 파일 업로드 -->
+        <!-- <div class="mb-3"></div>
+          <img
+              class="avatar me-2 float-md-start bg-light p-2"
+              src="https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg"
+            />
+        <div class="mb-3">
+          <input multiple @change="imageUpload()" ref="images" type="file" />
+        </div> -->
+        <!--  -->
         <div class="mb-3">
           <label for="username" class="form-label">이름 : </label>
           <input
