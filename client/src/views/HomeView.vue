@@ -1,22 +1,30 @@
 <script setup>
 import { VueperSlides, VueperSlide } from "vueperslides";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import "vueperslides/dist/vueperslides.css";
+import { useRouter } from "vue-router";
+const router = useRouter();
+onMounted(() => {
+  if (sessionStorage.getItem("isLogin") != null) {
+    sessionStorage.removeItem("isLogin");
+    router.go();
+  }
+});
 const slides = ref([
   {
     title: "Temp Image1",
     content: "Temp Image1",
-    image: "src/assets/img/default.jpg",
+    image: "src/assets/img/temp1.jpg",
   },
   {
     title: "Temp Image2",
     content: "Temp Image2",
-    image: "src/assets/img/default.jpg",
+    image: "src/assets/img/temp2.jpg",
   },
   {
     title: "Temp Image3",
     content: "Temp Image1",
-    image: "src/assets/img/default.jpg",
+    image: "src/assets/img/temp3.jpg",
   },
 ]);
 const test = (title) => {
@@ -85,7 +93,7 @@ const test = (title) => {
   background: rgba(0, 0, 0, 0.25);
   color: rgb(255, 181, 23);
 }
-.vueperslide__title {
+/* .vueperslide__title {
   margin: 0 0 0 1500px;
   font-size: 50px;
   color: yellowgreen;
@@ -94,7 +102,7 @@ const test = (title) => {
   font-size: 20px;
   color: yellowgreen;
   margin: 0 0 770px 1350px;
-}
+} */
 .vueperslides__inner {
   width: 1520px;
   margin: 10px auto;
@@ -106,10 +114,11 @@ const test = (title) => {
   display: block;
   font-size: 60px;
 } */
+/* ssafy 기준 30 */
 .cards {
   width: 80%;
   height: 400px;
-  margin: 10px auto;
+  margin: 30px auto;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -131,11 +140,11 @@ img {
 }
 .title {
   text-align: center;
-  font-size: 30px;
+  font-size: 25px;
 }
 .content {
   margin: auto 0;
   text-align: center;
-  font-size: 20px;
+  font-size: 15px;
 }
 </style>

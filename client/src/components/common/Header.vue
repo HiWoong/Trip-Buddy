@@ -35,14 +35,10 @@ const moveMyPage = () => {
             <RouterLink to="" @click="moveHome">Enjoy Trip</RouterLink>
           </div>
           <div class="menu">
-            <RouterLink aria-current="page" to="/attraction"
-              >여행지 검색</RouterLink
-            >
+            <RouterLink aria-current="page" to="/attraction">여행지 검색</RouterLink>
           </div>
           <div class="menu">
-            <RouterLink aria-current="page" to="/attraction/plan"
-              >여행 플래너</RouterLink
-            >
+            <RouterLink aria-current="page" to="/attraction/plan">여행 플래너</RouterLink>
           </div>
           <div class="menu">
             <RouterLink aria-current="page" to="#">핫플 자랑</RouterLink>
@@ -59,13 +55,13 @@ const moveMyPage = () => {
               <RouterLink id="navLogin" to="/user/login">로그인</RouterLink>
             </div>
           </div>
-          <div v-else>
-            <button class="user" @click="moveMyPage" id="navMypage">
-              마이페이지
-            </button>
-            <button class="user" @click="logout" id="navLogout">
-              로그아웃
-            </button>
+          <div v-else id="user_menu" class="menu">
+            <div class="user">
+              <RouterLink id="navMyPage" to="" @click="moveMyPage">마이페이지</RouterLink>
+            </div>
+            <div class="user">
+              <RouterLink id="navLogout" to="" @click="logout">로그아웃</RouterLink>
+            </div>
           </div>
         </div>
       </nav>
@@ -120,6 +116,7 @@ a {
   font-family: "NanumSquare";
 }
 #user_menu {
+  flex-wrap: wrap;
   display: flex;
 }
 .user {

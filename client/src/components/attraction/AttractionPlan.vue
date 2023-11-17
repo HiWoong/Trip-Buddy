@@ -4,6 +4,8 @@ import { ref, watch, onMounted } from "vue";
 var map;
 const keyword = ref("역삼역");
 const markers = ref([]);
+const result = ref([]);
+const idx = ref(0);
 onMounted(() => {
   if (window.kakao && window.kakao.maps) {
     console.log("loadMap");
@@ -13,6 +15,66 @@ onMounted(() => {
     loadScript();
   }
 });
+
+watch(result.value, () => {
+  let resultList = document.getElementById("selectPlaces");
+  resultList.innerHTML = "";
+  result.value.forEach((data) => {
+    let lists = document.createElement("div");
+    lists.className = "pickPlace";
+
+    let place_name = document.createElement("div");
+    place_name.innerHTML = data.place_name;
+
+    let road_address_name = document.createElement("div");
+    road_address_name.innerHTML = data.road_address_name;
+
+    let address_name = document.createElement("div");
+    address_name.innerHTML = data.address_name;
+
+    place_name.appendChild(road_address_name);
+    place_name.appendChild(address_name);
+
+    if (data.phone != "" && data.phone != null) {
+      let phone = document.createElement("div");
+      phone.innerHTML = data.phone;
+      place_name.appendChild(phone);
+    }
+    lists.appendChild(place_name);
+
+    let removePick = document.createElement("button");
+    removePick.className = "removePick";
+    removePick.innerHTML = "삭제";
+    removePick.onclick = () => {
+      removePickPlace(data.address_name, data.index);
+    };
+    lists.appendChild(place_name);
+    lists.appendChild(removePick);
+    resultList.appendChild(lists);
+  });
+  console.log(result.value);
+});
+
+const addPickPlace = (places) => {
+  result.value.push({
+    place_name: places.place_name,
+    road_address_name: places.road_address_name,
+    address_name: places.address_name,
+    phone: places.phone,
+    index: idx.value++,
+  });
+};
+
+const removePickPlace = (address_name, index) => {
+  for (let i = 0; i < result.value.length; i++) {
+    console.log(result.value);
+    if (result.value[i].address_name == address_name && result.value[i].index == index) {
+      result.value.splice(i, 1);
+      break;
+    }
+  }
+  console.log(result.value);
+};
 
 const loadMap = () => {
   const container = document.getElementById("map");
@@ -156,14 +218,12 @@ function searchPlaces() {
     info.appendChild(tel);
 
     let pick = document.createElement("button");
-    pick.className = "pick btn btn-success";
+    pick.className = "pick";
     pick.innerHTML = "담기";
     pick.onclick = () => {
-      alert(index + 1);
+      addPickPlace(places);
     };
     info.appendChild(pick);
-    // console.log(markerbg + info);
-    // el.innerHTML = markerbg + info;
     el.appendChild(markerbg);
     el.appendChild(info);
     el.className = "item";
@@ -286,7 +346,7 @@ function searchPlaces() {
   <div id="contents">
     <div id="menu_wrap">
       <div class="option">
-        <h5>^__^ 검색해라</h5>
+        <h5>검색이 하고싶어?</h5>
         <div>
           <input type="text" v-model="keyword" id="keyword" />
           <button id="searchButton" @click="searchPlaces" @keypress="() => searchPlaces()">
@@ -300,7 +360,7 @@ function searchPlaces() {
     </div>
     <div id="map"></div>
     <div id="menu_plan">
-      <h3>여행계획</h3>
+      <h3>여행 계획</h3>
       <div id="selectPlaces"></div>
     </div>
   </div>
@@ -323,7 +383,7 @@ function searchPlaces() {
   left: 0;
   bottom: 0;
   width: 330px;
-  margin: 30px 0 30px 10px;
+  margin: 10px 0 30px 10px;
   padding: 5px;
   overflow-y: auto;
   background: rgba(255, 255, 255, 0.7);
@@ -543,20 +603,70 @@ function searchPlaces() {
 #map {
   /* width: 1275px;
     height: 905px; */
-  margin: 35px 0 0 350px;
+  margin: 10px 0 0 350px;
   flex: 2;
 }
 #menu_plan {
-  margin: 35px 0 0 20px;
+  margin: 10px 0 0 20px;
   width: 300px;
   height: 904px;
-  background-color: antiquewhite;
+  background-color: ghostwhite;
   text-align: center;
   font-family: "NanumSquareB";
   /* font-family: sans-serif; */
-  flex: 1;
+  flex: 0.5;
+  border: 2px solid gray;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
 }
+
 .pick {
   float: right;
+  border: 3px solid #77af9c;
+  color: darkgray;
+  box-sizing: border-box;
+  padding: 5px 15px;
+  border-radius: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  font-weight: 800;
+  transition: 0.25s;
+}
+.pick:hover {
+  background-color: #77af9c;
+  color: #d7fff1;
+}
+.pickPlace {
+  margin: 0 10px 30px 10px;
+  padding: 10px 10px;
+  text-align: start;
+  border: 2px dotted black;
+  border-radius: 10px;
+}
+
+.removePick {
+  border: 2px solid #ff823a;
+  color: darkgray;
+  box-sizing: border-box;
+  padding: 2px 8px;
+  border-radius: 7px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  font-weight: 800;
+  transition: 0.25s;
+  width: 100%;
+}
+.removePick:hover {
+  background-color: #ff823a;
+  color: #000a07;
+}
+h3 {
+  background-color: rgb(252, 227, 118);
+}
+input {
+  border: 1px solid gray;
+  border-radius: 5px;
+  padding: 0 0 0 4px;
 }
 </style>
