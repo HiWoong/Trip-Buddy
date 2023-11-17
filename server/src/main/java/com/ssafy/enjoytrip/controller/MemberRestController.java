@@ -79,6 +79,7 @@ public class MemberRestController {
 
 //			System.out.println("memberDto.getProfileImage() = " + memberDto.getProfileImage());
 			
+			
 			int result = memberService.updateMember(memberDto);
 			if(result == 1)
 				return new ResponseEntity<Integer>(result, HttpStatus.CREATED);
