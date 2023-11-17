@@ -14,8 +14,7 @@
     "pinia": "^2.1.7",
     "vue": "^3.3.4",
     "vue-draggable-next": "^2.2.1",
-    "vue-router": "^4.2.5",
-    "vueperslides": "^3.5.1"
+    "vueperslides": "^3.5.1",
     "vue-router": "^4.2.5",
     "vue3-cookies": "^1.0.6"
   },

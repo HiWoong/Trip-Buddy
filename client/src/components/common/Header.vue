@@ -37,7 +37,7 @@ const moveMyPage = () => {
 
 // console.log("status : ", getLoginStatus());
 // isLogin.value = getLoginStatus() ? true : false;
-// console.log("header var : isLogin : ", isLogin.value);
+console.log("header var : isLogin : ", isLogin.value);
 </script>
 
 <template>
@@ -62,7 +62,7 @@ const moveMyPage = () => {
             <RouterLink aria-current="page" to="/board">Q&A게시판</RouterLink>
           </div>
           <div class="menu"></div>
-          <div id="user_menu" class="menu" v-if="isLogin">
+          <div v-if="isLogin == false" id="user_menu" class="menu" >
             <div class="user">
               <RouterLink id="navJoin" to="/user/join">회원가입</RouterLink>
             </div>
