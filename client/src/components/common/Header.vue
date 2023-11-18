@@ -4,6 +4,7 @@ import { ref, onMounted } from "vue";
 import { RouterLink, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "@/stores/userStore.js";
+import { useAttractionStore } from "@/stores/attractionStore";
 // cookies
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
@@ -14,6 +15,9 @@ const { isLogin } = storeToRefs(userStore);
 const { userLogoutStore } = userStore;
 
 const router = useRouter();
+
+const attractionStore = useAttractionStore();
+const { setSidoCode } = attractionStore;
 
 onMounted(async () => {
   const ui = cookies.get("userId");
@@ -35,6 +39,18 @@ const moveMyPage = () => {
   router.replace({ name: "UserMyPage" });
 };
 
+const moveAttractionSearch = async () => {
+  await setSidoCode(0);
+  await router.replace({ name: "AttractionSearch" });
+  router.go();
+};
+
+const moveAttractionPlan = async () => {
+  await setSidoCode(0);
+  await router.replace({ name: "AttractionPlan" });
+  router.go();
+};
+
 // console.log("status : ", getLoginStatus());
 // isLogin.value = getLoginStatus() ? true : false;
 console.log("header var : isLogin : ", isLogin.value);
@@ -50,10 +66,14 @@ console.log("header var : isLogin : ", isLogin.value);
             <RouterLink to="" @click="moveHome">Enjoy Trip</RouterLink>
           </div>
           <div class="menu">
-            <RouterLink aria-current="page" to="/attraction">여행지 검색</RouterLink>
+            <RouterLink aria-current="page" to="" @click="moveAttractionSearch"
+              >여행지 검색</RouterLink
+            >
           </div>
           <div class="menu">
-            <RouterLink aria-current="page" to="/attraction/plan">여행 플래너</RouterLink>
+            <RouterLink aria-current="page" to="" @click="moveAttractionPlan"
+              >여행 플래너</RouterLink
+            >
           </div>
           <div class="menu">
             <RouterLink aria-current="page" to="#">핫플 자랑</RouterLink>
@@ -72,10 +92,14 @@ console.log("header var : isLogin : ", isLogin.value);
           </div>
           <div v-else id="user_menu" class="menu">
             <div class="user">
-              <RouterLink id="navMyPage" to="" @click="moveMyPage">마이페이지</RouterLink>
+              <RouterLink id="navMyPage" to="" @click="moveMyPage"
+                >마이페이지</RouterLink
+              >
             </div>
             <div class="user">
-              <RouterLink id="navLogout" to="" @click="logout">로그아웃</RouterLink>
+              <RouterLink id="navLogout" to="" @click="logout"
+                >로그아웃</RouterLink
+              >
             </div>
           </div>
         </div>

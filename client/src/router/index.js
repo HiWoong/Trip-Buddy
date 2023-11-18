@@ -19,8 +19,9 @@ const router = createRouter({
       children: [
         {
           path: "",
-          name: "searchView",
-          component: () => import("@/components/attraction/AttractionSearch.vue"),
+          name: "AttractionSearch",
+          component: () =>
+            import("@/components/attraction/AttractionSearch.vue"),
         },
         {
           path: "plan",
@@ -48,6 +49,11 @@ const router = createRouter({
           path: "join",
           name: "UserJoin",
           component: () => import("@/components/user/UserJoin.vue"),
+        },
+        {
+          path: "plan",
+          name: "UserPlan",
+          component: () => import("@/components/user/UserPlan.vue"),
         },
       ],
     },
