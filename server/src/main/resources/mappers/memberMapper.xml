@@ -63,6 +63,9 @@
         where user_id = #{userId}
     </update>
 
+    <select id="checkDuplId">
+        select count(*) from members where user_id = #{userId}
+    </select>
 
 
 </mapper>

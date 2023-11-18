@@ -55,6 +55,11 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
+	public int checkDuplId(String userId) throws Exception {
+		return repo.checkDuplId(userId);
+	}
+
+	@Override
 	public int updateMember(MemberDto memberDto) throws SQLException {
 		return repo.updateMember(memberDto);
 	}

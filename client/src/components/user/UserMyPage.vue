@@ -52,12 +52,10 @@ const getUserInfo = async (userId) => {
       if (response.status === httpStatusCode.OK) {
         console.log("3. getUserInfo data >> ", response.data.userInfo);
         newUser.value = response.data.userInfo;
-        if (newUser.value.profileImage == ""){
-          newUser.value.profileImage = "https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg";
+        if (newUser.value.profileImage == "" || newUser.value.profileImage == null) {
+          newUser.value.profileImage =
+            "https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg";
         }
-
-        // console.log("new User", newUser.value);
-        // console.log("new User ProfileImg : ", newUser.value.profileImage);
       } else {
         console.log("유저 정보 없음!!!!");
       }
@@ -67,45 +65,21 @@ const getUserInfo = async (userId) => {
         "getUserInfo() error code [토큰 만료되어 사용 불가능.] ::: ",
         error.response.status
       );
-      // isValidToken.value = false;
-
-      // await tokenRegenerate();
     }
   );
 };
 
-const deleteUser = async() => {
+const deleteUser = async () => {
   await userDeleteStore(cookies.get("userId"));
   router.replace({ name: "HomeView" });
-}
-
-// const deleteUser = () => {
-//   http.get("/userapi/delete/" + newUser.value.userId).then(({ data }) => {
-//     let msg = "사용자 정보 삭제에 문제가 발생했습니다.";
-//     console.log("delete status : ", data.request.status);
-//     if (data.request.status === httpStatusCode.OK) {
-//       msg = "사용자 정보 삭제가 완료되었습니다.";
-//       isLogin.value = false;
-//       cookies.remove("userId");
-//       cookies.remove("accessToken");
-//       cookies.remove("refreshToken");
-//       router.push({ name: "HomeView" });
-//     }
-//     alert(msg);
-//   });
-// };
+};
 
 const updateUser = () => {
-  /* 
-    여기에서 사용자 정보란이 꽉 찼는지 확인하는 if 문을 넣어야됨.
-    아래 post 는 else 
-  */
   console.log(newUser.value);
   http.post("/userapi/update", newUser.value).then(({ data }) => {
     let msg = "사용자 정보 수정에 문제가 발생했습니다.";
     if (data === 1) {
       msg = "사용자 정보 수정이 완료되었습니다.";
-      // userInfo.value = newUser.value;
       router.go();
     }
     alert(msg);
@@ -113,44 +87,231 @@ const updateUser = () => {
 };
 
 const imageUpload = async (files) => {
-  // console.log("files : ", files[0]);
   imageToBase64(files[0]);
-  // profileImg.value = files[0].name;
-  // profileImg.value = "https://image.yes24.com/goods/105020756/XL";
-  // console.log("profileImg : ", profileImg.value);
-  // this.fileName = files[0];
-  // await this.base64(this.fileName);
 };
 
 function imageToBase64(f) {
   var reader = new FileReader();
   reader.readAsDataURL(f);
-  reader.onload = function(e) {
-    // console.log(e);
-    // profileImg.value = e.target.result;
+  reader.onload = function (e) {
     newUser.value.profileImage = e.target.result;
-    // console.log("imageToBase64, newUser.value.profileImg : ", newUser.value.profileImg)
-  }
+  };
 }
-
-// const base64 = (file) => {
-//   return new Promise(resolve => {
-//     // 업로드된 파일을 읽기 위한 FileReader() 객체 생성
-//     let a = new FileReader()
-//     // 읽기 동작이 성공적으로 완료됐을 때 발생
-//     a.onload = e => {
-//       resolve(e.target.result)
-// 			// 썸네일을 보여주고자 하는 <img>에 id값을 가져와 src에 결과값을 넣어준다.
-//       const previewImage = document.getElementById('preview')
-//       previewImage.src = e.target.result
-//     }
-// 		// file 데이터를 base64로 인코딩한 문자열. 이 문자열을 브라우저가 인식하여 원래 데이터로 만들어준다.
-//     a.readAsDataURL(file)
-//   })
-// };
 </script>
 
 <template>
+  <div class="wholeLayout">
+    <div id="title">
+      <img v-bind:src="newUser.profileImage" style="width: 100%; height: 100%; object-fit: cover" />
+      <div style="justify-content: center; margin: 10px 0 0 55px">
+        <label
+          for="uploadImage"
+          style="
+            cursor: pointer;
+            border: 1px solid gray;
+            border-radius: 30px;
+            padding: 5px;
+            background-color: skyblue;
+            color: #292929;
+            font-weight: bold;
+          "
+          >이미지 변경</label
+        >
+        <input
+          multiple
+          @change="imageUpload($event.target.files)"
+          accept="image/*"
+          type="file"
+          id="uploadImage"
+          style="display: flex; justify-content: center; visibility: hidden"
+        />
+      </div>
+    </div>
+    <label for="username" style="width: 500px; text-align: start; font-size: 25px">이름</label>
+    <div id="name">
+      <input
+        type="text"
+        id="userName"
+        name="userName"
+        style="width: 500px; height: 50px; padding-left: 15px"
+        v-model="newUser.userName"
+      />
+    </div>
+    <label for="userId" style="width: 500px; text-align: start; font-size: 25px">아이디</label>
+    <div id="id">
+      <input
+        type="text"
+        id="userId"
+        name="userId"
+        style="width: 500px; height: 50px; padding-left: 15px"
+        v-model="newUser.userId"
+        disabled
+      />
+    </div>
+    <label for="userPwd" style="width: 500px; text-align: start; font-size: 25px">비밀번호</label>
+    <div id="password">
+      <input
+        type="password"
+        id="userPwd"
+        name="userPwd"
+        style="width: 500px; height: 50px; padding-left: 15px; font-family: sans-serif"
+        v-model="newUser.userPwd"
+      />
+    </div>
+
+    <label for="emailid" style="width: 500px; text-align: start; font-size: 25px">이메일</label>
+    <div id="emailInfo">
+      <div style="margin-bottom: 10px; width: 530px">
+        <input
+          type="text"
+          id="emailid"
+          name="emailId"
+          placeholder="이메일아이디"
+          style="width: 500px; height: 50px; padding-left: 15px"
+          v-model="newUser.emailId"
+        />
+        <span style="margin-left: 10px; font-size: 20px">@</span>
+      </div>
+      <select
+        id="emaildomain"
+        name="emailDomain"
+        placeholder="이메일 도메인 선택"
+        style="width: 500px; height: 50px; padding-left: 15px"
+        v-model="newUser.emailDomain"
+      >
+        <option selected>선택</option>
+        <option value="ssafy.com">싸피</option>
+        <option value="google.com">구글</option>
+        <option value="naver.com">네이버</option>
+        <option value="kakao.com">카카오</option>
+      </select>
+    </div>
+
+    <div id="submits">
+      <button type="submit" class="submit" id="btn-plan" @click="viewPlans">보관함</button>
+      <button type="submit" class="submit" id="btn-update" @click="updateUser">수정하기</button>
+      <button type="submit" class="submit" id="btn-delete" @click="deleteUser">탈퇴하기</button>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+@font-face {
+  font-family: "NanumSquare";
+  src: url("../../assets/fonts/NanumSquareR.ttf") format("truetype");
+}
+@font-face {
+  font-family: "NanumSquareB";
+  src: url("../../assets/fonts/NanumSquareB.ttf") format("truetype");
+}
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "NanumSquare";
+}
+.wholeLayout {
+  margin: 20px 0;
+  width: 100%;
+  height: 1000px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  /* background-color: thistle; */
+}
+#title {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 40px;
+  background-color: antiquewhite;
+  border-radius: 70%;
+}
+#name {
+  font-size: 20px;
+  width: 500px;
+  margin-bottom: 20px;
+}
+#id {
+  background-color: aquamarine;
+  font-size: 20px;
+  width: 500px;
+  margin-bottom: 20px;
+}
+#password {
+  background-color: blueviolet;
+  font-size: 20px;
+  width: 500px;
+  margin-bottom: 20px;
+}
+#forgetPassword {
+  /* background-color: darkorange; */
+  margin-bottom: 30px;
+  color: gray;
+}
+#emailInfo {
+  font-size: 20px;
+  width: 500px;
+  margin-bottom: 40px;
+}
+#submits {
+  width: 30%;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: space-around;
+  align-items: center;
+}
+.submit {
+  width: 100px;
+  padding: 10px;
+  border: 2px solid #212121;
+  border-radius: 10px;
+}
+#btn-plan {
+  background: none;
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.5);
+  background-color: darksalmon;
+}
+#btn-update {
+  background: none;
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.5);
+  background-color: rgb(122, 172, 213);
+}
+#btn-delete {
+  background: none;
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.5);
+  background-color: rgb(253, 230, 59);
+}
+#btn-plan:hover {
+  margin-top: -2px;
+  margin-left: 0px;
+  transform: scale(1.1, 1.1);
+  -ms-transform: scale(1.1, 1.1);
+  -webkit-transform: scale(1.1, 1.1);
+  box-shadow: 0px 5px 5px -2px rgba(0, 0, 0, 0.25);
+  transition: 0.2s;
+}
+#btn-update:hover {
+  margin-top: -2px;
+  margin-left: 0px;
+  transform: scale(1.1, 1.1);
+  -ms-transform: scale(1.1, 1.1);
+  -webkit-transform: scale(1.1, 1.1);
+  box-shadow: 0px 5px 5px -2px rgba(0, 0, 0, 0.25);
+  transition: 0.2s;
+}
+#btn-delete:hover {
+  margin-top: -2px;
+  margin-left: 0px;
+  transform: scale(1.1, 1.1);
+  -ms-transform: scale(1.1, 1.1);
+  -webkit-transform: scale(1.1, 1.1);
+  box-shadow: 0px 5px 5px -2px rgba(0, 0, 0, 0.25);
+  transition: 0.2s;
+}
+</style>
+
+<!-- <template>
   <div class="container mt-5 pt-5">
     <div class="row justify-content-center mt-5">
       <div class="col-lg-8 col-md-10 col-sm-12">
@@ -159,17 +320,11 @@ function imageToBase64(f) {
         </h2>
       </div>
       <div class="col-lg-8 col-md-10 col-sm-12">
-        <!-- 파일 업로드 -->
         <div class="mb-3"></div>
-          <img
-              class="avatar me-2 float-md-start bg-light p-2"
-              v-bind:src="newUser.profileImage"
-            />
+        <img class="avatar me-2 float-md-start bg-light p-2" v-bind:src="newUser.profileImage" />
         <div class="mb-3">
           <input multiple @change="imageUpload($event.target.files)" accept="image/*" type="file" />
-          <!-- ref="images" -->
         </div>
-        <!--  -->
         <div class="mb-3">
           <label for="username" class="form-label">이름 : </label>
           <input
@@ -262,6 +417,4 @@ function imageToBase64(f) {
       </div>
     </div>
   </div>
-</template>
-
-<style scoped></style>
+</template> -->

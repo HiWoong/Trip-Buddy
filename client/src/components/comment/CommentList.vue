@@ -77,10 +77,9 @@ const modifyComment = () => {
       <button class="btn btn-outline-danger ms-1" @click="deleteComment">삭제</button>
     </span>
   </div>
-  <br />
-  <div class="modal" :id="newModalId">
-    <div class="modal-dialog">
-      <div class="modal-content">
+  <div class="modal mt-5 pt-5" :id="newModalId">
+    <div class="modal-dialog mt-5 pt-5">
+      <div class="modal-content mt-5">
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">{{ props.index }}</h4>
@@ -109,4 +108,8 @@ const modifyComment = () => {
   </div>
 </template>
 
-<style scoped></style>
+<style>
+.modal-backdrop {
+  z-index: 0;
+}
+</style>
