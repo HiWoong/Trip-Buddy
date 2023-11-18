@@ -20,10 +20,19 @@
         <result column="mlevel" property="mlevel"/>
     </resultMap>
     <select id="search" resultMap="attractionInfoDto">
-        select * from attraction_info where sido_code=#{area} and content_type_id=#{type}
-        <if test="word != null">
-            and title like concat('%', #{word}, '%')
-        </if>
+        select * from attraction_info where sido_code=#{area}
+        <choose>
+            <when test="word != null and type != 0">
+                and content_type_id=#{type} and title like concat('%', #{word}, '%')
+            </when>
+            <when test="word != null">
+                and title like concat('%', #{word}, '%')
+            </when>
+            <when test="type != 0">
+                and content_type_id=#{type}
+            </when>
+        </choose>
+
         limit 12
     </select>
 

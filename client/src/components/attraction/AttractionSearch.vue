@@ -9,14 +9,19 @@
         전국 관광지 정보
       </div>
       <!-- 관광지 검색 start -->
-      <form class="d-flex" onsubmit="return false;" role="search" id="search-form">
+      <form
+        class="d-flex"
+        onsubmit="return false;"
+        role="search"
+        id="search-form"
+      >
         <select
           id="search-area"
           name="search-area"
           class="form-select me-2"
           v-model="searchOptions.area"
         >
-          <option value="0" selected>선택해주세요</option>
+          <option value="0">선택해주세요</option>
         </select>
         <select
           id="search-content-id"
@@ -58,13 +63,25 @@
     <div id="map"></div>
     <template v-if="attractions[0] != null">
       <div class="attractionCards">
-        <div class="attractionCard" v-for="attraction in attractions" :key="attraction.title">
-          <img :src="attraction.firstImage" style="width: 246px; height: 120px" />
+        <div
+          class="attractionCard"
+          v-for="attraction in attractions"
+          :key="attraction.title"
+        >
+          <img
+            :src="attraction.firstImage"
+            style="width: 246px; height: 120px"
+          />
           <div>
-            <h5 style="margin-top: 4px" class="fw-bolder">{{ attraction.title }}</h5>
+            <h5 style="margin-top: 4px" class="fw-bolder">
+              {{ attraction.title }}
+            </h5>
             {{ attraction.addr1 }}
           </div>
-          <button class="moveButton" @click="moveCenter(attraction.latitude, attraction.longitude)">
+          <button
+            class="moveButton"
+            @click="moveCenter(attraction.latitude, attraction.longitude)"
+          >
             위치 보기
           </button>
         </div>
@@ -234,8 +251,11 @@
 </style>
 <script setup>
 import http from "@/util/http-common.js";
-import { ref, watch, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 
+import { useAttractionStore } from "@/stores/attractionStore";
+const attractionStore = useAttractionStore();
+const { getSidoCode, setFalseClickHome, getClickHome } = attractionStore;
 var map;
 // area, type은 필수
 const searchOptions = ref({
@@ -247,7 +267,7 @@ const searchOptions = ref({
 const attractions = ref([]);
 const markers = ref([]);
 
-onMounted(() => {
+onMounted(async () => {
   if (window.kakao && window.kakao.maps) {
     attractions.value = [];
     loadMap();
@@ -260,18 +280,27 @@ onMounted(() => {
         import.meta.env.VITE_TRIP_SERVICE_KEY +
         "&numOfRows=20&pageNo=1&MobileOS=ETC&MobileApp=AppTest&_type=json"
     )
-    .then((data) => {
+    .then(async (data) => {
       console.log(data);
       let areas = data.data.response.body.items.item;
       let sel = document.getElementById("search-area");
+      const sidoCode = await getSidoCode();
       areas.forEach((area) => {
         let opt = document.createElement("option");
         opt.setAttribute("value", area.code);
         opt.appendChild(document.createTextNode(area.name));
-
+        if (area.code == sidoCode) {
+          opt.selected = true;
+        }
         sel.appendChild(opt);
       });
     });
+  const isClickHome = await getClickHome();
+  if (isClickHome) {
+    searchOptions.value.area = await getSidoCode();
+    await setFalseClickHome();
+    document.getElementById("btn-search").click();
+  }
 });
 
 const loadMap = () => {
@@ -301,8 +330,9 @@ const loadScript = () => {
 };
 
 const searchAttractions = async (data) => {
-  if (data.area == "" || data.type == "" || data.area == "0" || data.type == "0") {
-    alert("지역과 관광지 유형은 필수 항목입니다.");
+  console.log(data);
+  if (data.area == "" || data.area == "0") {
+    alert("지역은 필수 항목입니다.");
     return;
   }
   await http.get("/attractionapi/search", { params: data }).then(({ data }) => {
@@ -398,7 +428,9 @@ const loadMarkers = () => {
   // 배열.reduce( (누적값, 현재값, 인덱스, 요소)=>{ return 결과값}, 초기값);
   const bounds = attractions.value.reduce(
     (bounds, position) =>
-      bounds.extend(new kakao.maps.LatLng(position.latitude, position.longitude)),
+      bounds.extend(
+        new kakao.maps.LatLng(position.latitude, position.longitude)
+      ),
     new kakao.maps.LatLngBounds()
   );
 

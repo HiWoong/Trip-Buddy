@@ -3,6 +3,11 @@ import { VueperSlides, VueperSlide } from "vueperslides";
 import { ref, onMounted } from "vue";
 import "vueperslides/dist/vueperslides.css";
 import { useRouter } from "vue-router";
+
+import { useAttractionStore } from "@/stores/attractionStore";
+const attractionStore = useAttractionStore();
+const { setSidoCode, setTrueClickHome } = attractionStore;
+
 const router = useRouter();
 onMounted(() => {
   if (sessionStorage.getItem("isLogin") != null) {
@@ -15,33 +20,45 @@ const slides = ref([
     title: "Seoul",
     content: "Seoul Seoul",
     image: "src/assets/img/Seoul.jpg",
+    sido: 1,
   },
   {
     title: "Incheon",
     content: "Incheon Incheon",
     image: "src/assets/img/Incheon.jpg",
+    sido: 2,
   },
   {
     title: "Busan",
     content: "Busan Busan",
     image: "src/assets/img/Busan.jpg",
+    sido: 6,
   },
   {
     title: "Daejeon",
     content: "Daejeon Daejeon",
     image: "src/assets/img/Daejeon.jpg",
+    sido: 3,
   },
   {
     title: "Daegu",
     content: "Daegu Daegu",
     image: "src/assets/img/Daegu.jpg",
+    sido: 4,
   },
   {
     title: "Gwangju",
     content: "Gwangju Gwangju",
     image: "src/assets/img/Gwangju.jpg",
+    sido: 5,
   },
 ]);
+
+const goAttraction = async (num) => {
+  setSidoCode(num);
+  setTrueClickHome();
+  router.replace({ name: "AttractionSearch" });
+};
 </script>
 
 <template>
@@ -61,6 +78,7 @@ const slides = ref([
       :image="slide.image"
       :title="slide.title"
       :content="slide.content"
+      @click="goAttraction(slide.sido)"
     />
   </vueper-slides>
   <!-- <div class="logo">Enjoy Trip</div> -->

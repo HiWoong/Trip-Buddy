@@ -3,7 +3,6 @@ import http from "@/util/http-common.js";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 
-import { storeToRefs } from "pinia";
 import { useUserStore } from "@/stores/userStore.js";
 
 import { info } from "@/api/userApi";
@@ -16,27 +15,14 @@ const { cookies } = useCookies();
 const userStore = useUserStore();
 const { userDeleteStore } = userStore;
 
-// import { useUserStore} from "@/stores/userStore.js";
-// const userStore = useUserStore();
-
-// const { userInfo } = storeToRefs(userStore);
-// const { getUserInfo } = userStore;
-
 const router = useRouter();
-
-// const newUser = ref({
-//   userId: userInfo.userId,
-//   userName: userInfo.userName,
-//   userPwd: userInfo.userPwd,
-//   emailId: userInfo.emailId,
-//   emailDomain: userInfo.emailDomain,
-//   joinDate: userInfo.joinDate,
-// });
 
 const newUser = ref([]);
 
 // temp
-const profileImg = ref("https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg");
+const profileImg = ref(
+  "https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg"
+);
 //
 
 onMounted(async () => {
@@ -52,7 +38,10 @@ const getUserInfo = async (userId) => {
       if (response.status === httpStatusCode.OK) {
         console.log("3. getUserInfo data >> ", response.data.userInfo);
         newUser.value = response.data.userInfo;
-        if (newUser.value.profileImage == "" || newUser.value.profileImage == null) {
+        if (
+          newUser.value.profileImage == "" ||
+          newUser.value.profileImage == null
+        ) {
           newUser.value.profileImage =
             "https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg";
         }
@@ -67,6 +56,10 @@ const getUserInfo = async (userId) => {
       );
     }
   );
+};
+
+const viewPlans = () => {
+  router.push({ name: "UserPlan" });
 };
 
 const deleteUser = async () => {
@@ -102,7 +95,10 @@ function imageToBase64(f) {
 <template>
   <div class="wholeLayout">
     <div id="title">
-      <img v-bind:src="newUser.profileImage" style="width: 100%; height: 100%; object-fit: cover" />
+      <img
+        v-bind:src="newUser.profileImage"
+        style="width: 100%; height: 100%; object-fit: cover"
+      />
       <div style="justify-content: center; margin: 10px 0 0 55px">
         <label
           for="uploadImage"
@@ -127,7 +123,11 @@ function imageToBase64(f) {
         />
       </div>
     </div>
-    <label for="username" style="width: 500px; text-align: start; font-size: 25px">이름</label>
+    <label
+      for="username"
+      style="width: 500px; text-align: start; font-size: 25px"
+      >이름</label
+    >
     <div id="name">
       <input
         type="text"
@@ -137,7 +137,9 @@ function imageToBase64(f) {
         v-model="newUser.userName"
       />
     </div>
-    <label for="userId" style="width: 500px; text-align: start; font-size: 25px">아이디</label>
+    <label for="userId" style="width: 500px; text-align: start; font-size: 25px"
+      >아이디</label
+    >
     <div id="id">
       <input
         type="text"
@@ -148,18 +150,31 @@ function imageToBase64(f) {
         disabled
       />
     </div>
-    <label for="userPwd" style="width: 500px; text-align: start; font-size: 25px">비밀번호</label>
+    <label
+      for="userPwd"
+      style="width: 500px; text-align: start; font-size: 25px"
+      >비밀번호</label
+    >
     <div id="password">
       <input
         type="password"
         id="userPwd"
         name="userPwd"
-        style="width: 500px; height: 50px; padding-left: 15px; font-family: sans-serif"
+        style="
+          width: 500px;
+          height: 50px;
+          padding-left: 15px;
+          font-family: sans-serif;
+        "
         v-model="newUser.userPwd"
       />
     </div>
 
-    <label for="emailid" style="width: 500px; text-align: start; font-size: 25px">이메일</label>
+    <label
+      for="emailid"
+      style="width: 500px; text-align: start; font-size: 25px"
+      >이메일</label
+    >
     <div id="emailInfo">
       <div style="margin-bottom: 10px; width: 530px">
         <input
@@ -188,9 +203,15 @@ function imageToBase64(f) {
     </div>
 
     <div id="submits">
-      <button type="submit" class="submit" id="btn-plan" @click="viewPlans">보관함</button>
-      <button type="submit" class="submit" id="btn-update" @click="updateUser">수정하기</button>
-      <button type="submit" class="submit" id="btn-delete" @click="deleteUser">탈퇴하기</button>
+      <button type="submit" class="submit" id="btn-plan" @click="viewPlans">
+        보관함
+      </button>
+      <button type="submit" class="submit" id="btn-update" @click="updateUser">
+        수정하기
+      </button>
+      <button type="submit" class="submit" id="btn-delete" @click="deleteUser">
+        탈퇴하기
+      </button>
     </div>
   </div>
 </template>
