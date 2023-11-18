@@ -147,6 +147,15 @@ public class MemberRestController {
 		}
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
+
+	@GetMapping("check/{userId}")
+	public ResponseEntity<?> checkDuplId(@PathVariable("userId") String userId) throws Exception {
+		System.out.println(userId);
+		int isDupl = memberService.checkDuplId(userId);
+		System.out.println(isDupl);
+		if(isDupl == 0) return new ResponseEntity<Integer>(1, HttpStatus.OK);
+		else return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+	}
 }
 
 

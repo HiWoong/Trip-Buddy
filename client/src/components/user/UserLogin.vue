@@ -24,61 +24,101 @@ const login = async () => {
   console.log("login ing!!!! !!!");
   console.log("userinfo : ", userinfo.value.userId, userinfo.value.userPwd);
   await userLoginStore(userinfo.value);
-  // let accessToken = cookies.get("accessToken");
-  // console.log("111. ", accessToken);
-  // console.log("isLogin: ", isLogin.value);
-  // if (userId) {
-  //   console.log("로그인 성공");
-  //   makeUserIdCookieStore(accessToken);
-  // }
-  // router.push("/");
 };
 </script>
 
 <template>
   <div class="wholeLayout">
-    <div>
-      <h2>로그인</h2>
+    <div id="title">
+      <h2>LOGO</h2>
     </div>
-    <div>
-      <label for="userId">아이디</label><br />
+    <label for="userId" style="width: 500px; text-align: start; font-size: 25px">아이디</label>
+    <div id="id">
       <input
         type="text"
         id="userId"
         name="userId"
         placeholder="아이디를 입력해주세요."
+        style="width: 500px; height: 50px; padding-left: 15px"
         v-model="userinfo.userId"
       />
     </div>
-    <div>
-      <label for="userPwd">비밀번호</label><br />
+    <label for="userPwd" style="width: 500px; text-align: start; font-size: 25px">비밀번호</label>
+    <div id="password">
       <input
         type="password"
         id="userPwd"
         name="userPwd"
         placeholder="비밀번호를 입력해주세요."
+        style="width: 500px; height: 50px; padding-left: 15px; font-family: sans-serif"
         v-model="userinfo.userPwd"
       />
     </div>
-    <div>
+    <div id="forgetPassword">비밀번호가 가물가물...</div>
+    <div id="submitLogin">
       <input type="submit" id="btn-login" value="로그인" @click="login" />
     </div>
   </div>
 </template>
 
 <style scoped>
+@font-face {
+  font-family: "NanumSquare";
+  src: url("../../assets/fonts/NanumSquareR.ttf") format("truetype");
+}
+@font-face {
+  font-family: "NanumSquareB";
+  src: url("../../assets/fonts/NanumSquareB.ttf") format("truetype");
+}
 * {
   margin: 0;
   padding: 0;
+  font-family: "NanumSquare";
 }
 .wholeLayout {
-  margin: 160px 0;
+  margin: 50px 0;
   width: 100%;
-  height: 500px;
+  height: 800px;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  justify-content: space-around;
   align-items: center;
+  /* background-color: thistle; */
+}
+#title {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 70px;
+  background-color: antiquewhite;
+}
+#id {
+  background-color: aquamarine;
+  font-size: 20px;
+  width: 500px;
+  margin-bottom: 30px;
+}
+#password {
+  background-color: blueviolet;
+  font-size: 20px;
+  width: 500px;
+  margin-bottom: 15px;
+}
+#forgetPassword {
+  /* background-color: darkorange; */
+  margin-bottom: 30px;
+  color: gray;
+}
+#btn-login {
+  background-color: #00ae68;
+  border-radius: 5px;
+  width: 120px;
+  height: 50px;
+  transition: all 0.25s;
+  box-shadow: 1px 5px 0px 0px #007144;
+}
+#btn-login:hover {
+  box-shadow: 0px 0px 0px 0px #007144;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 </style>
