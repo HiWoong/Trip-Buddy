@@ -36,58 +36,49 @@ const login = async () => {
 </script>
 
 <template>
-  <div class="container mt-5 pt-5">
-    <div class="row justify-content-center mt-5">
-      <div class="col-lg-8 col-md-10 col-sm-12 mt-5 pt-5">
-        <h2 class="my-3 py-3 shadow-sm bg-light text-center">
-          <mark class="orange">로그인</mark>
-        </h2>
-      </div>
-      <div class="col-lg-8 col-md-10 col-sm-12">
-        <!-- <div class="form-check mb-3 float-end">
-          <input class="form-check-input" type="checkbox" value="ok" id="saveId" name="saveId" />
-          <label class="form-check-label" for="saveId"> 아이디저장 </label>
-        </div> -->
-        <div class="mb-3">
-          <label for="userId" class="form-label">아이디 : </label>
-          <input
-            type="text"
-            class="form-control"
-            id="userId"
-            name="userId"
-            placeholder="아이디..."
-            v-model="userinfo.userId"
-          />
-        </div>
-        <div class="mb-3">
-          <label for="userPwd" class="form-label">비밀번호 : </label>
-          <input
-            type="password"
-            class="form-control"
-            id="userPwd"
-            name="userPwd"
-            placeholder="비밀번호..."
-            v-model="userinfo.userPwd"
-          />
-        </div>
-        <div class="col-auto text-center">
-          <input
-            type="submit"
-            id="btn-login"
-            class="btn btn-outline-primary mb-3"
-            value="로그인"
-            @click="login"
-          />
-          <input
-            type="button"
-            id="btn-mv-join"
-            class="btn btn-outline-success mb-3"
-            value="회원가입"
-          />
-        </div>
-      </div>
+  <div class="wholeLayout">
+    <div>
+      <h2>로그인</h2>
+    </div>
+    <div>
+      <label for="userId">아이디</label><br />
+      <input
+        type="text"
+        id="userId"
+        name="userId"
+        placeholder="아이디를 입력해주세요."
+        v-model="userinfo.userId"
+      />
+    </div>
+    <div>
+      <label for="userPwd">비밀번호</label><br />
+      <input
+        type="password"
+        id="userPwd"
+        name="userPwd"
+        placeholder="비밀번호를 입력해주세요."
+        v-model="userinfo.userPwd"
+      />
+    </div>
+    <div>
+      <input type="submit" id="btn-login" value="로그인" @click="login" />
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+* {
+  margin: 0;
+  padding: 0;
+}
+.wholeLayout {
+  margin: 160px 0;
+  width: 100%;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+}
+</style>
