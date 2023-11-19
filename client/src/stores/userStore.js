@@ -35,7 +35,7 @@ export const useUserStore = defineStore("userStore", () => {
           isLoginError.value = false;
           isValidToken.value = true;
           console.log(userInfo.value);
-          cookies.set("accessToken", accessToken, 600);
+          cookies.set("accessToken", accessToken, 3600);
           cookies.set("refreshToken", refreshToken);
           makeUserIdCookieStore(cookies.get("accessToken"));
           router.push("/");
@@ -101,7 +101,7 @@ export const useUserStore = defineStore("userStore", () => {
   const makeUserIdCookieStore = (token) => {
     let decodeToken = jwtDecode(token);
     console.log(decodeToken.userId);
-    cookies.set("userId", decodeToken.userId, 600);
+    cookies.set("userId", decodeToken.userId, 3600);
   }
 
   const userJoinStore = async (joinUser) => {

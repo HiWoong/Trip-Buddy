@@ -49,6 +49,11 @@ const router = createRouter({
           name: "UserJoin",
           component: () => import("@/components/user/UserJoin.vue"),
         },
+        {
+          path: "plan",
+          name: "UserPlan",
+          component: () => import("@/components/user/UserPlan.vue"),
+        },
       ],
     },
     {

@@ -2,10 +2,9 @@ package com.ssafy.enjoytrip.dto;
 
 import lombok.*;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter	@Setter
-@ToString
 public class AttractionInfoDto implements Comparable<AttractionInfoDto>{
 
 	private int contentId;

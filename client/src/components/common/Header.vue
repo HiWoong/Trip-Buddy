@@ -55,13 +55,23 @@ console.log("header var : isLogin : ", isLogin.value);
           <div class="menu">
             <RouterLink aria-current="page" to="/attraction/plan">여행 플래너</RouterLink>
           </div>
-          <div class="menu">
+          <!-- <div class="menu">
             <RouterLink aria-current="page" to="#">핫플 자랑</RouterLink>
-          </div>
+          </div> -->
           <div class="menu">
             <RouterLink aria-current="page" to="/board">Q&A게시판</RouterLink>
           </div>
+
+          <!-- 보관함 포탈 생성 ! -->
+          <div class="menu">
+            <RouterLink aria-current="page" to="/user/plan">포탈</RouterLink>
+          </div>
+          <!--  -->
+
           <div class="menu"></div>
+
+
+
           <div v-if="isLogin == false" id="user_menu" class="menu">
             <div class="user">
               <RouterLink id="navJoin" to="/user/join">회원가입</RouterLink>
