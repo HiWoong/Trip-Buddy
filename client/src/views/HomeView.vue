@@ -79,6 +79,7 @@ const goAttraction = async (num) => {
       :title="slide.title"
       :content="slide.content"
       @click="goAttraction(slide.sido)"
+      class="mainPhoto"
     />
   </vueper-slides>
   <!-- <div class="logo">Enjoy Trip</div> -->
@@ -114,6 +115,9 @@ const goAttraction = async (num) => {
 /* #slideShow {
   margin-top: 57px;
 } */
+.mainPhoto {
+  cursor: pointer;
+}
 .vueperslides__arrow {
   color: black;
 }

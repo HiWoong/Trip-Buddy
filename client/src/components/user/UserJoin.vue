@@ -300,7 +300,7 @@ const alreadyCheck = () => {
   justify-content: flex-end;
 }
 #password {
-  background-color: blueviolet;
+  /* background-color: blueviolet; */
   font-size: 20px;
   width: 500px;
   margin-bottom: 20px;

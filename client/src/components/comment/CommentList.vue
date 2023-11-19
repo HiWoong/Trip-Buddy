@@ -5,11 +5,9 @@ import { useRouter } from "vue-router";
 
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
+const uid = cookies.get("userId");
 
 const router = useRouter();
-const userinfo = JSON.parse(sessionStorage.getItem("userinfo"));
-
-const uid = cookies.get("userId");
 
 const props = defineProps({
   articleNo: Number,
@@ -37,7 +35,10 @@ const deleteComment = () => {
 
 const modifyComment = () => {
   http
-    .post("/commentapi/modify", { commentId: props.commentId, content: nowContent.value })
+    .post("/commentapi/modify", {
+      commentId: props.commentId,
+      content: nowContent.value,
+    })
     .then(({ data }) => {
       let msg = "수정 처리 시 문제가 발생했습니다.";
       if (data === 1) {
@@ -74,7 +75,9 @@ const modifyComment = () => {
       >
         수정
       </button>
-      <button class="btn btn-outline-danger ms-1" @click="deleteComment">삭제</button>
+      <button class="btn btn-outline-danger ms-1" @click="deleteComment">
+        삭제
+      </button>
     </span>
   </div>
   <div class="modal mt-5 pt-5" :id="newModalId">
@@ -83,7 +86,11 @@ const modifyComment = () => {
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">{{ props.index }}</h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
         </div>
         <div>
           <!-- Modal body -->
@@ -98,8 +105,15 @@ const modifyComment = () => {
 
         <!-- Modal footer -->
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" @click="modifyComment">Update</button>
-          <button type="button" class="btn btn-danger" id="modalClose" data-bs-dismiss="modal">
+          <button type="button" class="btn btn-primary" @click="modifyComment">
+            Update
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            id="modalClose"
+            data-bs-dismiss="modal"
+          >
             Close
           </button>
         </div>

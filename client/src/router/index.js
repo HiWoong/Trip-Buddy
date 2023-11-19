@@ -28,6 +28,18 @@ const router = createRouter({
           name: "AttractionPlan",
           component: () => import("@/components/attraction/AttractionPlan.vue"),
         },
+        {
+          path: "hot",
+          name: "AttractionHotPlaceList",
+          component: () =>
+            import("@/components/attraction/AttractionHotPlaceList.vue"),
+        },
+        {
+          path: "hotWrite",
+          name: "AttractionHotPlaceWrite",
+          component: () =>
+            import("@/components/attraction/AttractionHotPlaceWrite.vue"),
+        },
       ],
     },
     {
@@ -53,7 +65,7 @@ const router = createRouter({
         {
           path: "plan",
           name: "UserPlan",
-          component: () => import("@/components/user/UserPlan.vue"),
+          // component: () => import("@/components/user/UserPlan.vue"),
         },
       ],
     },
