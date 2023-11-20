@@ -91,18 +91,19 @@ const getTotalPlans = async (userId) => {
 </script>
 
 <template>
-  <div class="container mt-5 pt-5">
-    <div class="row justify-content-center mt-5">
-      <div class="col-lg-8 col-md-10 col-sm-12">
-        <h2 class="my-3 py-3 shadow-sm bg-light text-center">
+  <div>
+  <!-- <div class="container mt-5 pt-5"> -->
+    <!-- <div class="row justify-content-center mt-5"> -->
+      <!-- <div class="col-lg-8 col-md-10 col-sm-12"> -->
+        <!-- <h2 class="my-3 py-3 shadow-sm bg-light text-center">
           <mark class="orange">마이페이지</mark>
-        </h2>
+        </h2> -->
         <div>
           <UserPlanRow v-for="plan in plans" :key="plan.planId" v-bind="plan" />
         </div>
-      </div>
-      <div class="mb-3"></div>
-    </div>
+      <!-- </div> -->
+      <!-- <div class="mb-3"></div> -->
+    <!-- </div> -->
   </div>
 </template>
 

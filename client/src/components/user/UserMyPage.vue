@@ -2,9 +2,11 @@
 import { ref, onMounted } from "vue";
 import { useCookies } from "vue3-cookies";
 import UserMyPageHotPlace from "./UserMyPageHotPlace.vue";
-const { cookies } = useCookies();
+import UserPlan from "./UserPlan.vue";
 
 import { useUserStore } from "@/stores/userStore.js";
+
+const { cookies } = useCookies();
 const userStore = useUserStore();
 const { getFavorite, getLikes, getFavHotPlace, getmyFavHotPlaces, setmyFavHotPlaces } = userStore;
 
@@ -109,6 +111,12 @@ onMounted(async () => {
           :key="favHotPlace.hotplaceId"
           :favHotPlace="favHotPlace"
         />
+      </div>
+
+      <!--  -->
+
+      <div v-if="planFlag">
+        <UserPlan />
       </div>
     </div>
   </div>

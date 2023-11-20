@@ -93,9 +93,9 @@ console.log("header var : isLogin : ", isLogin.value);
           </div>
 
           <!-- 보관함 포탈 생성 ! -->
-          <div class="menu">
+          <!-- <div class="menu">
             <RouterLink aria-current="page" to="/user/plan">포탈</RouterLink>
-          </div>
+          </div> -->
           <!--  -->
 
           <div class="menu"></div>
