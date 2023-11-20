@@ -65,7 +65,7 @@ const router = createRouter({
         {
           path: "plan",
           name: "UserPlan",
-          // component: () => import("@/components/user/UserPlan.vue"),
+          component: () => import("@/components/user/UserPlan.vue"),
         },
       ],
     },

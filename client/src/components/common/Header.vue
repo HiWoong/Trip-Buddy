@@ -91,6 +91,13 @@ console.log("header var : isLogin : ", isLogin.value);
           <div class="menu">
             <RouterLink aria-current="page" to="/board">Q&A게시판</RouterLink>
           </div>
+
+          <!-- 보관함 포탈 생성 ! -->
+          <div class="menu">
+            <RouterLink aria-current="page" to="/user/plan">포탈</RouterLink>
+          </div>
+          <!--  -->
+
           <div class="menu"></div>
           <div v-if="isLogin == false" id="user_menu">
             <div class="userJoin">
