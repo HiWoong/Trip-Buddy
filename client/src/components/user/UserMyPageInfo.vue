@@ -88,8 +88,21 @@ const deleteUser = async () => {
 };
 
 const updateUser = () => {
-  // console.log(newUser.value);
-  http.post("/userapi/update", newUser.value).then(({ data }) => {
+  if (nowPwd.value.length < 4){
+    alert("비밀번호는 최소 4자리부터 시작해야 합니다.")
+  } else if (nowPwd.value != checkPwd.value){
+    alert("비밀 번호가 다릅니다. 다시 확인해주세요")
+  } else if (newUser.value.userName == "" || newUser.value.emailId == "" || newUser.value.emailDomain == "") {
+    alert("모든 회원 정보를 기입해주세요.")
+  } else{
+  http.post("/userapi/update", {
+    userId : newUser.value.userId,
+    userName : newUser.value.userName,
+    userPwd : nowPwd.value,
+    emailId : newUser.value.emailId,
+    emailDomain : newUser.value.emailDomain,
+    profileImage : newUser.value.profileImage,
+  }).then(({ data }) => {
     let msg = "사용자 정보 수정에 문제가 발생했습니다.";
     if (data === 1) {
       msg = "사용자 정보 수정이 완료되었습니다.";
@@ -97,6 +110,7 @@ const updateUser = () => {
     }
     alert(msg);
   });
+  }
 };
 
 const imageUpload = async (files) => {

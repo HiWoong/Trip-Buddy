@@ -15,7 +15,7 @@ async function login(user, success, fail) {
 }
 
 async function logout(userId, success, fail) {
-  await http.get(`/userapi/logout/${userId}`).then(success).catch(fail);
+  await http.post(`/userapi/logout`, userId).then(success).catch(fail);
 }
 
 async function update(user, success, fail) {

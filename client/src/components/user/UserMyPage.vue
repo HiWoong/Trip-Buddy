@@ -3,12 +3,13 @@ import { ref, onMounted } from "vue";
 import { useCookies } from "vue3-cookies";
 import UserMyPageHotPlace from "@/components/user/UserMyPageHotPlace.vue";
 import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/userStore.js";
+import UserPlan from "@/components/user/UserPlan.vue";
+
 const { cookies } = useCookies();
 const router = useRouter();
-import { useUserStore } from "@/stores/userStore.js";
 const userStore = useUserStore();
 const { getFavorite, getLikes, getFavHotPlace, getmyFavHotPlaces, setmyFavHotPlaces } = userStore;
-import UserPlan from "@/components/user/UserPlan.vue";
 
 const userId = cookies.get("userId");
 const myFav = ref([]);

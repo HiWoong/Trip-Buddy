@@ -4,18 +4,22 @@ import { useRouter } from "vue-router";
 import { RouterView } from "vue-router";
 import http from "@/util/http-common.js";
 
+// cookies
+import { useCookies } from "vue3-cookies";
+const { cookies } = useCookies();
+
 const router = useRouter();
 
 const subject = ref("");
 const content = ref("");
-const userinfo = JSON.parse(sessionStorage.getItem("userinfo"));
+// const userinfo = JSON.parse(sessionStorage.getItem("userinfo"));
 
 const createArticle = () => {
   http
     .post("articleapi/write", {
       subject: subject.value,
       content: content.value,
-      userId: userinfo.userId,
+      userId: cookies.get("userId")
     })
     .then(({ data }) => {
       let msg = "등록 처리 시 문제가 발생했습니다.";

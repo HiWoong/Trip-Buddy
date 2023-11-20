@@ -1,9 +1,8 @@
 package com.ssafy.enjoytrip.model.service;
 
 
-import com.ssafy.enjoytrip.dto.LoginDto;
-import com.ssafy.enjoytrip.dto.MemberDto;
-import com.ssafy.enjoytrip.model.repo.MemberRepo;
+import com.ssafy.enjoytrip.dto.UserDto;
+import com.ssafy.enjoytrip.model.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,24 +12,24 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService {
+public class UserServiceImpl implements UserService {
 
-	private final MemberRepo repo;
+	private final UserRepo repo;
 
 	@Override
-	public MemberDto getUserInfo(String userId) throws Exception {
+	public UserDto getUserInfo(String userId) throws Exception {
 		return repo.getUserInfo(userId);
 	}
 
 	@Override
-	public MemberDto loginMember(MemberDto memberDto) throws Exception {
-		return repo.loginMember(memberDto);
+	public UserDto loginUser(UserDto UserDto) throws Exception {
+		return repo.loginUser(UserDto);
 	}
 
 
 	@Override
-	public int joinMember(MemberDto memberDto) throws Exception {
-		return repo.joinMember(memberDto);
+	public int joinUser(UserDto UserDto) throws Exception {
+		return repo.joinUser(UserDto);
 	}
 
 	@Override
@@ -65,18 +64,18 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public int setFavorites(MemberDto memberDto) throws Exception {
-		return repo.setFavorites(memberDto);
+	public int setFavorites(UserDto UserDto) throws Exception {
+		return repo.setFavorites(UserDto);
 	}
 
 	@Override
-	public int updateMember(MemberDto memberDto) throws SQLException {
-		return repo.updateMember(memberDto);
+	public int updateUser(UserDto UserDto) throws SQLException {
+		return repo.updateUser(UserDto);
 	}
 
 	@Override
-	public int deleteMember(String userId) throws SQLException {
-		return repo.deleteMember(userId);
+	public int deleteUser(String userId) throws SQLException {
+		return repo.deleteUser(userId);
 	}
 
 }
