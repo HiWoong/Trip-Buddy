@@ -20,4 +20,7 @@ public interface MemberRepo {
 	void saveRefreshToken(Map<String, String> map) throws Exception;
 	Object getRefreshToken(String userId) throws Exception;
 	void deleteRefreshToken(Map<String, String> map) throws Exception;
+	int checkDuplId(String userId) throws Exception;
+	String getFavorites(String userId) throws Exception;
+	int setFavorites(MemberDto memberDto) throws Exception;
 }

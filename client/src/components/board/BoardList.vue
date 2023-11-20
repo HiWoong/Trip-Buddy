@@ -7,12 +7,16 @@ import http from "@/util/http-common.js";
 import BoardListRow from "@/components/board/BoardListRow.vue";
 import PageNavigation from "@/components/common/PageNavigation.vue";
 
+import { useCookies } from "vue3-cookies";
+const { cookies } = useCookies();
+const uid = cookies.get("userId");
+
 const router = useRouter();
 
 const articles = ref([]);
 
 const currentPage = ref(1);
-const totalPage = ref(10);
+const totalPage = ref(5);
 const listSize = ref(20);
 
 const param = ref({
@@ -39,7 +43,6 @@ const searchBoards = () => {
   onPageChange(currentPage.value);
 };
 
-
 onMounted(() => {
   getArticleList();
   getTotalPage();
@@ -63,81 +66,79 @@ const getArticleList = () => {
 };
 
 const getTotalPage = () => {
-  http.get(
-    "/articleapi/articleCount?pgno=" +
+  http
+    .get(
+      "/articleapi/articleCount?pgno=" +
         "&key=" +
         key.value +
         "&word=" +
         word.value
-  ).then(({ data }) => {
-    totalPage.value = Math.ceil(data / param.value.spp);
-  })
-}
-</script>
+    )
+    .then(({ data }) => {
+      totalPage.value = Math.ceil(data / param.value.spp);
+    });
+};
 
+const moveWrite = () => {
+  router.push({ name: "BoardWrite" });
+};
+</script>
 <template>
-  <div class="container mt-5 pt-5">
-    <div class="row justify-content-center">
-      <div class="col-lg-8 col-md-10 col-sm-12">
-        <h2 class="my-3 py-3 shadow-sm bg-light text-center">
-          <mark class="sky">글목록</mark>
-        </h2>
-      </div>
-      <div class="col-lg-8 col-md-10 col-sm-12">
-        <div class="row align-self-center mb-2">
-          <div class="col-md-2 text-start">
-            <button type="button" id="btn-mv-register" class="btn btn-outline-primary btn-sm">
-              <RouterLink class="nav-link active" aria-current="page" to="/board/write"
-                >글쓰기</RouterLink
-              >
-            </button>
+  <div>
+    <div>
+      <div class="title">Q&A 게시판</div>
+      <div class="content">
+        <div class="searchOptions">
+          <div v-if="uid != null" id="submitLogin">
+            <input
+              type="submit"
+              class="writeButton"
+              @click="moveWrite"
+              value="글쓰기"
+            />
           </div>
-          <div class="col-md-7 offset-3">
-            <form class="d-flex" id="form-search" action="">
-              <input type="hidden" name="action" value="list" />
-              <input type="hidden" name="pgno" value="1" />
-              <select
-                name="key"
-                id="key"
-                class="form-select form-select-sm ms-5 me-1 w-50"
-                aria-label="검색조건"
-                v-model="key"
-              >
-                <option value="" selected>검색조건</option>
-                <option value="article_no">글번호</option>
-                <option value="subject">제목</option>
-                <option value="user_id">작성자</option>
-              </select>
-              <div class="input-group input-group-sm">
-                <input
-                  type="text"
-                  name="word"
-                  id="word"
-                  class="form-control"
-                  placeholder="검색어..."
-                  v-model="word"
-                />
-                <button id="btn-search" class="btn btn-dark" type="button" @click="searchBoards">
-                  검색
-                </button>
-              </div>
-            </form>
+          <div class="searchType">
+            <select name="key" id="key" aria-label="검색조건" v-model="key">
+              <option value="" selected>검색조건</option>
+              <option value="article_no">글번호</option>
+              <option value="subject">제목</option>
+              <option value="user_id">작성자</option>
+            </select>
+          </div>
+          <div class="searchWord">
+            <input
+              type="text"
+              name="word"
+              id="word"
+              placeholder="검색어를 입력해주세요."
+              v-model="word"
+            />
+          </div>
+          <div class="searchButton">
+            <button id="btn-search" @click="searchBoards">검색</button>
           </div>
         </div>
-        <table class="table table-hover">
-          <thead>
-            <tr class="text-center">
-              <th scope="col">글번호</th>
-              <th scope="col">제목</th>
-              <th scope="col">작성자</th>
-              <th scope="col">조회수</th>
-              <th scope="col">작성일</th>
-            </tr>
-          </thead>
-          <tbody>
-            <BoardListRow v-for="article in articles" :key="article.articleNo" v-bind="article" />
-          </tbody>
-        </table>
+        <div class="searchResult">
+          <table>
+            <thead>
+              <tr class="section">
+                <th class="articleNo">글번호</th>
+                <th class="articleTitle">제목</th>
+                <th class="articleAuthor">작성자</th>
+                <th class="articleHit">조회수</th>
+                <th class="articleDate">작성일</th>
+              </tr>
+            </thead>
+            <tbody class="nextSection">
+              <BoardListRow
+                class="eachSection"
+                v-for="article in articles"
+                :key="article.articleNo"
+                v-bind="article"
+              />
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
     <PageNavigation
@@ -148,4 +149,192 @@ const getTotalPage = () => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+@font-face {
+  font-family: "NanumSquare";
+  src: url("../../assets/fonts/NanumSquareR.ttf") format("truetype");
+}
+@font-face {
+  font-family: "NanumSquareB";
+  src: url("../../assets/fonts/NanumSquareB.ttf") format("truetype");
+}
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "NanumSquare";
+}
+.title {
+  margin: 20px 0 0 0;
+  width: 100%;
+  height: 50px;
+  /* background-color: aliceblue; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 40px;
+  flex-wrap: wrap;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  width: 90%;
+}
+.searchOptions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+}
+.writeButton {
+  margin-right: 707px;
+  background-color: rgb(175, 171, 243);
+  border-radius: 5px;
+  width: 100px;
+  height: 35px;
+  transition: all 0.25s;
+  box-shadow: 1px 5px 0px 0px rgb(175, 171, 243);
+  font-size: 16px;
+  font-weight: 600;
+}
+.writeButton:hover {
+  box-shadow: 0px 0px 0px 0px rgb(175, 171, 243);
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
+.searchType {
+  width: 150px;
+}
+.searchWord {
+  width: 370px;
+}
+.searchButton {
+  margin: 0 10px;
+  width: 100px;
+}
+#key {
+  width: 150px;
+  height: 35px;
+  font-size: 18px;
+  border: 2px solid gray;
+  border-radius: 5px;
+}
+#word {
+  width: 350px;
+  height: 35px;
+  font-size: 20px;
+  margin: 0 10px;
+  border: 2px solid gray;
+  border-radius: 5px;
+  padding: 5px;
+}
+#btn-search {
+  width: 100px;
+  height: 35px;
+  color: #292929;
+  font-weight: 500;
+  border-radius: 5px;
+  background: transparent;
+  transition: all 0.2s ease;
+  position: relative;
+  display: inline-block;
+  box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
+    7px 7px 20px 0px rgba(0, 0, 0, 0.1), 4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+  outline: none;
+  border: none;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  text-align: center;
+  font-size: 19px;
+}
+#btn-search:after {
+  position: absolute;
+  content: " ";
+  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #f5bb4f;
+  transition: all 0.3s ease;
+}
+#btn-search:hover {
+  background: transparent;
+  box-shadow: 4px 4px 6px 0 rgba(255, 255, 255, 0.5),
+    -4px -4px 6px 0 rgba(116, 125, 136, 0.2),
+    inset -4px -4px 6px 0 rgba(255, 255, 255, 0.5),
+    inset 4px 4px 6px 0 rgba(116, 125, 136, 0.3);
+  font-size: 23px;
+}
+#btn-search:hover:after {
+  -webkit-transform: scale(2) rotate(180deg);
+  transform: scale(2) rotate(180deg);
+  box-shadow: 4px 4px 6px 0 rgba(255, 255, 255, 0.5),
+    -4px -4px 6px 0 rgba(116, 125, 136, 0.2),
+    inset -4px -4px 6px 0 rgba(255, 255, 255, 0.5),
+    inset 4px 4px 6px 0 rgba(116, 125, 136, 0.3);
+}
+.searchResult {
+  margin: 0 15%;
+  padding: 0 0 5px 0;
+  border: 2px solid gray;
+  border-radius: 15px;
+  width: 85%;
+}
+.section {
+  display: flex;
+  width: 1445px;
+  height: 45px;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 18px;
+  text-align: center;
+}
+.articleNo {
+  width: 100px;
+  /* border: 1px solid #292929;
+  border-radius: 5px; */
+  margin: 0 50px 0 10px;
+}
+.articleTitle {
+  width: 500px;
+  /* border: 1px solid #292929;
+  border-radius: 5px; */
+  margin: 0 50px 0 50px;
+}
+.articleAuthor {
+  width: 200px;
+  /* border: 1px solid #292929;
+  border-radius: 5px; */
+  margin: 0 10px 0 10px;
+}
+.articleHit {
+  width: 100px;
+  /* border: 1px solid #292929;
+  border-radius: 5px; */
+  margin: 0 10px 0 10px;
+}
+.articleDate {
+  width: 345px;
+  /* border: 1px solid #292929;
+  border-radius: 5px; */
+}
+
+.nextSection {
+  display: flex;
+  flex-direction: column;
+}
+.eachSection {
+  width: 1445px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin: 2px 0;
+  font-size: 18px;
+  border-bottom: 1px solid rgb(221, 220, 220);
+}
+</style>

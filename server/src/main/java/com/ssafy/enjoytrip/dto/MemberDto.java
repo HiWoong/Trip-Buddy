@@ -15,4 +15,5 @@ public class MemberDto {
 	private String joinDate;
 	private String refreshToken;
 	private String profileImage;
+	private String favorite;
 }

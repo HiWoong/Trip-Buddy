@@ -146,6 +146,33 @@ public class MemberRestController {
 		}
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
+
+	@GetMapping("check/{userId}")
+	public ResponseEntity<?> checkDuplId(@PathVariable("userId") String userId) throws Exception {
+		System.out.println(userId);
+		int isDupl = memberService.checkDuplId(userId);
+		System.out.println(isDupl);
+		if(isDupl == 0) return new ResponseEntity<Integer>(1, HttpStatus.OK);
+		else return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+	}
+
+	@GetMapping("favorite/{userId}")
+	public ResponseEntity<?> getFavorites(@PathVariable("userId") String userId) throws Exception {
+		System.out.println(userId);
+		String favorites = memberService.getFavorites(userId);
+		System.out.println(favorites);
+		if(favorites != null) return new ResponseEntity<String>(favorites, HttpStatus.OK);
+		else return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+	}
+
+	@PostMapping("favorite")
+	public ResponseEntity<?> setFavorites(@RequestBody MemberDto memberDto) throws Exception {
+		System.out.println(memberDto);
+		int result = memberService.setFavorites(memberDto);
+		System.out.println(result);
+		if(result == 1) return new ResponseEntity<Integer>(1, HttpStatus.OK);
+		else return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+	}
 }
 
 

@@ -55,6 +55,21 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
+	public int checkDuplId(String userId) throws Exception {
+		return repo.checkDuplId(userId);
+	}
+
+	@Override
+	public String getFavorites(String userId) throws Exception {
+		return repo.getFavorites(userId);
+	}
+
+	@Override
+	public int setFavorites(MemberDto memberDto) throws Exception {
+		return repo.setFavorites(memberDto);
+	}
+
+	@Override
 	public int updateMember(MemberDto memberDto) throws SQLException {
 		return repo.updateMember(memberDto);
 	}

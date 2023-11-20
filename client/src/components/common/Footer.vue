@@ -47,7 +47,7 @@
 .footer {
   width: 100%;
   height: 350px;
-  background-color: rgb(240, 233, 230);
+  background-color: rgb(240, 237, 230);
   display: flex;
   flex-direction: column;
 }

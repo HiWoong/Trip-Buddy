@@ -24,70 +24,112 @@ const login = async () => {
   console.log("login ing!!!! !!!");
   console.log("userinfo : ", userinfo.value.userId, userinfo.value.userPwd);
   await userLoginStore(userinfo.value);
-  // let accessToken = cookies.get("accessToken");
-  // console.log("111. ", accessToken);
-  // console.log("isLogin: ", isLogin.value);
-  // if (userId) {
-  //   console.log("로그인 성공");
-  //   makeUserIdCookieStore(accessToken);
-  // }
-  // router.push("/");
 };
 </script>
 
 <template>
-  <div class="container mt-5 pt-5">
-    <div class="row justify-content-center mt-5">
-      <div class="col-lg-8 col-md-10 col-sm-12 mt-5 pt-5">
-        <h2 class="my-3 py-3 shadow-sm bg-light text-center">
-          <mark class="orange">로그인</mark>
-        </h2>
-      </div>
-      <div class="col-lg-8 col-md-10 col-sm-12">
-        <!-- <div class="form-check mb-3 float-end">
-          <input class="form-check-input" type="checkbox" value="ok" id="saveId" name="saveId" />
-          <label class="form-check-label" for="saveId"> 아이디저장 </label>
-        </div> -->
-        <div class="mb-3">
-          <label for="userId" class="form-label">아이디 : </label>
-          <input
-            type="text"
-            class="form-control"
-            id="userId"
-            name="userId"
-            placeholder="아이디..."
-            v-model="userinfo.userId"
-          />
-        </div>
-        <div class="mb-3">
-          <label for="userPwd" class="form-label">비밀번호 : </label>
-          <input
-            type="password"
-            class="form-control"
-            id="userPwd"
-            name="userPwd"
-            placeholder="비밀번호..."
-            v-model="userinfo.userPwd"
-          />
-        </div>
-        <div class="col-auto text-center">
-          <input
-            type="submit"
-            id="btn-login"
-            class="btn btn-outline-primary mb-3"
-            value="로그인"
-            @click="login"
-          />
-          <input
-            type="button"
-            id="btn-mv-join"
-            class="btn btn-outline-success mb-3"
-            value="회원가입"
-          />
-        </div>
-      </div>
+  <div class="wholeLayout">
+    <div id="title">
+      <h2>LOGO</h2>
+    </div>
+    <label for="userId" style="width: 500px; text-align: start; font-size: 25px"
+      >아이디</label
+    >
+    <div id="id">
+      <input
+        type="text"
+        id="userId"
+        name="userId"
+        placeholder="아이디를 입력해주세요."
+        style="width: 500px; height: 50px; padding-left: 15px"
+        v-model="userinfo.userId"
+      />
+    </div>
+    <label
+      for="userPwd"
+      style="width: 500px; text-align: start; font-size: 25px"
+      >비밀번호</label
+    >
+    <div id="password">
+      <input
+        type="password"
+        id="userPwd"
+        name="userPwd"
+        placeholder="비밀번호를 입력해주세요."
+        style="
+          width: 500px;
+          height: 50px;
+          padding-left: 15px;
+          font-family: sans-serif;
+        "
+        v-model="userinfo.userPwd"
+      />
+    </div>
+    <div id="forgetPassword">비밀번호가 가물가물...</div>
+    <div id="submitLogin">
+      <input type="submit" id="btn-login" value="로그인" @click="login" />
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+@font-face {
+  font-family: "NanumSquare";
+  src: url("../../assets/fonts/NanumSquareR.ttf") format("truetype");
+}
+@font-face {
+  font-family: "NanumSquareB";
+  src: url("../../assets/fonts/NanumSquareB.ttf") format("truetype");
+}
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "NanumSquare";
+}
+.wholeLayout {
+  margin: 50px 0;
+  width: 100%;
+  height: 800px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  /* background-color: thistle; */
+}
+#title {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 70px;
+  background-color: antiquewhite;
+}
+#id {
+  /* background-color: aquamarine; */
+  font-size: 20px;
+  width: 500px;
+  margin-bottom: 30px;
+}
+#password {
+  /* background-color: blueviolet; */
+  font-size: 20px;
+  width: 500px;
+  margin-bottom: 15px;
+}
+#forgetPassword {
+  /* background-color: darkorange; */
+  margin-bottom: 30px;
+  color: gray;
+}
+#btn-login {
+  background-color: #00ae68;
+  border-radius: 5px;
+  width: 120px;
+  height: 50px;
+  transition: all 0.25s;
+  box-shadow: 1px 5px 0px 0px #007144;
+}
+#btn-login:hover {
+  box-shadow: 0px 0px 0px 0px #007144;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+</style>

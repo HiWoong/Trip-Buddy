@@ -19,13 +19,26 @@ const router = createRouter({
       children: [
         {
           path: "",
-          name: "searchView",
-          component: () => import("@/components/attraction/AttractionSearch.vue"),
+          name: "AttractionSearch",
+          component: () =>
+            import("@/components/attraction/AttractionSearch.vue"),
         },
         {
           path: "plan",
           name: "AttractionPlan",
           component: () => import("@/components/attraction/AttractionPlan.vue"),
+        },
+        {
+          path: "hot",
+          name: "AttractionHotPlaceList",
+          component: () =>
+            import("@/components/attraction/AttractionHotPlaceList.vue"),
+        },
+        {
+          path: "hotWrite",
+          name: "AttractionHotPlaceWrite",
+          component: () =>
+            import("@/components/attraction/AttractionHotPlaceWrite.vue"),
         },
       ],
     },
