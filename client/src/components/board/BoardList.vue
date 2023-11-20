@@ -67,13 +67,7 @@ const getArticleList = () => {
 
 const getTotalPage = () => {
   http
-    .get(
-      "/articleapi/articleCount?pgno=" +
-        "&key=" +
-        key.value +
-        "&word=" +
-        word.value
-    )
+    .get("/articleapi/articleCount?pgno=" + "&key=" + key.value + "&word=" + word.value)
     .then(({ data }) => {
       totalPage.value = Math.ceil(data / param.value.spp);
     });
@@ -90,12 +84,7 @@ const moveWrite = () => {
       <div class="content">
         <div class="searchOptions">
           <div v-if="uid != null" id="submitLogin">
-            <input
-              type="submit"
-              class="writeButton"
-              @click="moveWrite"
-              value="글쓰기"
-            />
+            <input type="submit" class="writeButton" @click="moveWrite" value="글쓰기" />
           </div>
           <div class="searchType">
             <select name="key" id="key" aria-label="검색조건" v-model="key">
@@ -164,7 +153,7 @@ const moveWrite = () => {
   font-family: "NanumSquare";
 }
 .title {
-  margin: 20px 0 0 0;
+  margin: 10px 0 0 0;
   width: 100%;
   height: 50px;
   /* background-color: aliceblue; */
@@ -241,8 +230,8 @@ const moveWrite = () => {
   transition: all 0.2s ease;
   position: relative;
   display: inline-block;
-  box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
-    7px 7px 20px 0px rgba(0, 0, 0, 0.1), 4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5), 7px 7px 20px 0px rgba(0, 0, 0, 0.1),
+    4px 4px 5px 0px rgba(0, 0, 0, 0.1);
   outline: none;
   border: none;
   transition: all 0.3s ease;
@@ -263,19 +252,15 @@ const moveWrite = () => {
 }
 #btn-search:hover {
   background: transparent;
-  box-shadow: 4px 4px 6px 0 rgba(255, 255, 255, 0.5),
-    -4px -4px 6px 0 rgba(116, 125, 136, 0.2),
-    inset -4px -4px 6px 0 rgba(255, 255, 255, 0.5),
-    inset 4px 4px 6px 0 rgba(116, 125, 136, 0.3);
+  box-shadow: 4px 4px 6px 0 rgba(255, 255, 255, 0.5), -4px -4px 6px 0 rgba(116, 125, 136, 0.2),
+    inset -4px -4px 6px 0 rgba(255, 255, 255, 0.5), inset 4px 4px 6px 0 rgba(116, 125, 136, 0.3);
   font-size: 23px;
 }
 #btn-search:hover:after {
   -webkit-transform: scale(2) rotate(180deg);
   transform: scale(2) rotate(180deg);
-  box-shadow: 4px 4px 6px 0 rgba(255, 255, 255, 0.5),
-    -4px -4px 6px 0 rgba(116, 125, 136, 0.2),
-    inset -4px -4px 6px 0 rgba(255, 255, 255, 0.5),
-    inset 4px 4px 6px 0 rgba(116, 125, 136, 0.3);
+  box-shadow: 4px 4px 6px 0 rgba(255, 255, 255, 0.5), -4px -4px 6px 0 rgba(116, 125, 136, 0.2),
+    inset -4px -4px 6px 0 rgba(255, 255, 255, 0.5), inset 4px 4px 6px 0 rgba(116, 125, 136, 0.3);
 }
 .searchResult {
   margin: 0 15%;

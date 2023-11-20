@@ -8,16 +8,14 @@ const navigationSize = props.totalPage;
 
 const startPage = computed(() => {
   // return parseInt((props.currentPage - 1) / navigationSize) * navigationSize + 1;
-  let topPage =
-    parseInt((props.currentPage - 1) / navigationSize) * navigationSize + 1;
+  let topPage = parseInt((props.currentPage - 1) / navigationSize) * navigationSize + 1;
   console.log("topPage : " + topPage);
   return topPage;
 });
 
 const endPage = computed(() => {
   let bottomPage =
-    parseInt((props.currentPage - 1) / navigationSize) * navigationSize +
-    navigationSize;
+    parseInt((props.currentPage - 1) / navigationSize) * navigationSize + navigationSize;
 
   // bottomPage = totalPage <= bottomPage ? totalPage : bottomPage;
   bottomPage = bottomPage <= props.totalPage ? bottomPage : props.totalPage;
@@ -29,10 +27,7 @@ const endPage = computed(() => {
 });
 
 const endRange = computed(() => {
-  return (
-    parseInt((props.totalPage - 1) / navigationSize) * navigationSize <
-    props.currentPage
-  );
+  return parseInt((props.totalPage - 1) / navigationSize) * navigationSize < props.currentPage;
 });
 
 function range(start, end) {
@@ -52,21 +47,20 @@ function onPageChange(pg) {
     <div class="mostFore" @click="onPageChange(1)">
       <img src="@/assets/img/mostFore.png" style="width: 25px; height: 25px" />
     </div>
-    <div
-      class="fore"
-      @click="onPageChange(startPage == 1 ? 1 : props.currentPage - 1)"
-    >
+    <div class="fore" @click="onPageChange(props.currentPage == 1 ? 1 : props.currentPage - 1)">
       <img src="@/assets/img/fore.png" style="width: 25px; height: 25px" />
     </div>
     <template v-for="pg in range(startPage, endPage)" :key="pg">
-      <div
-        :class="currentPage === pg ? 'activePage' : 'page'"
-        @click="onPageChange(pg)"
-      >
+      <div :class="currentPage === pg ? 'activePage' : 'page'" @click="onPageChange(pg)">
         {{ pg }}
       </div>
     </template>
-    <div class="rear" @click="onPageChange(endRange ? totalPage : endPage + 1)">
+    <div
+      class="rear"
+      @click="
+        onPageChange(props.currentPage == props.totalPage ? totalPage : props.currentPage + 1)
+      "
+    >
       <img src="@/assets/img/rear.png" style="width: 25px; height: 25px" />
     </div>
     <div class="mostRear" @click="onPageChange(totalPage)">

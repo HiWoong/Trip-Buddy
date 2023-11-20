@@ -35,7 +35,6 @@ public class PlanRestController {
 //        for (PlanDto p : list){
 //            System.out.println("p = " + p);
 //        }
-
         if (list != null){
             return new ResponseEntity<List<PlanDto>>(list, HttpStatus.OK);
         }

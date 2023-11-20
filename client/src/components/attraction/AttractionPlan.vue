@@ -2,6 +2,13 @@
 import http from "@/util/http-common.js";
 import { ref, watch, onMounted } from "vue";
 import { VueDraggableNext } from "vue-draggable-next";
+import { useRouter } from "vue-router";
+
+// cookies
+import { useCookies } from "vue3-cookies";
+const { cookies } = useCookies();
+const router = useRouter();
+
 var map;
 const keyword = ref("역삼역");
 const markers = ref([]);
@@ -92,14 +99,20 @@ const addPickPlace = (places) => {
     road_address_name: places.road_address_name,
     address_name: places.address_name,
     phone: places.phone,
-    index: idx.value++,
+    // index: idx.value++,
+    index: (idx.value++).toString(),
+    //
   });
 };
 
 const removePickPlace = (address_name, index) => {
   for (let i = 0; i < result.value.length; i++) {
     console.log(result.value);
-    if (result.value[i].address_name == address_name && result.value[i].index == index) {
+    if (
+      result.value[i].address_name == address_name &&
+      // result.value[i].index == index
+      Number(result.value[i].index) == index
+    ) {
       result.value.splice(i, 1);
       break;
     }
@@ -371,16 +384,77 @@ function searchPlaces() {
 }
 
 const addDay = () => {
-  result.value.push({
-    nowDay: nowDay.value,
-  });
-  nowDay.value++;
+  if (nowDay.value == 6) {
+    alert("여행 계획은 최대 5일까지만 가능합니다.");
+  } else {
+    result.value.push({
+      nowDay: nowDay.value,
+    });
+    nowDay.value++;
+  }
 };
 
+// onclick
 const addPlan = () => {
   // 보낼 때 맨 앞에 {nowDay: 1}을 해줘야 함
   // http.post("url", result.value);
-  alert("계획 저장하기");
+
+  const userId = cookies.get("userId");
+
+  if (userId == null) {
+    alert("여행 플래너를 이용하려면 로그인이 필요합니다.");
+  } else if (result.value.length == 0) {
+    alert("최소 하나 이상의 계획을 담아야 합니다.");
+  } else {
+    // const plans = ref([]);
+    // const plans = Object.assign(result);
+    let plans = new Array(5);
+    for (let i = 0; i < plans.length; i++) {
+      plans[i] = new Array();
+    }
+
+    // plans.value.add({
+    //   nowDay : 1
+    // })
+    let temp = plans[0];
+    for (let res of result.value) {
+      if (res.nowDay === undefined) {
+        // temp.value.push(res.value);
+        // console.log("temp.value", temp.value);
+        temp.push(res);
+        console.log("temp : ", temp);
+        // console.log(res.place_name);
+      } else {
+        temp = plans[res.nowDay - 1];
+        console.log(res.nowDay);
+      }
+    }
+
+    console.log(JSON.stringify(plans[0]));
+    console.log(JSON.stringify(plans[1]));
+    console.log(JSON.stringify(plans[2]));
+    console.log(JSON.stringify(plans[3]));
+    console.log(JSON.stringify(plans[4]));
+
+    // const plans = JSON.parse(JSON.stringify(result));
+    // plans.value.unshift({
+    //   nowDay : 1
+    // });
+    // console.log("addPlan, result : ", result.value);
+    http.post("planapi/create", {
+      userId: cookies.get("userId"),
+      subject: "hello",
+      content1: JSON.stringify(plans[0]),
+      content2: JSON.stringify(plans[1]),
+      content3: JSON.stringify(plans[2]),
+      content4: JSON.stringify(plans[3]),
+      content5: JSON.stringify(plans[4]),
+    });
+
+    alert("등록이 완료되었습니다. 마이페이지에서 확인하세요!");
+
+    router.push("/");
+  }
 };
 </script>
 <!-------------------------------------------------------------------------------------------------------------->
@@ -390,7 +464,7 @@ const addPlan = () => {
   <div id="contents">
     <div id="menu_wrap">
       <div class="option">
-        <h5>검색...하실래요?</h5>
+        <h5>검색하세요!</h5>
         <div>
           <input type="text" v-model="keyword" id="keyword" />
           <button id="searchButton" @click="searchPlaces" @keypress="() => searchPlaces()">
@@ -410,6 +484,7 @@ const addPlan = () => {
         </button>
         <div style="font-weight: bold; font-size: 25px">여행 계획</div>
         <button style="border: none; background-color: rgb(252, 227, 118)">
+          <!-- 여기에서 포스트하자! -->
           <img id="submitImg" src="@/assets/img/store.png" @click="addPlan" />
         </button>
       </div>

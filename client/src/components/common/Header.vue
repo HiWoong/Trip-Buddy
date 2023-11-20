@@ -71,7 +71,7 @@ console.log("header var : isLogin : ", isLogin.value);
       <nav>
         <div class="grid-container">
           <div id="logo">
-            <RouterLink to="" @click="moveHome">Enjoy Trip</RouterLink>
+            <RouterLink to="" @click="moveHome">Trip Buddy</RouterLink>
           </div>
           <div class="menu">
             <RouterLink aria-current="page" to="" @click="moveAttractionSearch"
@@ -84,9 +84,7 @@ console.log("header var : isLogin : ", isLogin.value);
             >
           </div>
           <div class="menu">
-            <RouterLink aria-current="page" to="" @click="moveHotPlace"
-              >핫플 보기</RouterLink
-            >
+            <RouterLink aria-current="page" to="" @click="moveHotPlace">핫플 보기</RouterLink>
           </div>
           <div class="menu">
             <RouterLink aria-current="page" to="/board">Q&A게시판</RouterLink>
@@ -109,19 +107,13 @@ console.log("header var : isLogin : ", isLogin.value);
           </div>
           <div v-else id="user_menu">
             <div class="loginUser">
-              <RouterLink id="navHotPlace" to="" @click="moveHotPlaceWrite"
-                >핫플 자랑</RouterLink
-              >
+              <RouterLink id="navHotPlace" to="" @click="moveHotPlaceWrite">핫플 자랑</RouterLink>
             </div>
             <div class="loginUser">
-              <RouterLink id="navMyPage" to="" @click="moveMyPage"
-                >마이페이지</RouterLink
-              >
+              <RouterLink id="navMyPage" to="" @click="moveMyPage">마이페이지</RouterLink>
             </div>
             <div class="loginUser">
-              <RouterLink id="navLogout" to="" @click="logout"
-                >로그아웃</RouterLink
-              >
+              <RouterLink id="navLogout" to="" @click="logout">로그아웃</RouterLink>
             </div>
           </div>
         </div>

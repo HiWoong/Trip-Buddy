@@ -79,7 +79,7 @@ const getUserInfo = async (userId) => {
 };
 
 const viewPlans = () => {
-  router.push({ name: "UserPlan" });
+  router.push({ name: "UserMyPage" });
 };
 
 const deleteUser = async () => {
@@ -88,7 +88,7 @@ const deleteUser = async () => {
 };
 
 const updateUser = () => {
-  console.log(newUser.value);
+  // console.log(newUser.value);
   http.post("/userapi/update", newUser.value).then(({ data }) => {
     let msg = "사용자 정보 수정에 문제가 발생했습니다.";
     if (data === 1) {

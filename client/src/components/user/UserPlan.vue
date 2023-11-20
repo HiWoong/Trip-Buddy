@@ -32,9 +32,7 @@ const newUser = ref([]);
 const plans = ref([]);
 
 // temp
-const profileImg = ref(
-  "https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg"
-);
+const profileImg = ref("https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg");
 //
 
 onMounted(async () => {
@@ -51,7 +49,6 @@ const getUserInfo = async (userId) => {
       if (response.status === httpStatusCode.OK) {
         console.log("3. getUserInfo data >> ", response.data.userInfo);
         newUser.value = response.data.userInfo;
-        
       } else {
         console.log("유저 정보 없음!!!!");
       }
@@ -66,12 +63,13 @@ const getUserInfo = async (userId) => {
 };
 
 const getTotalPlans = async (userId) => {
-  totalPlans(
+  await totalPlans(
     userId,
     (response) => {
       console.log(response.status);
       if (response.status === httpStatusCode.OK) {
         console.log("plans >> ", response.data);
+        console.log(plans.value);
         plans.value = response.data;
 
         // console.log("new User", newUser.value);
@@ -87,22 +85,22 @@ const getTotalPlans = async (userId) => {
       );
     }
   );
-}
+};
 </script>
 
 <template>
   <div>
-  <!-- <div class="container mt-5 pt-5"> -->
+    <!-- <div class="container mt-5 pt-5"> -->
     <!-- <div class="row justify-content-center mt-5"> -->
-      <!-- <div class="col-lg-8 col-md-10 col-sm-12"> -->
-        <!-- <h2 class="my-3 py-3 shadow-sm bg-light text-center">
+    <!-- <div class="col-lg-8 col-md-10 col-sm-12"> -->
+    <!-- <h2 class="my-3 py-3 shadow-sm bg-light text-center">
           <mark class="orange">마이페이지</mark>
         </h2> -->
-        <div>
-          <UserPlanRow v-for="plan in plans" :key="plan.planId" v-bind="plan" />
-        </div>
-      <!-- </div> -->
-      <!-- <div class="mb-3"></div> -->
+    <div>
+      <UserPlanRow v-for="plan in plans" :key="plan.planId" v-bind="plan" />
+    </div>
+    <!-- </div> -->
+    <!-- <div class="mb-3"></div> -->
     <!-- </div> -->
   </div>
 </template>
@@ -124,10 +122,9 @@ ol.numbered {
 }
 
 li {
-font-size: 16px;
-line-height: 1.2;
-margin-bottom: 30px;
-padding-left: 30px;
+  font-size: 16px;
+  line-height: 1.2;
+  margin-bottom: 30px;
+  padding-left: 30px;
 }
-
 </style>

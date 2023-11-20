@@ -21,7 +21,7 @@ onMounted(async () => {
 });
 
 const loadPlaces = async () => {
-  console.log(nowPage.value);
+  // console.log(nowPage.value);
   await http
     .get("/hotplaceapi/list?pgno=" + nowPage.value + "&sort=" + type.value)
     .then(({ data }) => {

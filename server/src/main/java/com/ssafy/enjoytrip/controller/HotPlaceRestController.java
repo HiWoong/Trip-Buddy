@@ -24,27 +24,27 @@ public class HotPlaceRestController {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("pgno", pgno + "");
 		map.put("sort", sort);
-		System.out.println(sort);
+//		System.out.println(sort);
 		List<HotPlaceDto> list = hotPlaceService.listHotPlace(map);
-		System.out.println(list);
-		System.out.println(list.size());
+//		System.out.println(list);
+//		System.out.println(list.size());
 		return new ResponseEntity<List<HotPlaceDto>>(list, HttpStatus.OK);
 	}
 
 	@PostMapping("/write")
 	private ResponseEntity<?> createHotPlace(@RequestBody HotPlaceDto hotPlaceDto) throws Exception {
-		System.out.println(hotPlaceDto);
+//		System.out.println(hotPlaceDto);
 		int result = hotPlaceService.createHotPlace(hotPlaceDto);
-		System.out.println(result);
+//		System.out.println(result);
 		if(result == 1) return new ResponseEntity<Integer>(1, HttpStatus.OK);
 		else return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 
 	@GetMapping("/readFavorite/{hotPlaceId}")
 	private ResponseEntity<?> getFavHotPlace(@PathVariable int hotPlaceId) throws Exception {
-		System.out.println(hotPlaceId);
+//		System.out.println(hotPlaceId);
 		HotPlaceDto favPlace = hotPlaceService.getFavHotPlace(hotPlaceId);
-		System.out.println(favPlace);
+//		System.out.println(favPlace);
 		if(favPlace != null) return new ResponseEntity<HotPlaceDto>(favPlace, HttpStatus.OK);
 		else return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}

@@ -80,7 +80,7 @@ const hotPlaceWrite = () => {
           type="text"
           id="hotTitle"
           name="hotTitle"
-          placeholder="기깔나는 제목을 원해요!"
+          placeholder="장소에 어울리는 제목을 적어주세요!"
           style="width: 500px; height: 50px; padding-left: 15px"
           v-model="data.subject"
         />
@@ -127,6 +127,7 @@ const hotPlaceWrite = () => {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  justify-content: center;
   /* background-color: thistle; */
 }
 #image {

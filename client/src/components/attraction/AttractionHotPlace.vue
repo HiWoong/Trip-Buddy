@@ -27,23 +27,27 @@ onMounted(() => {
 });
 
 const takePlace = async () => {
-  if (!isLoved.value) {
-    const abc = props.myFav;
-    abc.push(props.hotPlace.hotplaceId);
-    await setFavorite({
-      userId: userId,
-      favorite: JSON.stringify(abc),
-    });
-    isLoved.value = true;
-  } else {
-    // 좋아요 삭제 로직 만들기
-    alert("좋아하는 마음이 어떻게 변해요?");
+  if (userId == null || userId == "") alert("좋아요 기능은 로그인 후에 이용하실 수 있습니다.");
+  else {
+    if (!isLoved.value) {
+      const abc = props.myFav;
+      abc.push(props.hotPlace.hotplaceId);
+      await setFavorite({
+        userId: userId,
+        favorite: JSON.stringify(abc),
+      });
+      isLoved.value = true;
+    } else {
+      // 좋아요 삭제 로직 만들기
+      // alert("좋아하는 마음이 어떻게 변해요?");
+      alert("좋아요는 현재 취소할 수 없습니다.");
+    }
   }
 };
 
 const click = () => {
   isClicked.value = !isClicked.value;
-  console.log(isClicked.value);
+  // console.log(isClicked.value);
 };
 </script>
 <template>
@@ -51,8 +55,8 @@ const click = () => {
     <div>
       <div id="icon">
         <button id="favorite" @click="takePlace">
-          <span v-if="isLoved" role="img" style="color: red">❤</span>
-          <span v-else role="img">🤍</span>
+          <span v-if="isLoved">❤️</span>
+          <span v-else>🤍</span>
         </button>
       </div>
       <img

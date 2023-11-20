@@ -8,6 +8,7 @@ const router = useRouter();
 import { useUserStore } from "@/stores/userStore.js";
 const userStore = useUserStore();
 const { getFavorite, getLikes, getFavHotPlace, getmyFavHotPlaces, setmyFavHotPlaces } = userStore;
+import UserPlan from "@/components/user/UserPlan.vue";
 
 const userId = cookies.get("userId");
 const myFav = ref([]);
@@ -35,7 +36,7 @@ const myWriteStyleObject = ref({
 const myHotPlaceC = () => {
   if (!myHotPlaceFlag.value) {
     myHotPlaceFlag.value = true;
-    console.log(myHotPlaceFlag.value);
+    // console.log(myHotPlaceFlag.value);
     myHotStyleObject.value.backgroundColor = "gray";
     myHotStyleObject.value.fontSize = "20px";
   }
@@ -83,7 +84,7 @@ onMounted(async () => {
   await getFavorite(userId);
   myFav.value = await getLikes();
   myFav.value.forEach(async (hotPlaceId) => {
-    console.log(hotPlaceId);
+    // console.log(hotPlaceId);
     await getFavHotPlace(hotPlaceId);
   });
   favHotPlaces.value = await getmyFavHotPlaces();
@@ -126,6 +127,9 @@ const moveMyPageInfo = () => {
           :key="favHotPlace.hotplaceId"
           :favHotPlace="favHotPlace"
         />
+      </div>
+      <div v-if="planFlag">
+        <UserPlan />
       </div>
     </div>
   </div>

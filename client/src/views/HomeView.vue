@@ -85,17 +85,17 @@ const goAttraction = async (num) => {
   <!-- <div class="logo">Enjoy Trip</div> -->
   <div class="cards">
     <div class="card">
-      <img src="../assets/img/default.jpg" alt="" />
-      <div class="title">주인장 추천</div>
-      <div class="content">주인장 추천입니다.</div>
+      <img src="../assets/img/Busan.jpg" alt="#" style="border-radius: 5px; object-fit: cover" />
+      <div class="title">최신순</div>
+      <div class="content">최신순입니다.</div>
     </div>
     <div class="card">
-      <img src="../assets/img/default.jpg" alt="" />
-      <div class="title">별점순</div>
-      <div class="content">별점순입니다.</div>
+      <img src="../assets/img/Daegu.jpg" alt="#" style="border-radius: 5px; object-fit: cover" />
+      <div class="title">조회순</div>
+      <div class="content">조회순입니다.</div>
     </div>
     <div class="card">
-      <img src="../assets/img/default.jpg" alt="" />
+      <img src="../assets/img/Gwangju.jpg" alt="#" style="border-radius: 5px; object-fit: cover" />
       <div class="title">좋아요순</div>
       <div class="content">좋아요순입니다.</div>
     </div>
@@ -156,7 +156,7 @@ const goAttraction = async (num) => {
 .card {
   background-color: rgb(222, 222, 222);
   display: inline-block;
-  width: 300px;
+  width: 299px;
   height: 400px;
   border-radius: 2vh;
   margin-bottom: 3vh;
