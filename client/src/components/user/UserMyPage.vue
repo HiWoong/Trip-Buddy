@@ -1,12 +1,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useCookies } from "vue3-cookies";
-import UserMyPageHotPlace from "./UserMyPageHotPlace.vue";
-import UserPlan from "./UserPlan.vue";
+import UserMyPageHotPlace from "@/components/user/UserMyPageHotPlace.vue";
+const { cookies } = useCookies();
 
 import { useUserStore } from "@/stores/userStore.js";
-
-const { cookies } = useCookies();
 const userStore = useUserStore();
 const { getFavorite, getLikes, getFavHotPlace, getmyFavHotPlaces, setmyFavHotPlaces } = userStore;
 
@@ -95,14 +93,26 @@ onMounted(async () => {
   <div class="wholeLayout">
     <div class="menu">
       <div class="tab-content">
-        <span :style="planStyleObject" @click="planC">나의 여행 계획</span>
+        <div class="clickMenu" :style="planStyleObject" @click="planC">나의 여행 계획</div>
       </div>
       <div class="tab-content">
-        <span :style="myHotStyleObject" @click="myHotPlaceC">좋아요한 핫플레이스</span>
+        <div class="clickMenu" :style="myHotStyleObject" @click="myHotPlaceC">
+          좋아요한 핫플레이스
+        </div>
       </div>
       <div class="tab-content">
-        <span :style="myWriteStyleObject" @click="myWritePlaceC">내가 등록한 핫플레이스</span>
+        <div class="clickMenu" :style="myWriteStyleObject" @click="myWritePlaceC">
+          내가 등록한 핫플레이스
+        </div>
       </div>
+      <button style="border: none; width: 50px; height: 50px; background-color: transparent">
+        <img
+          id="submitImg"
+          src="@/assets/img/settings.png"
+          @click="addPlan"
+          style="width: 50px; height: 50px"
+        />
+      </button>
     </div>
     <div class="tab">
       <div v-if="myHotPlaceFlag">
@@ -111,12 +121,6 @@ onMounted(async () => {
           :key="favHotPlace.hotplaceId"
           :favHotPlace="favHotPlace"
         />
-      </div>
-
-      <!--  -->
-
-      <div v-if="planFlag">
-        <UserPlan />
       </div>
     </div>
   </div>
@@ -143,18 +147,20 @@ onMounted(async () => {
   flex-direction: column;
 }
 .menu {
-  width: 100%;
+  width: 1900px;
   height: 100px;
   display: flex;
   flex-direction: row;
+  align-items: center;
+  text-align: center;
 }
 .tab {
   margin: 50px 0 0 100px;
-  width: 100%;
+  width: 90%;
   height: 800px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: center;
   overflow-y: scroll;
 }
 .tab::-webkit-scrollbar {
@@ -169,9 +175,16 @@ onMounted(async () => {
   background: rgba(233, 214, 161, 0.5); /*스크롤바 뒷 배경 색상*/
 }
 .tab-content {
-  flex: 1;
+  display: flex;
+  width: 100%;
   height: 100px;
-  margin: 0 100px;
+}
+.clickMenu {
+  width: 100%;
+  height: 100%;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

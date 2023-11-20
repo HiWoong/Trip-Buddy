@@ -5,11 +5,15 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="wholeLayout">
+  <div class="favhotP">
     <div><img :src="props.favHotPlace.image" /></div>
-    <div>{{ props.favHotPlace.hotplaceId }} {{ props.favHotPlace.subject }}</div>
-    <div>{{ props.favHotPlace.content }}</div>
-    <div>{{ props.favHotPlace.createdDate }}</div>
+    <div class="favhotContents">
+      <div class="favhotTitle">
+        [{{ props.favHotPlace.hotplaceId }}] {{ props.favHotPlace.subject }}
+      </div>
+      <div class="favhotContent">{{ props.favHotPlace.content }}</div>
+      <div>{{ props.favHotPlace.createdDate }}</div>
+    </div>
   </div>
 </template>
 
@@ -27,7 +31,21 @@ const props = defineProps({
   padding: 0;
   font-family: "NanumSquare";
 }
-.wholeLayout {
+.favhotP {
+  display: flex;
+  flex-direction: row;
   width: 1000px;
+  height: 300px;
+}
+.favhotContents {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 0 20px;
+}
+.favhotTitle {
+  font-size: 30px;
+}
+.favhotContent {
+  font-size: 20px;
 }
 </style>

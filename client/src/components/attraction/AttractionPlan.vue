@@ -2,13 +2,6 @@
 import http from "@/util/http-common.js";
 import { ref, watch, onMounted } from "vue";
 import { VueDraggableNext } from "vue-draggable-next";
-import { useRouter } from "vue-router";
-
-// cookies
-import { useCookies } from "vue3-cookies";
-const { cookies } = useCookies();
-const router = useRouter();
-
 var map;
 const keyword = ref("역삼역");
 const markers = ref([]);
@@ -99,21 +92,14 @@ const addPickPlace = (places) => {
     road_address_name: places.road_address_name,
     address_name: places.address_name,
     phone: places.phone,
-    // index: idx.value++,
-    index: (idx.value++).toString(),
-    //
+    index: idx.value++,
   });
 };
 
 const removePickPlace = (address_name, index) => {
   for (let i = 0; i < result.value.length; i++) {
     console.log(result.value);
-    if (
-      result.value[i].address_name == address_name &&
-      // result.value[i].index == index
-      Number(result.value[i].index) == index
-
-    ) {
+    if (result.value[i].address_name == address_name && result.value[i].index == index) {
       result.value.splice(i, 1);
       break;
     }
@@ -221,13 +207,7 @@ function searchPlaces() {
         itemEl.onmouseenter = function () {
           infowindow.close();
         };
-      })(
-        marker,
-        places[i].place_name,
-        places[i].road_address_name,
-        places[i].phone,
-        placePosition
-      );
+      })(marker, places[i].place_name, places[i].road_address_name, places[i].phone, placePosition);
 
       fragment.appendChild(itemEl);
     }
@@ -292,11 +272,7 @@ function searchPlaces() {
       spriteOrigin: new kakao.maps.Point(0, idx * 46 + 10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
       offset: new kakao.maps.Point(13, 37), // 마커 좌표에 일치시킬 이미지 내에서의 좌표
     };
-    const markerImage = new kakao.maps.MarkerImage(
-      imageSrc,
-      imageSize,
-      imgOptions
-    );
+    const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions);
     const marker = new kakao.maps.Marker({
       position: position, // 마커의 위치
       image: markerImage,
@@ -356,8 +332,7 @@ function searchPlaces() {
 
     let title = document.createElement("div");
     title.className = "title";
-    if (place_name.length > 10)
-      title.innerHTML = place_name.substring(0, 10) + "...";
+    if (place_name.length > 10) title.innerHTML = place_name.substring(0, 10) + "...";
     else title.innerHTML = place_name;
 
     let body = document.createElement("div");
@@ -396,79 +371,16 @@ function searchPlaces() {
 }
 
 const addDay = () => {
-  if (nowDay.value == 6){
-    alert("여행 계획은 최대 5일까지만 가능합니다.")
-  } else {
-    result.value.push({
-      nowDay: nowDay.value,
-    });
-    nowDay.value++;
-  }
-
+  result.value.push({
+    nowDay: nowDay.value,
+  });
+  nowDay.value++;
 };
 
-
-// onclick
 const addPlan = () => {
   // 보낼 때 맨 앞에 {nowDay: 1}을 해줘야 함
   // http.post("url", result.value);
-
-  const userId = cookies.get("userId");
-
-  if (userId == null) {
-    alert("여행 플래너를 이용하려면 로그인이 필요합니다.");
-  } else if (result.value.length == 0) {
-    alert("최소 하나 이상의 계획을 담아야 합니다.");
-  } else {
-    // const plans = ref([]);
-    // const plans = Object.assign(result);
-    let plans = new Array(5);
-    for (let i = 0; i < plans.length; i++) {
-    plans[i] = new Array();
-    }
-
-    // plans.value.add({
-    //   nowDay : 1
-    // })
-    let temp = plans[0];
-    for (let res of result.value){
-      if (res.nowDay === undefined){
-        // temp.value.push(res.value);
-        // console.log("temp.value", temp.value);
-        temp.push(res);
-        console.log("temp : ", temp);
-        // console.log(res.place_name);
-      } else {
-        temp = plans[res.nowDay - 1];
-        console.log(res.nowDay);
-      }
-    }
-
-    console.log(JSON.stringify(plans[0]));
-    console.log(JSON.stringify(plans[1]));
-    console.log(JSON.stringify(plans[2]));
-    console.log(JSON.stringify(plans[3]));
-    console.log(JSON.stringify(plans[4]));
-
-    // const plans = JSON.parse(JSON.stringify(result));
-    // plans.value.unshift({
-    //   nowDay : 1
-    // });
-    // console.log("addPlan, result : ", result.value);
-    http.post("planapi/create", {
-      userId : cookies.get("userId"),
-      subject : "hello",
-      content1 : JSON.stringify(plans[0]),
-      content2 : JSON.stringify(plans[1]),
-      content3 : JSON.stringify(plans[2]),
-      content4 : JSON.stringify(plans[3]),
-      content5 : JSON.stringify(plans[4])
-    })
-
-    alert("등록이 완료되었습니다. 마이페이지에서 확인하세요!");
-
-    router.push("/");
-  }
+  alert("계획 저장하기");
 };
 </script>
 <!-------------------------------------------------------------------------------------------------------------->
@@ -478,14 +390,10 @@ const addPlan = () => {
   <div id="contents">
     <div id="menu_wrap">
       <div class="option">
-        <h5>검색이 하고싶어?</h5>
+        <h5>검색...하실래요?</h5>
         <div>
           <input type="text" v-model="keyword" id="keyword" />
-          <button
-            id="searchButton"
-            @click="searchPlaces"
-            @keypress="() => searchPlaces()"
-          >
+          <button id="searchButton" @click="searchPlaces" @keypress="() => searchPlaces()">
             검색하기
           </button>
         </div>
@@ -501,25 +409,13 @@ const addPlan = () => {
           <img id="submitImg" src="@/assets/img/day.png" @click="addDay" />
         </button>
         <div style="font-weight: bold; font-size: 25px">여행 계획</div>
-        <button
-          style="border: none; background-color: rgb(252, 227, 118)"
-        >
-          <!-- 여기에서 포스트하자! -->
-          <img
-            id="submitImg"
-            src="@/assets/img/store.png"
-            @click="addPlan"
-          />
+        <button style="border: none; background-color: rgb(252, 227, 118)">
+          <img id="submitImg" src="@/assets/img/store.png" @click="addPlan" />
         </button>
       </div>
       <div id="selectPlaces">
         <div id="firstDay"></div>
-        <VueDraggableNext
-          id="draggable"
-          class="dragArea"
-          :list="result"
-          :sort="true"
-        >
+        <VueDraggableNext id="draggable" class="dragArea" :list="result" :sort="true">
         </VueDraggableNext>
       </div>
     </div>
@@ -772,8 +668,7 @@ const addPlan = () => {
   text-align: center;
   border: none;
   border-radius: 4px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   width: 80px;
   height: 30px;
   float: right;

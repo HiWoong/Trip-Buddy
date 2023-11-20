@@ -1,8 +1,8 @@
 <script setup>
 import { VueperSlides, VueperSlide } from "vueperslides";
 import { ref, onMounted } from "vue";
-import "vueperslides/dist/vueperslides.css";
 import { useRouter } from "vue-router";
+import "vueperslides/dist/vueperslides.css";
 
 import { useAttractionStore } from "@/stores/attractionStore";
 const attractionStore = useAttractionStore();
@@ -87,22 +87,17 @@ const goAttraction = async (num) => {
     <div class="card">
       <img src="../assets/img/default.jpg" alt="" />
       <div class="title">주인장 추천</div>
-      <div class="content">한 번 잡숴봐</div>
+      <div class="content">주인장 추천입니다.</div>
     </div>
     <div class="card">
       <img src="../assets/img/default.jpg" alt="" />
       <div class="title">별점순</div>
-      <div class="content">이게 진짜 좋은거라니까</div>
+      <div class="content">별점순입니다.</div>
     </div>
     <div class="card">
       <img src="../assets/img/default.jpg" alt="" />
       <div class="title">좋아요순</div>
-      <div class="content">내가 먹으려다 안먹고 양보하는거여</div>
-    </div>
-    <div class="card">
-      <img src="../assets/img/default.jpg" alt="" />
-      <div class="title">조회수순</div>
-      <div class="content">으잉? 진짜 안먹을겨?</div>
+      <div class="content">좋아요순입니다.</div>
     </div>
   </div>
 </template>
@@ -155,7 +150,7 @@ const goAttraction = async (num) => {
   margin: 30px auto;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-around;
   /* background-color: antiquewhite; */
 }
 .card {

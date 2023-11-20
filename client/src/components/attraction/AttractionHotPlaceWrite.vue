@@ -38,6 +38,8 @@ const hotPlaceWrite = () => {
         alert("등록이 정상적으로 진행되지 않았습니다.");
       }
     });
+  } else {
+    alert("I need a picture...");
   }
 };
 </script>
