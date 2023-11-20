@@ -57,43 +57,33 @@ const moveList = () => {
 </script>
 
 <template>
-  <div class="row justify-content-center mt-5">
-    <div class="col-lg-8 col-md-10 col-sm-12">
-      <h2 class="my-3 py-3 shadow-sm bg-light text-center">
-        <mark class="sky">글보기</mark>
-      </h2>
-    </div>
-    <div class="col-lg-8 col-md-10 col-sm-12">
-      <div class="row my-2">
-        <h2 class="text-secondary">{{ article.subject }}</h2>
+  <div>
+    <div>
+      <div class="title">
+        {{ article.subject }}
       </div>
-      <div class="row">
-        <div class="col-md-8">
-          <div class="clearfix align-content-center">
-            <img
-              class="avatar me-2 float-md-start bg-light p-2"
-              src="https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg"
-            />
-            <p>
-              <span class="fw-bold">{{ article.userId }}</span> <br />
-              <span class="text-secondary fw-light">
-                {{ article.registerTime }} 조회 : {{ article.hit }}
-              </span>
-            </p>
-          </div>
+      <div class="content">
+        <div class="firstContent">
+          <img
+            src="https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg"
+            style="width: 50px; height: 50px; margin-right: 10px"
+          />
+          <div style="font-size: 20px; color: gray">|</div>
+          <div style="font-size: 20px; margin-left: 30px">{{ article.userId }}</div>
         </div>
-        <div class="col-md-4 align-self-center text-end">댓글 : {{ comments.length }}</div>
-        <div class="divider mb-3"></div>
-        <div class="text-body">{{ article.content }}</div>
-        <div class="divider mt-3 mb-3"></div>
-        <div class="d-flex justify-content-end">
-          <button type="button" id="btn-list" class="btn btn-outline-primary mb-3">
-            <RouterLink class="nav-link active" aria-current="page" to="/board">글목록</RouterLink>
+        <div class="secondContent">
+          <div>{{ article.registerTime }}</div>
+        </div>
+        <div class="thirdContent">조회 : {{ article.hit }}</div>
+        <div class="fourthContent">댓글 : {{ comments.length }}</div>
+        <div class="fifthContent">{{ article.content }}</div>
+        <div>
+          <button type="button" id="btn-list">
+            <RouterLink aria-current="page" to="/board">글목록</RouterLink>
           </button>
           <span v-if="uid == article.userId">
-            <button type="button" id="btn-mv-modify" class="btn btn-outline-success mb-3 ms-1">
+            <button type="button" id="btn-mv-modify">
               <RouterLink
-                class="nav-link active"
                 aria-current="page"
                 :to="{
                   name: 'BoardModify',
@@ -105,14 +95,7 @@ const moveList = () => {
             </button>
           </span>
           <span v-if="uid == article.userId">
-            <button
-              type="button"
-              id="btn-delete"
-              class="btn btn-outline-danger mb-3 ms-1"
-              @click="deleteArticle"
-            >
-              글삭제
-            </button>
+            <button type="button" id="btn-delete" @click="deleteArticle">글삭제</button>
           </span>
         </div>
       </div>
@@ -131,4 +114,56 @@ const moveList = () => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+@font-face {
+  font-family: "NanumSquare";
+  src: url("../../assets/fonts/NanumSquareR.ttf") format("truetype");
+}
+@font-face {
+  font-family: "NanumSquareB";
+  src: url("../../assets/fonts/NanumSquareB.ttf") format("truetype");
+}
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "NanumSquare";
+}
+.title {
+  width: 100%;
+  height: 60px;
+  font-family: "NanumSquareB";
+  font-size: 60px;
+  padding: 0 150px 0 0;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  width: 75%;
+}
+.firstContent {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+.secondContent,
+.thirdContent,
+.fourthContent {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 17px;
+}
+.fifthContent {
+  height: 600px;
+  margin: 0 15% 0 20.6%;
+  padding: 15px;
+  width: 85%;
+  border: 2px solid gray;
+  border-radius: 15px;
+  word-break: break-all;
+  font-size: 20px;
+}
+</style>
