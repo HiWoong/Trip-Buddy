@@ -2,8 +2,9 @@
 import { ref, onMounted } from "vue";
 import { useCookies } from "vue3-cookies";
 import UserMyPageHotPlace from "@/components/user/UserMyPageHotPlace.vue";
+import { useRouter } from "vue-router";
 const { cookies } = useCookies();
-
+const router = useRouter();
 import { useUserStore } from "@/stores/userStore.js";
 const userStore = useUserStore();
 const { getFavorite, getLikes, getFavHotPlace, getmyFavHotPlaces, setmyFavHotPlaces } = userStore;
@@ -87,6 +88,10 @@ onMounted(async () => {
   });
   favHotPlaces.value = await getmyFavHotPlaces();
 });
+
+const moveMyPageInfo = () => {
+  router.push({ name: "UserMyPageInfo" });
+};
 </script>
 
 <template>
@@ -105,12 +110,12 @@ onMounted(async () => {
           내가 등록한 핫플레이스
         </div>
       </div>
-      <button style="border: none; width: 50px; height: 50px; background-color: transparent">
+      <button style="border: none; width: 70px; height: 70px; background-color: transparent">
         <img
           id="submitImg"
           src="@/assets/img/settings.png"
-          @click="addPlan"
-          style="width: 50px; height: 50px"
+          @click="moveMyPageInfo"
+          style="width: 70px; height: 70px"
         />
       </button>
     </div>
@@ -178,6 +183,7 @@ onMounted(async () => {
   display: flex;
   width: 100%;
   height: 100px;
+  cursor: pointer;
 }
 .clickMenu {
   width: 100%;
