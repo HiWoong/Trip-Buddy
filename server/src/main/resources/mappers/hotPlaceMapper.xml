@@ -14,9 +14,16 @@
     </resultMap>
 
     <select id="listHotPlace" resultMap="hotPlaces">
-        select * from hot_places order by ${sort} desc
+        select * from hotplaces order by ${sort} desc
          limit #{start}, #{listsize}
     </select>
 
+    <insert id="createHotPlace">
+        insert into hotplaces(user_id, subject, content, image) values(#{userId}, #{subject}, #{content}, #{image})
+    </insert>
+
+    <select id="getFavHotPlace" resultMap="hotPlaces">
+        select * from hotplaces where hotplace_id = #{hotPlaceId}
+    </select>
 
 </mapper>

@@ -31,4 +31,22 @@ public class HotPlaceRestController {
 		return new ResponseEntity<List<HotPlaceDto>>(list, HttpStatus.OK);
 	}
 
+	@PostMapping("/write")
+	private ResponseEntity<?> createHotPlace(@RequestBody HotPlaceDto hotPlaceDto) throws Exception {
+		System.out.println(hotPlaceDto);
+		int result = hotPlaceService.createHotPlace(hotPlaceDto);
+		System.out.println(result);
+		if(result == 1) return new ResponseEntity<Integer>(1, HttpStatus.OK);
+		else return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+	}
+
+	@GetMapping("/readFavorite/{hotPlaceId}")
+	private ResponseEntity<?> getFavHotPlace(@PathVariable int hotPlaceId) throws Exception {
+		System.out.println(hotPlaceId);
+		HotPlaceDto favPlace = hotPlaceService.getFavHotPlace(hotPlaceId);
+		System.out.println(favPlace);
+		if(favPlace != null) return new ResponseEntity<HotPlaceDto>(favPlace, HttpStatus.OK);
+		else return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+	}
+
 }

@@ -28,4 +28,14 @@ public class HotPlaceServiceImpl implements HotPlaceService {
 		return repo.listHotPlace(param);
 	}
 
+	@Override
+	public int createHotPlace(HotPlaceDto hotPlaceDto) throws Exception {
+		return repo.createHotPlace(hotPlaceDto);
+	}
+
+	@Override
+	public HotPlaceDto getFavHotPlace(int hotPlaceId) throws Exception {
+		return repo.getFavHotPlace(hotPlaceId);
+	}
+
 }

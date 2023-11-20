@@ -7,10 +7,11 @@ import { httpStatusCode } from "@/util/http-status";
 
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
-
+const userId = cookies.get("userId");
 const router = useRouter();
 const data = ref({
-  uploadImage: "",
+  userId: userId,
+  image: "../src/assets/img/noImage.png",
   subject: "",
   content: "",
 });
@@ -23,18 +24,28 @@ function imageToBase64(f) {
   var reader = new FileReader();
   reader.readAsDataURL(f);
   reader.onload = function (e) {
-    data.value.uploadImage = e.target.result;
+    data.value.image = e.target.result;
   };
 }
+
+const hotPlaceWrite = () => {
+  if (data.value.image != "../src/assets/img/noImage.png") {
+    http.post("/hotplaceapi/write", data.value).then(({ data }) => {
+      if (data == 1) {
+        alert("등록이 완료되었습니다.");
+        router.replace({ name: "AttractionHotPlaceList" });
+      } else {
+        alert("등록이 정상적으로 진행되지 않았습니다.");
+      }
+    });
+  }
+};
 </script>
 
 <template>
   <div class="wholeLayout">
     <div id="image">
-      <img
-        v-bind:src="data.uploadImage"
-        style="width: 100%; height: 100%; object-fit: cover"
-      />
+      <img v-bind:src="data.image" style="width: 100%; height: 100%; object-fit: cover" />
       <div style="justify-content: center; margin: 30px 0 0 275px">
         <label
           for="uploadImage"
@@ -58,6 +69,36 @@ function imageToBase64(f) {
           id="uploadImage"
           style="display: flex; justify-content: center; visibility: hidden"
         />
+      </div>
+    </div>
+    <div id="contents">
+      <label for="hotTitle" style="width: 500px; text-align: start; font-size: 25px">제목</label>
+      <div id="title">
+        <input
+          type="text"
+          id="hotTitle"
+          name="hotTitle"
+          placeholder="기깔나는 제목을 원해요!"
+          style="width: 500px; height: 50px; padding-left: 15px"
+          v-model="data.subject"
+        />
+      </div>
+      <label for="hotContent" style="width: 500px; text-align: start; font-size: 25px"
+        >부가내용</label
+      >
+      <div id="content">
+        <textarea
+          type="text"
+          id="hotContent"
+          name="hotContent"
+          placeholder="장소에 어울리는 내용을 적어주세요!"
+          style="width: 500px; height: 350px; padding: 10px 0 0 15px"
+          rows="15"
+          v-model="data.content"
+        />
+      </div>
+      <div class="button" @click="hotPlaceWrite">
+        <p class="btnText">등록하기</p>
       </div>
     </div>
   </div>
@@ -93,5 +134,49 @@ function imageToBase64(f) {
   margin-bottom: 40px;
   /* background-color: antiquewhite; */
   border-radius: 70%;
+}
+#contents {
+  margin: 100px 0 0 100px;
+  width: 500px;
+  height: 500px;
+}
+#title {
+  margin: 0 0 100px 0;
+}
+#hotContent {
+  width: 500px;
+}
+/* #button {
+  
+  width: 150px;
+  height: 150px;
+  background-color: antiquewhite;
+} */
+.button {
+  margin: 0 0 0 18vh;
+  background: #3d4c53;
+  margin: 20px auto;
+  width: 200px;
+  height: 50px;
+  overflow: hidden;
+  text-align: center;
+  /* transition: 0.1s; */
+  cursor: pointer;
+  border-radius: 3px;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+  font-size: 16px;
+  color: white;
+}
+.btnText {
+  margin: 14px 0 0 0;
+  transition: 0.3s;
+}
+.button:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #292929;
+}
+.button:active {
+  /*Clicked and held*/
+  box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.3);
 }
 </style>

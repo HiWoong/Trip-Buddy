@@ -3,10 +3,23 @@ import { ref, onMounted } from "vue";
 import AttractionHotPlace from "./AttractionHotPlace.vue";
 import Last from "@/components/common/Last.vue";
 import http from "@/util/http-common.js";
+import { useCookies } from "vue3-cookies";
+const { cookies } = useCookies();
+
+import { useUserStore } from "@/stores/userStore.js";
+const userStore = useUserStore();
+const { getFavorite, getLikes } = userStore;
+const myFav = ref([]);
 const nowPage = ref(1);
 const hotPlaces = ref([]);
 const type = ref("created_date");
 const typeString = ref("최신순");
+const userId = cookies.get("userId");
+onMounted(async () => {
+  await getFavorite(userId);
+  myFav.value = await getLikes();
+});
+
 const loadPlaces = async () => {
   console.log(nowPage.value);
   await http
@@ -42,6 +55,7 @@ const sortType = () => {
       v-for="hotPlace in hotPlaces"
       :key="hotPlace.title"
       :hotPlace="hotPlace"
+      :myFav="myFav"
     />
   </div>
   <Last @triggerIntersected="loadPlaces" />
@@ -105,11 +119,7 @@ const sortType = () => {
   box-shadow: 0 2px 25px rgba(20, 137, 204, 0.5);
 }
 #btn-search:active {
-  background: linear-gradient(
-    to right,
-    rgba(20, 136, 204, 0.9),
-    rgba(43, 50, 178, 0.9)
-  );
+  background: linear-gradient(to right, rgba(20, 136, 204, 0.9), rgba(43, 50, 178, 0.9));
 }
 
 .DivHotPlaces {

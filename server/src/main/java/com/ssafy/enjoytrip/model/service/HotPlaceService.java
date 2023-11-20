@@ -8,6 +8,8 @@ import java.util.Map;
 public interface HotPlaceService {
 
 	List<HotPlaceDto> listHotPlace(Map<String, String> map) throws Exception;
+	int createHotPlace(HotPlaceDto hotPlaceDto) throws Exception;
 
+	HotPlaceDto getFavHotPlace(int hotPlaceId) throws Exception;
 	
 }

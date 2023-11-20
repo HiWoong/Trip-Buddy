@@ -1,5 +1,5 @@
 <template>
-  <div ref="trigger">-</div>
+  <div ref="trigger"></div>
 </template>
 <script setup>
 import { onMounted, onUnmounted, ref } from "vue";
