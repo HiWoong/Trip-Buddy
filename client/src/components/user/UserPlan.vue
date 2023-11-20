@@ -98,12 +98,6 @@ const getTotalPlans = async (userId) => {
           <mark class="orange">마이페이지</mark>
         </h2>
         <div>
-          <p>보관함 출력 두가자은아라디</p>
-          <!-- <div v-for="plan in plans">
-            <p>{{ plan.planId }}</p>
-            <p>{{ plan.subject }}</p>
-            <p>{{ plan.createDate }}</p>
-          </div> -->
           <UserPlanRow v-for="plan in plans" :key="plan.planId" v-bind="plan" />
         </div>
       </div>
@@ -112,4 +106,27 @@ const getTotalPlans = async (userId) => {
   </div>
 </template>
 
-<style scoped></style>
+<style>
+.modal-backdrop {
+  z-index: 0;
+  background-color: transparent;
+}
+
+.modal-content {
+  z-index: 10;
+}
+
+ol.numbered {
+  counter-reset: numbered-list;
+  margin-left: 10px;
+  position: relative;
+}
+
+li {
+font-size: 16px;
+line-height: 1.2;
+margin-bottom: 30px;
+padding-left: 30px;
+}
+
+</style>

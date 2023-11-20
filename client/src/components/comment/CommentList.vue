@@ -109,4 +109,8 @@ const modifyComment = () => {
   </div>
 </template>
 
-<style scoped></style>
+<style>
+.modal-backdrop {
+  z-index: 0;
+}
+</style>
