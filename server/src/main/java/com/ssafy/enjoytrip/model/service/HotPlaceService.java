@@ -11,5 +11,6 @@ public interface HotPlaceService {
 	int createHotPlace(HotPlaceDto hotPlaceDto) throws Exception;
 
 	HotPlaceDto getFavHotPlace(int hotPlaceId) throws Exception;
+	List<HotPlaceDto> getMyHotPlace(String userId) throws Exception;
 	
 }

@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import { useCookies } from "vue3-cookies";
 import UserMyPageHotPlace from "@/components/user/UserMyPageHotPlace.vue";
+import UserMyPageMyHotPlace from "@/components/user/UserMyPageMyHotPlace.vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/userStore.js";
 import UserPlan from "@/components/user/UserPlan.vue";
@@ -9,11 +10,12 @@ import UserPlan from "@/components/user/UserPlan.vue";
 const { cookies } = useCookies();
 const router = useRouter();
 const userStore = useUserStore();
-const { getFavorite, getLikes, getFavHotPlace, getmyFavHotPlaces, setmyFavHotPlaces } = userStore;
+const { getFavorite, getLikes, getFavHotPlace, getmyFavHotPlaces, setmyFavHotPlaces, setmyStorageHotPlace, getmyStorageHotPlace } = userStore;
 
 const userId = cookies.get("userId");
 const myFav = ref([]);
 const favHotPlaces = ref([]);
+const mineHotPlaces = ref([]);
 
 const planFlag = ref(true);
 const myHotPlaceFlag = ref(false);
@@ -89,6 +91,10 @@ onMounted(async () => {
     await getFavHotPlace(hotPlaceId);
   });
   favHotPlaces.value = await getmyFavHotPlaces();
+
+  // mystorage hotplace
+  await setmyStorageHotPlace(cookies.get("userId"));
+  mineHotPlaces.value = await getmyStorageHotPlace();
 });
 
 const moveMyPageInfo = () => {
@@ -131,6 +137,13 @@ const moveMyPageInfo = () => {
       </div>
       <div v-if="planFlag">
         <UserPlan />
+      </div>
+      <div v-if="myWritePlaceFlag">
+        <UserMyPageMyHotPlace
+          v-for="mineHotPlace in mineHotPlaces"
+          :key="mineHotPlace.hotplaceId"
+          :myHotPlace="mineHotPlace"
+        />
       </div>
     </div>
   </div>
