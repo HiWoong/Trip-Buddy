@@ -3,11 +3,22 @@ import { useRouter } from "vue-router";
 import { defineStore } from "pinia";
 import { jwtDecode } from "jwt-decode";
 
-import { join, login, logout, update, withdraw, info, tokenRegeneration } from "@/api/userApi";
+import {
+  join,
+  login,
+  logout,
+  update,
+  withdraw,
+  info,
+  tokenRegeneration,
+  getFavorites,
+  getMyFavoriteHotPlace,
+} from "@/api/userApi";
 import { httpStatusCode } from "@/util/http-status";
 
 // cookies
 import { useCookies } from "vue3-cookies";
+import { setFavorites } from "../api/userApi";
 const { cookies } = useCookies();
 
 export const useUserStore = defineStore("userStore", () => {
@@ -17,6 +28,68 @@ export const useUserStore = defineStore("userStore", () => {
   const isLoginError = ref(false);
   const userInfo = ref(null);
   const isValidToken = ref(false);
+  const favorites = ref([]);
+  const myFavHotPlaces = ref([]);
+
+  const setmyFavHotPlaces = () => {
+    myFavHotPlaces.value = [];
+  };
+  const getmyFavHotPlaces = () => {
+    return myFavHotPlaces.value;
+  };
+
+  const getFavHotPlace = async (hotPlaceId) => {
+    await getMyFavoriteHotPlace(
+      hotPlaceId,
+      (response) => {
+        if (response.status === httpStatusCode.OK) {
+          let { data } = response;
+          myFavHotPlaces.value.push(data);
+          // myFavHotPlaces.value.push(data);
+          // console.log(myFavHotPlaces);
+        }
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  };
+
+  const getLikes = () => {
+    return favorites.value;
+  };
+
+  const setFavorite = async (data) => {
+    await setFavorites(
+      data,
+      (response) => {
+        if (response.status === httpStatusCode.OK) {
+          alert("좋아요가 성공적으로 완료되었습니다.");
+        }
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  };
+
+  const getFavorite = async (userId) => {
+    await getFavorites(
+      userId,
+      (response) => {
+        if (response.status === httpStatusCode.OK) {
+          // console.log(response);
+          let { data } = response;
+          favorites.value = data;
+          // let arr = JSON.parse(data);
+          // console.log(arr);
+        }
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  };
 
   const userLoginStore = async (loginUser) => {
     await login(
@@ -35,7 +108,7 @@ export const useUserStore = defineStore("userStore", () => {
           isLoginError.value = false;
           isValidToken.value = true;
           console.log(userInfo.value);
-          cookies.set("accessToken", accessToken, 600);
+          cookies.set("accessToken", accessToken, 3600);
           cookies.set("refreshToken", refreshToken);
           makeUserIdCookieStore(cookies.get("accessToken"));
           router.push("/");
@@ -51,18 +124,16 @@ export const useUserStore = defineStore("userStore", () => {
         alert("아이디와 비밀번호를 확인하도록");
         console.error(error);
       }
-      );
-    };
+    );
+  };
 
   const userLogoutStore = async (userId) => {
-    // console.log(userInfo.value);
-    // console.log(userId);
     await logout(
       userId,
       (response) => {
         if (response.status === httpStatusCode.OK) {
           isLogin.value = false;
-          cookies.remove("userId")
+          cookies.remove("userId");
           cookies.remove("accessToken");
           cookies.remove("refreshToken");
         } else {
@@ -77,7 +148,6 @@ export const useUserStore = defineStore("userStore", () => {
   };
 
   const userDeleteStore = async (userId) => {
-
     // console.log("userStore.userDeleteStore => userId : ", userId);
     await withdraw(
       userId,
@@ -85,7 +155,7 @@ export const useUserStore = defineStore("userStore", () => {
         if (response.status === httpStatusCode.NOCONTENT) {
           console.log("userStore.userDeleteStore => status : ", response.status);
           isLogin.value = false;
-          cookies.remove("userId")
+          cookies.remove("userId");
           cookies.remove("accessToken");
           cookies.remove("refreshToken");
         } else {
@@ -101,8 +171,8 @@ export const useUserStore = defineStore("userStore", () => {
   const makeUserIdCookieStore = (token) => {
     let decodeToken = jwtDecode(token);
     console.log(decodeToken.userId);
-    cookies.set("userId", decodeToken.userId, 600);
-  }
+    cookies.set("userId", decodeToken.userId, 3600);
+  };
 
   const userJoinStore = async (joinUser) => {
     join(
@@ -118,78 +188,8 @@ export const useUserStore = defineStore("userStore", () => {
       (error) => {
         alert("중복된 아이디입니다!");
       }
-
-      
-    )
-  }
-
-  // const getUserInfo = async (userId) => {
-  //   info(
-  //     userId,
-  //     (response) => {
-  //       if (response.status === httpStatusCode.OK) {
-  //         // cookies.set("userId", response.data.userInfo.userId);
-  //         console.log("3. getUserInfo data >> ", response.data.userInfo);
-  //         userInfo.value = response.data.userInfo;
-  //         console.log("userStore => userInfo : ", userInfo.value);
-  //         // return response.data.userInfo;
-  //       } else {
-  //         console.log("유저 정보 없음!!!!");
-  //       }
-  //     },
-  //     async (error) => {
-  //       console.error(
-  //         "getUserInfo() error code [토큰 만료되어 사용 불가능.] ::: ",
-  //         error.response.status
-  //       );
-  //       isValidToken.value = false;
-
-  //       // await tokenRegenerate();
-  //     }
-  //   );
-  // };
-
-  // const tokenRegenerate = async () => {
-  //   console.log("토큰 재발급 >> 기존 토큰 정보 : {}", sessionStorage.getItem("accessToken"));
-  //   await tokenRegeneration(
-  //     JSON.stringify(userInfo.value),
-  //     (response) => {
-  //       if (response.status === httpStatusCode.CREATE) {
-  //         let accessToken = response.data["access-token"];
-  //         console.log("재발급 완료 >> 새로운 토큰 : {}", accessToken);
-  //         sessionStorage.setItem("accessToken", accessToken);
-  //         isValidToken.value = true;
-  //       }
-  //     },
-  //     async (error) => {
-  //       // HttpStatus.UNAUTHORIZE(401) : RefreshToken 기간 만료 >> 다시 로그인!!!!
-  //       if (error.response.status === httpStatusCode.UNAUTHORIZED) {
-  //         console.log("갱신 실패");
-  //         // 다시 로그인 전 DB에 저장된 RefreshToken 제거.
-  //         await logout(
-  //           userInfo.value.userid,
-  //           (response) => {
-  //             if (response.status === httpStatusCode.OK) {
-  //               console.log("리프레시 토큰 제거 성공");
-  //             } else {
-  //               console.log("리프레시 토큰 제거 실패");
-  //             }
-  //             alert("RefreshToken 기간 만료!!! 다시 로그인해 주세요.");
-  //             isLogin.value = false;
-  //             userInfo.value = null;
-  //             isValidToken.value = false;
-  //             router.push({ name: "user-login" });
-  //           },
-  //           (error) => {
-  //             console.error(error);
-  //             isLogin.value = false;
-  //             userInfo.value = null;
-  //           }
-  //         );
-  //       }
-  //     }
-  //   );
-  // };
+    );
+  };
 
   return {
     isLogin,
@@ -200,7 +200,12 @@ export const useUserStore = defineStore("userStore", () => {
     userLogoutStore,
     userDeleteStore,
     userJoinStore,
-    // getUserInfo,
     makeUserIdCookieStore,
+    setFavorite,
+    getFavorite,
+    getLikes,
+    getFavHotPlace,
+    getmyFavHotPlaces,
+    setmyFavHotPlaces,
   };
 });

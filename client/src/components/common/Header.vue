@@ -51,6 +51,14 @@ const moveAttractionPlan = async () => {
   router.go();
 };
 
+const moveHotPlace = () => {
+  router.replace({ name: "AttractionHotPlaceList" });
+};
+
+const moveHotPlaceWrite = () => {
+  router.replace({ name: "AttractionHotPlaceWrite" });
+};
+
 // console.log("status : ", getLoginStatus());
 // isLogin.value = getLoginStatus() ? true : false;
 console.log("header var : isLogin : ", isLogin.value);
@@ -63,7 +71,7 @@ console.log("header var : isLogin : ", isLogin.value);
       <nav>
         <div class="grid-container">
           <div id="logo">
-            <RouterLink to="" @click="moveHome">Enjoy Trip</RouterLink>
+            <RouterLink to="" @click="moveHome">Trip Buddy</RouterLink>
           </div>
           <div class="menu">
             <RouterLink aria-current="page" to="" @click="moveAttractionSearch"
@@ -76,30 +84,36 @@ console.log("header var : isLogin : ", isLogin.value);
             >
           </div>
           <div class="menu">
-            <RouterLink aria-current="page" to="#">핫플 자랑</RouterLink>
+            <RouterLink aria-current="page" to="" @click="moveHotPlace">핫플 보기</RouterLink>
           </div>
           <div class="menu">
             <RouterLink aria-current="page" to="/board">Q&A게시판</RouterLink>
           </div>
+
+          <!-- 보관함 포탈 생성 ! -->
+          <!-- <div class="menu">
+            <RouterLink aria-current="page" to="/user/plan">포탈</RouterLink>
+          </div> -->
+          <!--  -->
+
           <div class="menu"></div>
-          <div v-if="isLogin == false" id="user_menu" class="menu">
-            <div class="user">
+          <div v-if="isLogin == false" id="user_menu">
+            <div class="userJoin">
               <RouterLink id="navJoin" to="/user/join">회원가입</RouterLink>
             </div>
-            <div class="user">
+            <div class="userLogin">
               <RouterLink id="navLogin" to="/user/login">로그인</RouterLink>
             </div>
           </div>
-          <div v-else id="user_menu" class="menu">
-            <div class="user">
-              <RouterLink id="navMyPage" to="" @click="moveMyPage"
-                >마이페이지</RouterLink
-              >
+          <div v-else id="user_menu">
+            <div class="loginUser">
+              <RouterLink id="navHotPlace" to="" @click="moveHotPlaceWrite">핫플 자랑</RouterLink>
             </div>
-            <div class="user">
-              <RouterLink id="navLogout" to="" @click="logout"
-                >로그아웃</RouterLink
-              >
+            <div class="loginUser">
+              <RouterLink id="navMyPage" to="" @click="moveMyPage">마이페이지</RouterLink>
+            </div>
+            <div class="loginUser">
+              <RouterLink id="navLogout" to="" @click="logout">로그아웃</RouterLink>
             </div>
           </div>
         </div>
@@ -130,7 +144,7 @@ a {
 .grid-container {
   display: grid;
   width: 100%;
-  grid-template-columns: 200px 100px 100px 100px 100px 1150px 150px;
+  grid-template-columns: 200px 100px 100px 100px 100px 1000px 300px;
   position: fixed;
   background-color: white;
   border: 1px solid gainsboro;
@@ -152,14 +166,26 @@ a {
   height: 100px;
   line-height: 100px;
   text-align: center;
-  font-family: "NanumSquare";
 }
 #user_menu {
   flex-wrap: wrap;
   display: flex;
+  align-items: center;
 }
-.user {
+.userJoin {
   flex: 1;
-  font-family: "NanumSquare";
+  text-align: center;
+  padding-left: 80px;
+  padding-top: 40px;
+}
+.userLogin {
+  flex: 1;
+  text-align: center;
+  padding-top: 40px;
+}
+.loginUser {
+  flex: 1;
+  text-align: center;
+  padding-top: 40px;
 }
 </style>

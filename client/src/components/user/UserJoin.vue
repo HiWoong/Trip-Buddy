@@ -72,9 +72,7 @@ const joinUser = () => {
   } else if (!pwdFlag.value) {
     alert("왜 혼자 비밀번호를 두 개 쓰려고 하세요?");
   } else if (!idFlag.value) {
-    alert(
-      "중복확인 버튼을 누르기 전까지는 중복인지 아닌지 모르는 슈뢰딩거의 ID입니다."
-    );
+    alert("중복확인 해주세요...");
   } else {
     userJoinStore(user.value);
   }
@@ -102,11 +100,7 @@ const alreadyCheck = () => {
     <div id="title">
       <h2>LOGO</h2>
     </div>
-    <label
-      for="username"
-      style="width: 500px; text-align: start; font-size: 25px"
-      >이름</label
-    >
+    <label for="username" style="width: 500px; text-align: start; font-size: 25px">이름</label>
     <div id="name">
       <input
         type="text"
@@ -117,9 +111,7 @@ const alreadyCheck = () => {
         v-model="user.userName"
       />
     </div>
-    <label for="userId" style="width: 500px; text-align: start; font-size: 25px"
-      >아이디</label
-    >
+    <label for="userId" style="width: 500px; text-align: start; font-size: 25px">아이디</label>
     <div id="id">
       <input
         type="text"
@@ -162,30 +154,19 @@ const alreadyCheck = () => {
         </template>
       </span>
     </div>
-    <label
-      for="userPwd"
-      style="width: 500px; text-align: start; font-size: 25px"
-      >비밀번호</label
-    >
+    <label for="userPwd" style="width: 500px; text-align: start; font-size: 25px">비밀번호</label>
     <div id="password">
       <input
         type="password"
         id="userPwd"
         name="userPwd"
         placeholder="비밀번호를 입력해주세요."
-        style="
-          width: 500px;
-          height: 50px;
-          padding-left: 15px;
-          font-family: sans-serif;
-        "
+        style="width: 500px; height: 50px; padding-left: 15px; font-family: sans-serif"
         v-model="user.userPwd"
       />
     </div>
 
-    <label
-      for="pwdCheck"
-      style="width: 500px; text-align: start; font-size: 25px"
+    <label for="pwdCheck" style="width: 500px; text-align: start; font-size: 25px"
       >비밀번호확인
     </label>
     <div id="pwdcheck">
@@ -193,36 +174,23 @@ const alreadyCheck = () => {
         type="password"
         id="pwdCheck"
         placeholder="다시 한 번 비밀번호를 입력해주세요."
-        style="
-          width: 500px;
-          height: 50px;
-          padding-left: 15px;
-          font-family: sans-serif;
-        "
+        style="width: 500px; height: 50px; padding-left: 15px; font-family: sans-serif"
         v-model="checkPwd"
       />
     </div>
     <div style="margin-bottom: 10px">
       <template v-if="pwdFlag">
-        <div
-          style="width: 500px; text-align: start; font-size: 17px; color: green"
-        >
+        <div style="width: 500px; text-align: start; font-size: 17px; color: green">
           {{ pwdText }}
         </div>
       </template>
       <template v-else>
-        <div
-          style="width: 500px; text-align: start; font-size: 17px; color: red"
-        >
+        <div style="width: 500px; text-align: start; font-size: 17px; color: red">
           {{ pwdText }}
         </div>
       </template>
     </div>
-    <label
-      for="emailid"
-      style="width: 500px; text-align: start; font-size: 25px"
-      >이메일</label
-    >
+    <label for="emailid" style="width: 500px; text-align: start; font-size: 25px">이메일</label>
     <div id="emailInfo">
       <div style="margin-bottom: 10px; width: 530px">
         <input
@@ -300,7 +268,7 @@ const alreadyCheck = () => {
   justify-content: flex-end;
 }
 #password {
-  background-color: blueviolet;
+  /* background-color: blueviolet; */
   font-size: 20px;
   width: 500px;
   margin-bottom: 20px;

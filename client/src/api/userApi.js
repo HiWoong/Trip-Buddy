@@ -38,4 +38,29 @@ async function tokenRegeneration(userId, success, fail) {
   await http.post(`/userapi/refresh`, userId).then(success).catch(fail);
 }
 
-export { join, login, logout, update, withdraw, info, tokenRegeneration };
+async function getFavorites(userId, success, fail) {
+  http.defaults.headers["Authorization"] = cookies.get("accessToken");
+  await http.get(`/userapi/favorite/${userId}`).then(success).catch(fail);
+}
+async function setFavorites(data, success, fail) {
+  http.defaults.headers["Authorization"] = cookies.get("accessToken");
+  await http.post(`/userapi/favorite`, data).then(success).catch(fail);
+}
+
+async function getMyFavoriteHotPlace(hotPlaceId, success, fail) {
+  http.defaults.headers["Authorization"] = cookies.get("accessToken");
+  await http.get(`/hotplaceapi/readFavorite/${hotPlaceId}`).then(success).catch(fail);
+}
+
+export {
+  join,
+  login,
+  logout,
+  update,
+  withdraw,
+  info,
+  tokenRegeneration,
+  getFavorites,
+  setFavorites,
+  getMyFavoriteHotPlace,
+};

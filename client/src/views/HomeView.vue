@@ -1,8 +1,8 @@
 <script setup>
 import { VueperSlides, VueperSlide } from "vueperslides";
 import { ref, onMounted } from "vue";
-import "vueperslides/dist/vueperslides.css";
 import { useRouter } from "vue-router";
+import "vueperslides/dist/vueperslides.css";
 
 import { useAttractionStore } from "@/stores/attractionStore";
 const attractionStore = useAttractionStore();
@@ -79,29 +79,25 @@ const goAttraction = async (num) => {
       :title="slide.title"
       :content="slide.content"
       @click="goAttraction(slide.sido)"
+      class="mainPhoto"
     />
   </vueper-slides>
   <!-- <div class="logo">Enjoy Trip</div> -->
   <div class="cards">
     <div class="card">
-      <img src="../assets/img/default.jpg" alt="" />
-      <div class="title">주인장 추천</div>
-      <div class="content">한 번 잡숴봐</div>
+      <img src="../assets/img/Busan.jpg" alt="#" style="border-radius: 5px; object-fit: cover" />
+      <div class="title">최신순</div>
+      <div class="content">최신순입니다.</div>
     </div>
     <div class="card">
-      <img src="../assets/img/default.jpg" alt="" />
-      <div class="title">별점순</div>
-      <div class="content">이게 진짜 좋은거라니까</div>
+      <img src="../assets/img/Daegu.jpg" alt="#" style="border-radius: 5px; object-fit: cover" />
+      <div class="title">조회순</div>
+      <div class="content">조회순입니다.</div>
     </div>
     <div class="card">
-      <img src="../assets/img/default.jpg" alt="" />
+      <img src="../assets/img/Gwangju.jpg" alt="#" style="border-radius: 5px; object-fit: cover" />
       <div class="title">좋아요순</div>
-      <div class="content">내가 먹으려다 안먹고 양보하는거여</div>
-    </div>
-    <div class="card">
-      <img src="../assets/img/default.jpg" alt="" />
-      <div class="title">조회수순</div>
-      <div class="content">으잉? 진짜 안먹을겨?</div>
+      <div class="content">좋아요순입니다.</div>
     </div>
   </div>
 </template>
@@ -114,6 +110,9 @@ const goAttraction = async (num) => {
 /* #slideShow {
   margin-top: 57px;
 } */
+.mainPhoto {
+  cursor: pointer;
+}
 .vueperslides__arrow {
   color: black;
 }
@@ -151,13 +150,13 @@ const goAttraction = async (num) => {
   margin: 30px auto;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-around;
   /* background-color: antiquewhite; */
 }
 .card {
   background-color: rgb(222, 222, 222);
   display: inline-block;
-  width: 300px;
+  width: 299px;
   height: 400px;
   border-radius: 2vh;
   margin-bottom: 3vh;

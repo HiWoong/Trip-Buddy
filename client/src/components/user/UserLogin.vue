@@ -32,7 +32,9 @@ const login = async () => {
     <div id="title">
       <h2>LOGO</h2>
     </div>
-    <label for="userId" style="width: 500px; text-align: start; font-size: 25px">아이디</label>
+    <label for="userId" style="width: 500px; text-align: start; font-size: 25px"
+      >아이디</label
+    >
     <div id="id">
       <input
         type="text"
@@ -43,14 +45,23 @@ const login = async () => {
         v-model="userinfo.userId"
       />
     </div>
-    <label for="userPwd" style="width: 500px; text-align: start; font-size: 25px">비밀번호</label>
+    <label
+      for="userPwd"
+      style="width: 500px; text-align: start; font-size: 25px"
+      >비밀번호</label
+    >
     <div id="password">
       <input
         type="password"
         id="userPwd"
         name="userPwd"
         placeholder="비밀번호를 입력해주세요."
-        style="width: 500px; height: 50px; padding-left: 15px; font-family: sans-serif"
+        style="
+          width: 500px;
+          height: 50px;
+          padding-left: 15px;
+          font-family: sans-serif;
+        "
         v-model="userinfo.userPwd"
       />
     </div>
@@ -92,13 +103,13 @@ const login = async () => {
   background-color: antiquewhite;
 }
 #id {
-  background-color: aquamarine;
+  /* background-color: aquamarine; */
   font-size: 20px;
   width: 500px;
   margin-bottom: 30px;
 }
 #password {
-  background-color: blueviolet;
+  /* background-color: blueviolet; */
   font-size: 20px;
   width: 500px;
   margin-bottom: 15px;
