@@ -22,6 +22,10 @@ public class HotPlaceRestController {
 	@GetMapping("/list")
 	private ResponseEntity<?> list(@RequestParam String pgno, @RequestParam String sort) throws Exception {
 		Map<String, String> map = new HashMap<String, String>();
+
+		System.out.println(">>> pgno = " + pgno);
+		System.out.println(">>> sort = " + sort);
+
 		map.put("pgno", pgno + "");
 		map.put("sort", sort);
 //		System.out.println(sort);

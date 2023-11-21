@@ -5,10 +5,19 @@ import Last from "@/components/common/Last.vue";
 import http from "@/util/http-common.js";
 import { useCookies } from "vue3-cookies";
 import { useUserStore } from "@/stores/userStore.js";
+import { useRoute } from "vue-router";
+import { useMenuStore } from "@/stores/menuStore.js"
+import { storeToRefs } from "pinia";
+
+const route = useRoute();
 
 const { cookies } = useCookies();
 const userStore = useUserStore();
 const { getFavorite, getLikes } = userStore;
+
+const menuStore = useMenuStore();
+let { menuFlag, flagName } = storeToRefs(menuStore);
+
 const myFav = ref([]);
 const nowPage = ref(1);
 const hotPlaces = ref([]);
@@ -16,6 +25,7 @@ const type = ref("created_date");
 const typeString = ref("최신순");
 const userId = cookies.get("userId");
 onMounted(async () => {
+  await paramChange();
   await getFavorite(userId);
   myFav.value = await getLikes();
 });
@@ -45,6 +55,12 @@ const sortType = () => {
   hotPlaces.value = [];
   loadPlaces();
 };
+
+const paramChange = async() => {
+  type.value = menuFlag.value;
+  typeString.value = flagName.value;
+}
+
 </script>
 <template>
   <div class="searchOptions">
