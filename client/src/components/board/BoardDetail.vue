@@ -25,11 +25,9 @@ const article = ref({
 
 const comments = ref([]);
 onMounted(async () => {
-  await http
-    .get("/articleapi/view/" + route.params.articleNo)
-    .then(({ data }) => {
-      article.value = data;
-    });
+  await http.get("/articleapi/view/" + route.params.articleNo).then(({ data }) => {
+    article.value = data;
+  });
 
   await http
     .get("/commentapi/list", { params: { articleNo: article.value.articleNo } })
@@ -71,7 +69,6 @@ const moveModify = () => {
         <div class="title">
           {{ article.subject }}
         </div>
-        <div></div>
       </div>
       <div class="content">
         <div class="firstContent">
@@ -109,16 +106,27 @@ const moveModify = () => {
                 value="글삭제"
               />
             </div>
+            <div class="listButtonDiv">
+              <input
+                class="listButton"
+                type="submit"
+                style="width: 80px; height: 40px"
+                value="글목록"
+                @click="moveList"
+              />
+            </div>
           </template>
-          <div class="listButtonDiv">
-            <input
-              class="listButton"
-              type="submit"
-              style="width: 80px; height: 40px"
-              value="글목록"
-              @click="moveList"
-            />
-          </div>
+          <template v-else>
+            <div class="listButtonElseDiv">
+              <input
+                class="listButtonElse"
+                type="submit"
+                style="width: 80px; height: 40px"
+                value="글목록"
+                @click="moveList"
+              />
+            </div>
+          </template>
         </div>
         <div class="sixthContent">{{ article.content }}</div>
       </div>
@@ -188,7 +196,7 @@ const moveModify = () => {
 }
 .fifthContent {
   display: flex;
-  margin: 0 0 1vh 320px;
+  margin: 0 0 1vh 300px;
   align-items: center;
   height: 50px;
 }
@@ -231,12 +239,13 @@ const moveModify = () => {
 }
 
 .listButtonDiv {
-  margin: 0 0 0 50vh;
+  margin: 0 0 0 49vh;
   width: 80px;
   height: 40px;
 }
 
-.listButton {
+.listButton,
+.listButtonElse {
   background-color: rgb(238, 179, 71);
   border-radius: 5px;
   transition: all 0.25s;
@@ -245,6 +254,11 @@ const moveModify = () => {
   font-weight: 600;
 }
 .listButton:hover {
+  box-shadow: 0px 0px 0px 0px rgb(238, 179, 71);
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
+.listButtonElse:hover {
   box-shadow: 0px 0px 0px 0px rgb(238, 179, 71);
   margin-top: 10px;
   margin-bottom: 0px;

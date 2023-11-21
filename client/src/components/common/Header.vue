@@ -135,13 +135,14 @@ console.log("header var : isLogin : ", isLogin.value);
   margin: 0;
   padding: 0;
   font-family: "NanumSquare";
-  height: 100px;
+  height: 70px;
 }
 a {
   text-decoration-line: none;
   color: black;
 }
 .grid-container {
+  align-content: center;
   display: grid;
   width: 100%;
   grid-template-columns: 200px 100px 100px 100px 100px 1000px 300px;

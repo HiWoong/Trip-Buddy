@@ -34,12 +34,7 @@ const modifyComment = () => {
       <div class="comment">
         <textarea class="commentContent" v-model="content" />
       </div>
-      <input
-        type="button"
-        class="registerButton"
-        @click="modifyComment"
-        value="수정하기"
-      />
+      <input type="button" class="registerButton" @click="modifyComment" value="수정하기" />
     </div>
   </div>
 </template>
@@ -70,7 +65,7 @@ const modifyComment = () => {
   font-size: 20px;
 }
 .commentContent {
-  padding: 3px;
+  padding: 3px 3px 3px 6px;
   height: 100px;
   width: 1000px;
   border: 2px solid gray;

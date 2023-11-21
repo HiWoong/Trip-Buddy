@@ -52,20 +52,10 @@ const toggleModal = () => {
     </div>
     <template v-if="uid == userId">
       <div class="commentModifyDiv">
-        <input
-          class="commentModify"
-          type="button"
-          @click="toggleModal"
-          value="수정"
-        />
+        <input class="commentModify" type="button" @click="toggleModal" value="수정" />
       </div>
       <div class="commentDeleteDiv">
-        <input
-          class="commentDelete"
-          type="button"
-          @click="deleteComment"
-          value="삭제"
-        />
+        <input class="commentDelete" type="button" @click="deleteComment" value="삭제" />
       </div>
     </template>
   </div>
@@ -89,7 +79,7 @@ const toggleModal = () => {
   font-family: "NanumSquare";
 }
 .wholeContents {
-  margin: 1vh 0 1vh 33vh;
+  margin: 1vh 0 1vh 31vh;
   width: 1000px;
   width: 1000px;
   display: flex;
@@ -97,11 +87,12 @@ const toggleModal = () => {
   align-items: center;
 }
 .realContent {
-  padding: 5px 0 5px 5px;
+  padding: 5px 5px 5px 10px;
   border: 2px solid gray;
   border-radius: 10px;
   word-break: break-all;
   margin: 0 10px 0 0;
+  max-width: 850px;
 }
 .initContents {
   display: flex;
