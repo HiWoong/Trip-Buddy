@@ -135,6 +135,7 @@ const moveDetail = () => {
   width: 1000px;
   height: 520px;
   padding: 10px 0 0 15px;
+  resize: none;
 }
 .submit {
   margin: 15px 0 15px 90vh;

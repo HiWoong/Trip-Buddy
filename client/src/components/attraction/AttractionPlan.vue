@@ -3,16 +3,16 @@ import http from "@/util/http-common.js";
 import { ref, watch, onMounted } from "vue";
 import { VueDraggableNext } from "vue-draggable-next";
 import { useRouter } from "vue-router";
-
+import axios from "axios";
 // cookies
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
 const router = useRouter();
 
 var map;
-const keyword = ref("");
-const nowLat = ref(33.450701);
-const nowLon = ref(126.570667);
+const keyword = ref("역삼");
+const nowLat = ref(0);
+const nowLon = ref(0);
 const markers = ref([]);
 const result = ref([]);
 const idx = ref(0);
@@ -57,6 +57,7 @@ watch(result.value, () => {
       if (data.phone != "" && data.phone != null) {
         let phone = document.createElement("div");
         phone.innerHTML = data.phone;
+        phone.style.color = "#009900";
         lists.appendChild(phone);
       }
 
@@ -138,6 +139,8 @@ const loadMap = () => {
       var locPosition = new kakao.maps.LatLng(lat, lon);
       nowLat.value = locPosition.Ma;
       nowLon.value = locPosition.La;
+      console.log(nowLat.value);
+      console.log(nowLon.value);
       let options = {
         center: new kakao.maps.LatLng(nowLat.value, nowLon.value),
         level: 3,
@@ -214,6 +217,7 @@ const searchPlaces = () => {
     // 지도에 표시되고 있는 마커를 제거합니다
     removeMarker();
     const newPlaces = sortByDistance(places);
+    console.log(newPlaces);
     map.setCenter(new kakao.maps.LatLng(places[0].y, places[0].x));
     for (var i = 0; i < newPlaces.length; i++) {
       // 마커를 생성하고 지도에 표시합니다
@@ -254,7 +258,7 @@ const searchPlaces = () => {
   }
 
   // 검색결과 항목을 Element로 반환하는 함수입니다
-  function getListItem(index, places) {
+  function getListItem(index, place) {
     let el = document.createElement("li");
 
     let markerbg = document.createElement("span");
@@ -263,32 +267,40 @@ const searchPlaces = () => {
     let info = document.createElement("div");
     info.className = "info";
     let place_name = document.createElement("h5");
-    place_name.innerHTML = places.place_name;
+    place_name.innerHTML = place.place_name;
     info.appendChild(place_name);
-    if (places.road_address_name) {
+    if (place.road_address_name) {
       let road = document.createElement("span");
-      road.innerHTML = places.road_address_name;
+      road.innerHTML = place.road_address_name;
       let jibun = document.createElement("span");
-      jibun.innerHTML = places.address_name;
+      jibun.innerHTML = place.address_name;
 
       info.appendChild(road);
       info.appendChild(jibun);
     } else {
       let address = document.createElement("span");
-      address.innerHTML = places.address_name;
+      address.innerHTML = place.address_name;
 
       info.appendChild(address);
     }
     let tel = document.createElement("span");
     tel.className = "tel";
-    tel.innerHTML = places.phone;
+    tel.innerHTML = place.phone;
     info.appendChild(tel);
+
+    let fare = document.createElement("button");
+    fare.className = "fare";
+    fare.innerHTML = "요금";
+    fare.onclick = () => {
+      calFare(place);
+    };
+    info.appendChild(fare);
 
     let pick = document.createElement("button");
     pick.className = "pick";
     pick.innerHTML = "담기";
     pick.onclick = () => {
-      addPickPlace(places);
+      addPickPlace(place);
     };
     info.appendChild(pick);
     el.appendChild(markerbg);
@@ -312,6 +324,10 @@ const searchPlaces = () => {
     const marker = new kakao.maps.Marker({
       position: position, // 마커의 위치
       image: markerImage,
+      clickable: true,
+    });
+    kakao.maps.event.addListener(marker, "click", function () {
+      console.log(marker.n.La, marker.n.Ma);
     });
 
     marker.setMap(map); // 지도 위에 마커를 표출합니다
@@ -403,6 +419,7 @@ const searchPlaces = () => {
       el.removeChild(el.lastChild);
     }
   }
+  new kakao.maps.Marker({ map: map, position: new kakao.maps.LatLng(nowLat.value, nowLon.value) });
 };
 
 const sortByDistance = (places) => {
@@ -425,11 +442,12 @@ const addDay = () => {
   }
 };
 
-// onclick
 const addPlan = () => {
-  // 보낼 때 맨 앞에 {nowDay: 1}을 해줘야 함
-  // http.post("url", result.value);
-
+  let subject = prompt("여행 계획 제목을 입력하세요.", "여행 계획 1");
+  if (subject == null || subject == "") {
+    alert("여행 계획 제목은 필수입니다.");
+    return;
+  }
   const userId = cookies.get("userId");
 
   if (userId == null) {
@@ -474,7 +492,7 @@ const addPlan = () => {
     // console.log("addPlan, result : ", result.value);
     http.post("planapi/create", {
       userId: cookies.get("userId"),
-      subject: "hello",
+      subject: subject,
       content1: JSON.stringify(plans[0]),
       content2: JSON.stringify(plans[1]),
       content3: JSON.stringify(plans[2]),
@@ -487,10 +505,29 @@ const addPlan = () => {
     router.push("/");
   }
 };
+const calFare = async (data) => {
+  if (nowLat.value == 0 && nowLon.value == 0) {
+    alert("현재 위치가 올바르지 않습니다.");
+  } else {
+    const header = "KakaoAK" + " " + import.meta.env.VITE_KAKAO_REST_API_TOKEN;
+    await axios
+      .get("https://apis-navi.kakaomobility.com/v1/directions", {
+        params: {
+          priority: "TIME",
+          car_type: "1",
+          car_fuel: "GASOLINE",
+          destination: `${data.x},${data.y}`,
+          origin: `${nowLon.value},${nowLat.value}`,
+        },
+        headers: {
+          Authorization: header,
+        },
+      })
+      .then((data) => console.log(data));
+  }
+  console.log(data.x, data.y);
+};
 </script>
-<!-------------------------------------------------------------------------------------------------------------->
-<!-------------------------------------------------------------------------------------------------------------->
-<!-------------------------------------------------------------------------------------------------------------->
 <template>
   <div id="contents">
     <div id="menu_wrap">
@@ -527,9 +564,6 @@ const addPlan = () => {
     </div>
   </div>
 </template>
-<!-------------------------------------------------------------------------------------------------------------->
-<!-------------------------------------------------------------------------------------------------------------->
-<!-------------------------------------------------------------------------------------------------------------->
 <style>
 * {
   margin: 0;
@@ -547,7 +581,7 @@ const addPlan = () => {
   left: 0;
   bottom: 0;
   width: 330px;
-  margin: 10px 0 0px 10px;
+  margin: 5px 0 0px 10px;
   padding: 5px;
   overflow-y: auto;
   background: rgba(255, 255, 255, 0.7);
@@ -800,7 +834,7 @@ const addPlan = () => {
 }
 #contents {
   width: 100%;
-  height: 850px;
+  height: 880px;
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
@@ -809,12 +843,12 @@ const addPlan = () => {
   /* width: 1275px;
     height: 905px; */
   height: 100%;
-  margin: 10px 0 0 350px;
+  margin: 5px 0 0 350px;
   flex: 2;
   border-radius: 10px;
 }
 #menu_plan {
-  margin: 10px 0 0 10px;
+  margin: 5px 0 0 10px;
   width: 310px;
   height: 100%;
   /* height: 904px; */
@@ -844,6 +878,9 @@ const addPlan = () => {
 .pick:hover {
   background-color: #77af9c;
   color: #d7fff1;
+}
+.fare {
+  float: right;
 }
 .pickPlace {
   margin: 5px 10px 10px 10px;

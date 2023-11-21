@@ -4,7 +4,8 @@ import { useRouter, useRoute } from "vue-router";
 import CommentList from "@/components/comment/CommentList.vue";
 import http from "@/util/http-common.js";
 import CommentWrite from "@/components/comment/CommentWrite.vue";
-
+import { info } from "@/api/userApi";
+import { httpStatusCode } from "@/util/http-status";
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
 
@@ -23,6 +24,8 @@ const article = ref({
   registerTime: String,
 });
 
+const user = ref({});
+
 const comments = ref([]);
 onMounted(async () => {
   await http.get("/articleapi/view/" + route.params.articleNo).then(({ data }) => {
@@ -34,7 +37,34 @@ onMounted(async () => {
     .then(({ data }) => {
       comments.value = data;
     });
+  console.log("gogo getUserInfo : ", article.value.userId);
+  getUserInfo(article.value.userId);
 });
+
+const getUserInfo = async (userId) => {
+  info(
+    userId,
+    (response) => {
+      console.log(response.status);
+      if (response.status === httpStatusCode.OK) {
+        console.log("3. getUserInfo data >> ", response.data.userInfo);
+        user.value = response.data.userInfo;
+        if (user.value.profileImage == "" || user.value.profileImage == null) {
+          user.value.profileImage =
+            "https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg";
+        }
+      } else {
+        console.log("유저 정보 없음!!!!");
+      }
+    },
+    async (error) => {
+      console.error(
+        "getUserInfo() error code [토큰 만료되어 사용 불가능.] ::: ",
+        error.response.status
+      );
+    }
+  );
+};
 
 const deleteArticle = () => {
   http.get("articleapi/delete/" + route.params.articleNo).then(({ data }) => {
@@ -63,85 +93,80 @@ const moveModify = () => {
 </script>
 
 <template>
-  <div>
-    <div>
-      <div class="titleDiv">
-        <div class="title">
-          {{ article.subject }}
-        </div>
+  <div style="margin-bottom: 10px">
+    <div class="titleDiv">
+      <div class="title">
+        {{ article.subject }}
       </div>
-      <div class="content">
-        <div class="firstContent">
-          <img
-            src="https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg"
-            style="width: 50px; height: 50px; margin-right: 10px"
-          />
-          <div style="font-size: 20px; color: gray">|</div>
-          <div style="font-size: 20px; margin-left: 30px">
-            {{ article.userId }}
-          </div>
-        </div>
-        <div class="secondContent">
-          <div>{{ article.registerTime }}</div>
-        </div>
-        <div class="thirdContent">조회 : {{ article.hit }}</div>
-        <div class="fourthContent">댓글 : {{ comments.length }}</div>
-        <div class="fifthContent">
-          <template v-if="uid == article.userId">
-            <div class="modifyButtonDiv">
-              <input
-                class="modifyButton"
-                type="submit"
-                style="width: 80px; height: 40px"
-                value="글수정"
-                @click="moveModify"
-              />
-            </div>
-            <div class="deleteButtonDiv">
-              <input
-                class="deleteButton"
-                type="submit"
-                style="width: 80px; height: 40px"
-                @click="deleteArticle"
-                value="글삭제"
-              />
-            </div>
-            <div class="listButtonDiv">
-              <input
-                class="listButton"
-                type="submit"
-                style="width: 80px; height: 40px"
-                value="글목록"
-                @click="moveList"
-              />
-            </div>
-          </template>
-          <template v-else>
-            <div class="listButtonElseDiv">
-              <input
-                class="listButtonElse"
-                type="submit"
-                style="width: 80px; height: 40px"
-                value="글목록"
-                @click="moveList"
-              />
-            </div>
-          </template>
-        </div>
-        <div class="sixthContent">{{ article.content }}</div>
-      </div>
-      <template v-if="comments != null">
-        <CommentList
-          v-for="(comment, index) in comments"
-          :key="comment.commentId"
-          v-bind="comment"
-          :index="index + 1"
-        />
-      </template>
-      <template v-if="uid == article.userId">
-        <CommentWrite :user-id="uid" :article-no="Number(article.articleNo)" />
-      </template>
     </div>
+    <div class="content">
+      <div class="firstContent">
+        <img class="articleUserImage" :src="user.profileImage" />
+        <div style="font-size: 20px; color: gray">|</div>
+        <div style="font-size: 20px; margin-left: 30px">
+          {{ article.userId }}
+        </div>
+      </div>
+      <div class="secondContent">
+        <div>{{ article.registerTime }}</div>
+      </div>
+      <div class="thirdContent">조회 : {{ article.hit }}</div>
+      <div class="fourthContent">댓글 : {{ comments.length }}</div>
+      <div class="fifthContent">
+        <template v-if="uid == article.userId">
+          <div class="modifyButtonDiv">
+            <input
+              class="modifyButton"
+              type="submit"
+              style="width: 80px; height: 40px"
+              value="글수정"
+              @click="moveModify"
+            />
+          </div>
+          <div class="deleteButtonDiv">
+            <input
+              class="deleteButton"
+              type="submit"
+              style="width: 80px; height: 40px"
+              @click="deleteArticle"
+              value="글삭제"
+            />
+          </div>
+          <div class="listButtonDiv">
+            <input
+              class="listButton"
+              type="submit"
+              style="width: 80px; height: 40px"
+              value="글목록"
+              @click="moveList"
+            />
+          </div>
+        </template>
+        <template v-else>
+          <div class="listButtonElseDiv">
+            <input
+              class="listButtonElse"
+              type="submit"
+              style="width: 80px; height: 40px"
+              value="글목록"
+              @click="moveList"
+            />
+          </div>
+        </template>
+      </div>
+      <div class="sixthContent">{{ article.content }}</div>
+    </div>
+    <template v-if="comments != null">
+      <CommentList
+        v-for="(comment, index) in comments"
+        :key="comment.commentId"
+        v-bind="comment"
+        :index="index + 1"
+      />
+    </template>
+    <template v-if="uid != null">
+      <CommentWrite :user-id="uid" :article-no="Number(article.articleNo)" />
+    </template>
   </div>
 </template>
 
@@ -274,5 +299,12 @@ const moveModify = () => {
   word-break: break-all;
   font-size: 20px;
   text-align: start;
+}
+.articleUserImage {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 40px;
 }
 </style>

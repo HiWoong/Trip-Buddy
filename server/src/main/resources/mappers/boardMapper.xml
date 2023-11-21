@@ -20,7 +20,10 @@
         <if test="key != '' and word != ''">
             where ${key} like concat('%', #{word}, '%')
         </if>
-        order by article_no desc limit #{start}, #{listsize}
+        <if test="sort != ''">
+            order by ${sort} desc
+        </if>
+        limit #{start}, #{listsize}
     </select>
 
     <select id="getArticleCount">

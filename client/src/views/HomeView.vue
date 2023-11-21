@@ -64,7 +64,7 @@ const goAttraction = async (num) => {
 <template>
   <!-- fixed-height="863px" -->
   <vueper-slides
-    fixed-height="400px"
+    fixed-height="430px"
     autoplay
     arrows-outside
     transition-speed="250"
@@ -136,18 +136,10 @@ const goAttraction = async (num) => {
   width: 1520px;
   margin: 10px auto;
 }
-/* .logo {
-  width: 100%;
-  height: 100px;
-  text-align: center;
-  display: block;
-  font-size: 60px;
-} */
-/* ssafy 기준 30 */
 .cards {
   width: 80%;
   height: 400px;
-  margin: 30px auto;
+  margin: 40px auto 20px auto;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;

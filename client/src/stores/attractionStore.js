@@ -4,6 +4,15 @@ import { defineStore } from "pinia";
 export const useAttractionStore = defineStore("attractionStore", () => {
   const sidoCode = ref(0);
   const clickHome = ref(false);
+  const isModalOpen = ref(false);
+
+  const getIsModalOpen = () => {
+    return isModalOpen.value;
+  };
+
+  const setIsModalOpen = () => {
+    isModalOpen.value = !isModalOpen.value;
+  };
 
   const setSidoCode = (num) => {
     sidoCode.value = num;
@@ -30,5 +39,7 @@ export const useAttractionStore = defineStore("attractionStore", () => {
     setTrueClickHome,
     setFalseClickHome,
     getClickHome,
+    getIsModalOpen,
+    setIsModalOpen,
   };
 });
