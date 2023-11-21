@@ -18,7 +18,7 @@ import { httpStatusCode } from "@/util/http-status";
 
 // cookies
 import { useCookies } from "vue3-cookies";
-import { setFavorites } from "../api/userApi";
+import { getMyHotPlace, setFavorites } from "../api/userApi";
 const { cookies } = useCookies();
 
 export const useUserStore = defineStore("userStore", () => {
@@ -30,6 +30,7 @@ export const useUserStore = defineStore("userStore", () => {
   const isValidToken = ref(false);
   const favorites = ref([]);
   const myFavHotPlaces = ref([]);
+  const myStorageHotPlaces = ref([]);
 
   const setmyFavHotPlaces = () => {
     myFavHotPlaces.value = [];
@@ -54,6 +55,26 @@ export const useUserStore = defineStore("userStore", () => {
       }
     );
   };
+
+  const setmyStorageHotPlace = async (userId) => {
+    myStorageHotPlaces.value = [];
+
+    await getMyHotPlace(
+      userId,
+      (response) => {
+        if (response.status === httpStatusCode.OK) {
+          myStorageHotPlaces.value = response.data
+        }
+      },
+      (error) => {
+        console.error(error);
+      }
+    )
+  }
+
+  const getmyStorageHotPlace = async () => {
+    return myStorageHotPlaces.value;
+  }
 
   const getLikes = () => {
     return favorites.value;
@@ -207,5 +228,7 @@ export const useUserStore = defineStore("userStore", () => {
     getFavHotPlace,
     getmyFavHotPlaces,
     setmyFavHotPlaces,
+    setmyStorageHotPlace,
+    getmyStorageHotPlace,
   };
 });

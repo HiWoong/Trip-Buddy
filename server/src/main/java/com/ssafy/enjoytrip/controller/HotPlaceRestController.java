@@ -49,4 +49,13 @@ public class HotPlaceRestController {
 		else return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 
+	@GetMapping("/myHotplace/{userId}")
+	private ResponseEntity<?> getMyHotPlace(@PathVariable("userId") String userId) throws Exception {
+		List<HotPlaceDto> list = hotPlaceService.getMyHotPlace(userId);
+
+		if (list != null) return new ResponseEntity<List<HotPlaceDto>>(list, HttpStatus.OK);
+
+		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+	}
+
 }

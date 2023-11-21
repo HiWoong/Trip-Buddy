@@ -52,6 +52,11 @@ async function getMyFavoriteHotPlace(hotPlaceId, success, fail) {
   await http.get(`/hotplaceapi/readFavorite/${hotPlaceId}`).then(success).catch(fail);
 }
 
+async function getMyHotPlace(userId, success, fail) {
+  http.defaults.headers["Authorization"] = cookies.get("accessToken");
+  await http.get(`/hotplaceapi/myHotplace/${userId}`).then(success).catch(fail);
+}
+
 export {
   join,
   login,
@@ -63,4 +68,5 @@ export {
   getFavorites,
   setFavorites,
   getMyFavoriteHotPlace,
+  getMyHotPlace,
 };

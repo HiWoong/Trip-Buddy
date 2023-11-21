@@ -38,4 +38,9 @@ public class HotPlaceServiceImpl implements HotPlaceService {
 		return repo.getFavHotPlace(hotPlaceId);
 	}
 
+	@Override
+	public List<HotPlaceDto> getMyHotPlace(String userId) throws Exception {
+		return repo.getMyHotPlace(userId);
+	}
+
 }
