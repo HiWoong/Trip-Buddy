@@ -5,8 +5,14 @@ import { useRouter } from "vue-router";
 import "vueperslides/dist/vueperslides.css";
 
 import { useAttractionStore } from "@/stores/attractionStore";
+import { useMenuStore } from "@/stores/menuStore.js"
+import { storeToRefs } from "pinia";
+
 const attractionStore = useAttractionStore();
 const { setSidoCode, setTrueClickHome } = attractionStore;
+
+const menuStore = useMenuStore();
+const { menuFlag, flagName } = storeToRefs(menuStore);
 
 const router = useRouter();
 onMounted(() => {
@@ -59,6 +65,26 @@ const goAttraction = async (num) => {
   setTrueClickHome();
   router.replace({ name: "AttractionSearch" });
 };
+
+const moveHotplaceSequence = async (num) => {
+  // let sequence = "created_date"
+  if (num === 1){
+    menuFlag.value = "created_date";
+    flagName.value = "최신순";
+    // await setFlagCreated();
+  } else if (num === 2){
+    menuFlag.value = "visited_count";
+    flagName.value = "조회순";
+    // await setFlagVisited();
+    // sequence = "visited_count";
+  } else {
+    menuFlag.value = "hit_count";
+    flagName.value = "좋아요순";    
+    // await setFlagHit();
+    // sequence = "hit_count";
+  }
+  router.push({ name: "AttractionHotPlaceList" });
+}
 </script>
 
 <template>
@@ -84,17 +110,17 @@ const goAttraction = async (num) => {
   </vueper-slides>
   <!-- <div class="logo">Enjoy Trip</div> -->
   <div class="cards">
-    <div class="card">
+    <div class="card" @click="moveHotplaceSequence(1)">
       <img src="../assets/img/Busan.jpg" alt="#" style="border-radius: 5px; object-fit: cover" />
       <div class="title">최신순</div>
       <div class="content">최신순입니다.</div>
     </div>
-    <div class="card">
+    <div class="card" @click="moveHotplaceSequence(2)">
       <img src="../assets/img/Daegu.jpg" alt="#" style="border-radius: 5px; object-fit: cover" />
       <div class="title">조회순</div>
       <div class="content">조회순입니다.</div>
     </div>
-    <div class="card">
+    <div class="card" @click="moveHotplaceSequence(3)">
       <img src="../assets/img/Gwangju.jpg" alt="#" style="border-radius: 5px; object-fit: cover" />
       <div class="title">좋아요순</div>
       <div class="content">좋아요순입니다.</div>
