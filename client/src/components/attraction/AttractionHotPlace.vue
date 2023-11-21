@@ -102,6 +102,9 @@ const click = () => {
   color: honeydew;
 }
 .placeContent {
+  word-break: break-all;
+  width: 200px;
+  height: 90px;
   font-size: 15px;
   color: beige;
 }

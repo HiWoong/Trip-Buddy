@@ -31,7 +31,8 @@ public class BoardServiceImpl implements BoardService {
 		int start = pgno * spp;
 		param.put("start", start);
 		param.put("listsize", spp);
-		System.out.println(param);
+		param.put("sort", map.get("sort"));
+		System.out.println("param: " + param);
 		return repo.listArticle(param);
 	}
 

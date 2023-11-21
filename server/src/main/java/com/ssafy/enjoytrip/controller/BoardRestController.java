@@ -20,12 +20,14 @@ public class BoardRestController {
 	private final BoardService boardService;
 
 	@GetMapping("/list")
-	private ResponseEntity<?> list(@RequestParam String pgno, @RequestParam String key, @RequestParam String word, @RequestParam String spp) throws Exception {
+	private ResponseEntity<?> list(@RequestParam String pgno, @RequestParam String key, @RequestParam String word, @RequestParam String spp, @RequestParam String sort) throws Exception {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("pgno", pgno + "");
 		map.put("key", key);
 		map.put("word", word);
 		map.put("spp", spp);
+		map.put("sort", sort);
+		System.out.println(map);
 		List<BoardDto> list = boardService.listArticle(map);
 		return new ResponseEntity<List<BoardDto>>(list, HttpStatus.OK);
 	}

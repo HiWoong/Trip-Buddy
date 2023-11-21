@@ -29,17 +29,23 @@ function imageToBase64(f) {
 }
 
 const hotPlaceWrite = () => {
-  if (data.value.image != "../src/assets/img/noImage.png") {
-    http.post("/hotplaceapi/write", data.value).then(({ data }) => {
-      if (data == 1) {
-        alert("등록이 완료되었습니다.");
-        router.replace({ name: "AttractionHotPlaceList" });
-      } else {
-        alert("등록이 정상적으로 진행되지 않았습니다.");
-      }
-    });
+  if (data.value.image == "../src/assets/img/noImage.png") {
+    alert("사진은 필수입니다.");
+  } else if (data.value.subject.length > 8 || data.value.subject.length == 0) {
+    alert("제목은 필수이며 8자 제한입니다.");
+  } else if (data.value.content.length > 55 || data.value.content.length == 0) {
+    alert("내용은 필수이며 55자 제한입니다.");
   } else {
-    alert("I need a picture...");
+    if (data.value.image != "../src/assets/img/noImage.png") {
+      http.post("/hotplaceapi/write", data.value).then(({ data }) => {
+        if (data == 1) {
+          alert("등록이 완료되었습니다.");
+          router.replace({ name: "AttractionHotPlaceList" });
+        } else {
+          alert("등록이 정상적으로 진행되지 않았습니다.");
+        }
+      });
+    }
   }
 };
 </script>
@@ -133,7 +139,7 @@ const hotPlaceWrite = () => {
 #image {
   width: 700px;
   height: 700px;
-  margin-left: 150px;
+  margin-left: 100px;
   margin-bottom: 40px;
   /* background-color: antiquewhite; */
   border-radius: 70%;

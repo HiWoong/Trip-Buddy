@@ -5,12 +5,23 @@ import UserMyPageHotPlace from "@/components/user/UserMyPageHotPlace.vue";
 import UserMyPageMyHotPlace from "@/components/user/UserMyPageMyHotPlace.vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/userStore.js";
-import UserPlan from "@/components/user/UserPlan.vue";
+import { httpStatusCode } from "@/util/http-status";
+import { info } from "@/api/userApi";
+import { totalPlans } from "@/api/planApi";
+import UserPlanRow from "@/components/user/UserPlanRow.vue";
 
 const { cookies } = useCookies();
 const router = useRouter();
 const userStore = useUserStore();
-const { getFavorite, getLikes, getFavHotPlace, getmyFavHotPlaces, setmyFavHotPlaces, setmyStorageHotPlace, getmyStorageHotPlace } = userStore;
+const {
+  getFavorite,
+  getLikes,
+  getFavHotPlace,
+  getmyFavHotPlaces,
+  setmyFavHotPlaces,
+  setmyStorageHotPlace,
+  getmyStorageHotPlace,
+} = userStore;
 
 const userId = cookies.get("userId");
 const myFav = ref([]);
@@ -21,65 +32,48 @@ const planFlag = ref(true);
 const myHotPlaceFlag = ref(false);
 const myWritePlaceFlag = ref(false);
 
-const planStyleObject = ref({
-  backgroundColor: "gray",
-  fontSize: "20px",
+const newUser = ref([]);
+const plans = ref([]);
+
+const styleObject = ref({
+  backgroundColor: "#332708",
+  fontSize: "30px",
+  color: "whiteSmoke",
+  border: "5px solid #e0a200",
+  "border-radius": "15px",
 });
 
-const myHotStyleObject = ref({
-  backgroundColor: "",
-  fontSize: "",
-});
+const planStyleObject = ref({});
 
-const myWriteStyleObject = ref({
-  backgroundColor: "",
-  fontSize: "",
-});
+const myHotStyleObject = ref({});
+
+const myWriteStyleObject = ref({});
 
 const myHotPlaceC = () => {
-  if (!myHotPlaceFlag.value) {
-    myHotPlaceFlag.value = true;
-    // console.log(myHotPlaceFlag.value);
-    myHotStyleObject.value.backgroundColor = "gray";
-    myHotStyleObject.value.fontSize = "20px";
-  }
+  myHotStyleObject.value = styleObject.value;
+  planStyleObject.value = {};
+  myWriteStyleObject.value = {};
+  myHotPlaceFlag.value = true;
   planFlag.value = false;
   myWritePlaceFlag.value = false;
-
-  planStyleObject.value.backgroundColor = "";
-  planStyleObject.value.fontSize = "";
-  myWriteStyleObject.value.backgroundColor = "";
-  myWriteStyleObject.value.fontSize = "";
 };
 
 const myWritePlaceC = () => {
-  if (!myWritePlaceFlag.value) {
-    myWritePlaceFlag.value = true;
-    myWriteStyleObject.value.backgroundColor = "gray";
-    myWriteStyleObject.value.fontSize = "20px";
-  }
+  myWriteStyleObject.value = styleObject.value;
+  planStyleObject.value = {};
+  myHotStyleObject.value = {};
+  myWritePlaceFlag.value = true;
   planFlag.value = false;
   myHotPlaceFlag.value = false;
-
-  planStyleObject.value.backgroundColor = "";
-  planStyleObject.value.fontSize = "";
-  myHotStyleObject.value.backgroundColor = "";
-  myHotStyleObject.value.fontSize = "";
 };
 
 const planC = () => {
-  if (!planFlag.value) {
-    planFlag.value = true;
-    planStyleObject.value.backgroundColor = "gray";
-    planStyleObject.value.fontSize = "20px";
-  }
-  myHotPlaceFlag.value = false;
+  planStyleObject.value = styleObject.value;
+  myWriteStyleObject.value = {};
+  myHotStyleObject.value = {};
+  planFlag.value = true;
   myWritePlaceFlag.value = false;
-
-  myWriteStyleObject.value.backgroundColor = "";
-  myWriteStyleObject.value.fontSize = "";
-  myHotStyleObject.value.backgroundColor = "";
-  myHotStyleObject.value.fontSize = "";
+  myHotPlaceFlag.value = false;
 };
 
 onMounted(async () => {
@@ -95,10 +89,61 @@ onMounted(async () => {
   // mystorage hotplace
   await setmyStorageHotPlace(cookies.get("userId"));
   mineHotPlaces.value = await getmyStorageHotPlace();
+
+  getUserInfo(cookies.get("userId"));
+  getTotalPlans(cookies.get("userId"));
+
+  planStyleObject.value = styleObject.value;
 });
 
 const moveMyPageInfo = () => {
   router.push({ name: "UserMyPageInfo" });
+};
+
+const getUserInfo = async (userId) => {
+  info(
+    userId,
+    (response) => {
+      console.log(response.status);
+      if (response.status === httpStatusCode.OK) {
+        console.log("3. getUserInfo data >> ", response.data.userInfo);
+        newUser.value = response.data.userInfo;
+      } else {
+        console.log("유저 정보 없음!!!!");
+      }
+    },
+    async (error) => {
+      console.error(
+        "getUserInfo() error code [토큰 만료되어 사용 불가능.] ::: ",
+        error.response.status
+      );
+    }
+  );
+};
+
+const getTotalPlans = async (userId) => {
+  await totalPlans(
+    userId,
+    (response) => {
+      console.log(response.status);
+      if (response.status === httpStatusCode.OK) {
+        console.log("plans >> ", response.data);
+        console.log(plans.value);
+        plans.value = response.data;
+
+        // console.log("new User", newUser.value);
+        // console.log("new User ProfileImg : ", newUser.value.profileImage);
+      } else {
+        console.log("유저 정보 없음!!!!");
+      }
+    },
+    async (error) => {
+      console.error(
+        "getUserInfo() error code [토큰 만료되어 사용 불가능.] ::: ",
+        error.response.status
+      );
+    }
+  );
 };
 </script>
 
@@ -136,7 +181,7 @@ const moveMyPageInfo = () => {
         />
       </div>
       <div v-if="planFlag">
-        <UserPlan />
+        <UserPlanRow v-for="plan in plans" :key="plan.planId" v-bind="plan" />
       </div>
       <div v-if="myWritePlaceFlag">
         <UserMyPageMyHotPlace
@@ -180,7 +225,7 @@ const moveMyPageInfo = () => {
 .tab {
   margin: 50px 0 0 100px;
   width: 90%;
-  height: 800px;
+  height: 100%;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

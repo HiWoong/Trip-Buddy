@@ -35,6 +35,7 @@ const onPageChange = (val) => {
 const key = ref("");
 const word = ref("");
 const pgno = ref(1);
+const sort = ref("");
 
 const searchBoards = () => {
   currentPage.value = 1;
@@ -58,7 +59,9 @@ const getArticleList = () => {
         "&word=" +
         word.value +
         "&spp=" +
-        param.value.spp
+        param.value.spp +
+        "&sort=" +
+        sort.value
     )
     .then(({ data }) => {
       articles.value = data;
@@ -85,6 +88,14 @@ const moveWrite = () => {
         <div class="searchOptions">
           <div v-if="uid != null" id="submitLogin">
             <input type="submit" class="writeButton" @click="moveWrite" value="글쓰기" />
+          </div>
+          <div class="sortType">
+            <select name="sort" id="sort" aria-label="정렬조건" v-model="sort">
+              <option value="" selected>정렬조건</option>
+              <option value="register_time" selected>최신순</option>
+              <option value="hit">조회순</option>
+              <option value="article_no">글번호</option>
+            </select>
           </div>
           <div class="searchType">
             <select name="key" id="key" aria-label="검색조건" v-model="key">
@@ -178,6 +189,9 @@ const moveWrite = () => {
   width: 100%;
   height: 50px;
 }
+#submitLogin {
+  width: 750px;
+}
 .writeButton {
   margin-right: 707px;
   background-color: rgb(175, 171, 243);
@@ -194,8 +208,12 @@ const moveWrite = () => {
   margin-top: 10px;
   margin-bottom: 0px;
 }
+.sortType {
+  width: 120px;
+  padding-left: 10px;
+}
 .searchType {
-  width: 150px;
+  width: 90px;
 }
 .searchWord {
   width: 370px;
@@ -204,8 +222,15 @@ const moveWrite = () => {
   margin: 0 10px;
   width: 100px;
 }
+#sort {
+  width: 90px;
+  height: 35px;
+  font-size: 18px;
+  border: 2px solid gray;
+  border-radius: 5px;
+}
 #key {
-  width: 150px;
+  width: 90px;
   height: 35px;
   font-size: 18px;
   border: 2px solid gray;
