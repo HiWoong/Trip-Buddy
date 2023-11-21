@@ -10,7 +10,6 @@ const { cookies } = useCookies();
 
 const router = useRouter();
 const route = useRoute();
-const userinfo = JSON.parse(sessionStorage.getItem("userinfo"));
 
 const uid = cookies.get("userId");
 console.log(uid);
@@ -54,67 +53,82 @@ const deleteArticle = () => {
 const moveList = () => {
   router.push({ name: "BoardList" });
 };
+
+const moveModify = () => {
+  router.push({
+    name: "BoardModify",
+    params: { articleNo: article.value.articleNo },
+  });
+};
 </script>
 
 <template>
-  <div class="row justify-content-center mt-5">
-    <div class="col-lg-8 col-md-10 col-sm-12">
-      <h2 class="my-3 py-3 shadow-sm bg-light text-center">
-        <mark class="sky">글보기</mark>
-      </h2>
-    </div>
-    <div class="col-lg-8 col-md-10 col-sm-12">
-      <div class="row my-2">
-        <h2 class="text-secondary">{{ article.subject }}</h2>
+  <div>
+    <div>
+      <div class="titleDiv">
+        <div class="title">
+          {{ article.subject }}
+        </div>
       </div>
-      <div class="row">
-        <div class="col-md-8">
-          <div class="clearfix align-content-center">
-            <img
-              class="avatar me-2 float-md-start bg-light p-2"
-              src="https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg"
-            />
-            <p>
-              <span class="fw-bold">{{ article.userId }}</span> <br />
-              <span class="text-secondary fw-light">
-                {{ article.registerTime }} 조회 : {{ article.hit }}
-              </span>
-            </p>
+      <div class="content">
+        <div class="firstContent">
+          <img
+            src="https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg"
+            style="width: 50px; height: 50px; margin-right: 10px"
+          />
+          <div style="font-size: 20px; color: gray">|</div>
+          <div style="font-size: 20px; margin-left: 30px">
+            {{ article.userId }}
           </div>
         </div>
-        <div class="col-md-4 align-self-center text-end">댓글 : {{ comments.length }}</div>
-        <div class="divider mb-3"></div>
-        <div class="text-body">{{ article.content }}</div>
-        <div class="divider mt-3 mb-3"></div>
-        <div class="d-flex justify-content-end">
-          <button type="button" id="btn-list" class="btn btn-outline-primary mb-3">
-            <RouterLink class="nav-link active" aria-current="page" to="/board">글목록</RouterLink>
-          </button>
-          <span v-if="uid == article.userId">
-            <button type="button" id="btn-mv-modify" class="btn btn-outline-success mb-3 ms-1">
-              <RouterLink
-                class="nav-link active"
-                aria-current="page"
-                :to="{
-                  name: 'BoardModify',
-                  params: { articleNo: article.articleNo },
-                }"
-              >
-                글수정
-              </RouterLink>
-            </button>
-          </span>
-          <span v-if="uid == article.userId">
-            <button
-              type="button"
-              id="btn-delete"
-              class="btn btn-outline-danger mb-3 ms-1"
-              @click="deleteArticle"
-            >
-              글삭제
-            </button>
-          </span>
+        <div class="secondContent">
+          <div>{{ article.registerTime }}</div>
         </div>
+        <div class="thirdContent">조회 : {{ article.hit }}</div>
+        <div class="fourthContent">댓글 : {{ comments.length }}</div>
+        <div class="fifthContent">
+          <template v-if="uid == article.userId">
+            <div class="modifyButtonDiv">
+              <input
+                class="modifyButton"
+                type="submit"
+                style="width: 80px; height: 40px"
+                value="글수정"
+                @click="moveModify"
+              />
+            </div>
+            <div class="deleteButtonDiv">
+              <input
+                class="deleteButton"
+                type="submit"
+                style="width: 80px; height: 40px"
+                @click="deleteArticle"
+                value="글삭제"
+              />
+            </div>
+            <div class="listButtonDiv">
+              <input
+                class="listButton"
+                type="submit"
+                style="width: 80px; height: 40px"
+                value="글목록"
+                @click="moveList"
+              />
+            </div>
+          </template>
+          <template v-else>
+            <div class="listButtonElseDiv">
+              <input
+                class="listButtonElse"
+                type="submit"
+                style="width: 80px; height: 40px"
+                value="글목록"
+                @click="moveList"
+              />
+            </div>
+          </template>
+        </div>
+        <div class="sixthContent">{{ article.content }}</div>
       </div>
       <template v-if="comments != null">
         <CommentList
@@ -124,11 +138,141 @@ const moveList = () => {
           :index="index + 1"
         />
       </template>
-      <template v-if="true">
+      <template v-if="uid == article.userId">
         <CommentWrite :user-id="uid" :article-no="Number(article.articleNo)" />
       </template>
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+@font-face {
+  font-family: "NanumSquare";
+  src: url("../../assets/fonts/NanumSquareR.ttf") format("truetype");
+}
+@font-face {
+  font-family: "NanumSquareB";
+  src: url("../../assets/fonts/NanumSquareB.ttf") format("truetype");
+}
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "NanumSquare";
+}
+.titleDiv {
+  margin: 20px 0 0 0;
+  width: 100%;
+  height: 60px;
+}
+.title {
+  font-family: "NanumSquareB";
+  font-size: 50px;
+  padding: 0 150px 0 0;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-decoration-color: gray;
+  text-underline-position: under;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  width: 75%;
+}
+.firstContent {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+.secondContent,
+.thirdContent,
+.fourthContent {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 17px;
+}
+.fifthContent {
+  display: flex;
+  margin: 0 0 1vh 300px;
+  align-items: center;
+  height: 50px;
+}
+.modifyButtonDiv {
+  margin: 0 1vh 0 0;
+  width: 80px;
+  height: 40px;
+}
+.modifyButton {
+  background-color: rgb(178, 214, 111);
+  border-radius: 5px;
+  transition: all 0.25s;
+  box-shadow: 1px 5px 0px 0px rgb(178, 214, 111);
+  font-size: 16px;
+  font-weight: 600;
+}
+.modifyButton:hover {
+  box-shadow: 0px 0px 0px 0px rgb(178, 214, 111);
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
+
+.deleteButtonDiv {
+  margin: 0 50vh 0 0;
+  width: 80px;
+  height: 40px;
+}
+.deleteButton {
+  background-color: rgb(247, 127, 157);
+  border-radius: 5px;
+  transition: all 0.25s;
+  box-shadow: 1px 5px 0px 0px rgb(247, 127, 157);
+  font-size: 16px;
+  font-weight: 600;
+}
+.deleteButton:hover {
+  box-shadow: 0px 0px 0px 0px rgb(247, 127, 157);
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
+
+.listButtonDiv {
+  margin: 0 0 0 49vh;
+  width: 80px;
+  height: 40px;
+}
+
+.listButton,
+.listButtonElse {
+  background-color: rgb(238, 179, 71);
+  border-radius: 5px;
+  transition: all 0.25s;
+  box-shadow: 1px 5px 0px 0px rgb(238, 179, 71);
+  font-size: 16px;
+  font-weight: 600;
+}
+.listButton:hover {
+  box-shadow: 0px 0px 0px 0px rgb(238, 179, 71);
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
+.listButtonElse:hover {
+  box-shadow: 0px 0px 0px 0px rgb(238, 179, 71);
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
+
+.sixthContent {
+  height: 400px;
+  margin: 0 15% 0 20.6%;
+  padding: 15px;
+  width: 85%;
+  border: 2px solid gray;
+  border-radius: 15px;
+  word-break: break-all;
+  font-size: 20px;
+  text-align: start;
+}
+</style>

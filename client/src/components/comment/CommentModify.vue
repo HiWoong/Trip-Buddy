@@ -3,42 +3,38 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import http from "@/util/http-common.js";
 const router = useRouter();
-const content = ref("");
 const props = defineProps({
-  userId: String,
-  articleNo: Number,
+  commentId: String,
+  content: Number,
 });
-const createComment = () => {
-  console.log(content.value);
+const content = ref(props.content);
+const emit = defineEmits(["toggleModal"]);
+
+const modifyComment = () => {
   http
-    .post("/commentapi/write", {
+    .post("/commentapi/modify", {
+      commentId: props.commentId,
       content: content.value,
-      userId: props.userId,
-      articleNo: props.articleNo,
     })
     .then(({ data }) => {
-      let msg = "등록 처리 시 문제가 발생했습니다.";
+      let msg = "수정 처리 시 문제가 발생했습니다.";
       if (data === 1) {
-        msg = "등록이 완료되었습니다.";
+        msg = "수정이 완료되었습니다.";
       }
       alert(msg);
+      emit("toggleModal");
       router.go();
     });
 };
 </script>
 <template>
   <div class="wholeCommentContents">
-    <div class="title">댓글 작성하기</div>
+    <div class="title">{{ commentId }}번 댓글 수정</div>
     <div style="display: flex; height: 120px">
       <div class="comment">
         <textarea class="commentContent" v-model="content" />
       </div>
-      <input
-        type="button"
-        class="registerButton"
-        @click="createComment"
-        value="작성하기"
-      />
+      <input type="button" class="registerButton" @click="modifyComment" value="수정하기" />
     </div>
   </div>
 </template>
@@ -57,7 +53,11 @@ const createComment = () => {
   font-family: "NanumSquare";
 }
 .wholeCommentContents {
-  margin: 0 16% 0 16%;
+  background-color: rgb(247 240 208);
+  margin: 0 15% 0 15%;
+  padding: 0 0 0 20px;
+  width: 1170px;
+  border-radius: 10px;
 }
 .title {
   margin: 5px 0 5px 0;
@@ -65,7 +65,7 @@ const createComment = () => {
   font-size: 20px;
 }
 .commentContent {
-  padding: 3px;
+  padding: 3px 3px 3px 6px;
   height: 100px;
   width: 1000px;
   border: 2px solid gray;
@@ -83,15 +83,15 @@ const createComment = () => {
   height: 50px;
   width: 100px;
   margin: 20px 0 0 20px;
-  background-color: rgb(129, 202, 231);
+  background-color: rgb(178, 214, 111);
   border-radius: 5px;
   transition: all 0.25s;
-  box-shadow: 1px 5px 0px 0px rgb(129, 202, 231);
+  box-shadow: 1px 5px 0px 0px rgb(178, 214, 111);
   font-size: 16px;
   font-weight: 600;
 }
 .registerButton:hover {
-  box-shadow: 0px 0px 0px 0px rgb(129, 202, 231);
+  box-shadow: 0px 0px 0px 0px rgb(178, 214, 111);
   margin-top: 15px;
   margin-bottom: 20px;
 }

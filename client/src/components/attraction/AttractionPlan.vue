@@ -10,7 +10,9 @@ const { cookies } = useCookies();
 const router = useRouter();
 
 var map;
-const keyword = ref("역삼역");
+const keyword = ref("");
+const nowLat = ref(33.450701);
+const nowLon = ref(126.570667);
 const markers = ref([]);
 const result = ref([]);
 const idx = ref(0);
@@ -122,11 +124,30 @@ const removePickPlace = (address_name, index) => {
 
 const loadMap = () => {
   const container = document.getElementById("map");
-  const options = {
+  let options = {
     center: new kakao.maps.LatLng(33.450701, 126.570667),
     level: 3,
   };
   map = new kakao.maps.Map(container, options);
+  if (navigator.geolocation) {
+    // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+    navigator.geolocation.getCurrentPosition(function (position) {
+      var lat = position.coords.latitude, // 위도
+        lon = position.coords.longitude; // 경도
+
+      var locPosition = new kakao.maps.LatLng(lat, lon);
+      nowLat.value = locPosition.Ma;
+      nowLon.value = locPosition.La;
+      let options = {
+        center: new kakao.maps.LatLng(nowLat.value, nowLon.value),
+        level: 3,
+      };
+      map = new kakao.maps.Map(container, options);
+      new kakao.maps.Marker({ map: map, position: locPosition });
+    });
+  } else {
+    alert("현재 위치를 가져올 수 없습니다.");
+  }
   var mapTypeControl = new kakao.maps.MapTypeControl();
 
   map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
@@ -145,13 +166,14 @@ const loadScript = () => {
   document.head.appendChild(script);
 };
 
-function searchPlaces() {
+const searchPlaces = () => {
   const container = document.getElementById("map");
   const options = {
-    center: new kakao.maps.LatLng(33.450701, 126.570667),
+    center: new kakao.maps.LatLng(nowLat.value, nowLon.value),
     level: 3,
   };
   map = new kakao.maps.Map(container, options);
+
   const mapTypeControl = new kakao.maps.MapTypeControl();
 
   map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
@@ -191,8 +213,9 @@ function searchPlaces() {
 
     // 지도에 표시되고 있는 마커를 제거합니다
     removeMarker();
+    const newPlaces = sortByDistance(places);
     map.setCenter(new kakao.maps.LatLng(places[0].y, places[0].x));
-    for (var i = 0; i < places.length; i++) {
+    for (var i = 0; i < newPlaces.length; i++) {
       // 마커를 생성하고 지도에 표시합니다
       const placePosition = new kakao.maps.LatLng(places[i].y, places[i].x);
       const marker = addMarker(placePosition, i);
@@ -293,7 +316,6 @@ function searchPlaces() {
 
     marker.setMap(map); // 지도 위에 마커를 표출합니다
     markers.value.push(marker); // 배열에 생성된 마커를 추가합니다
-
     return marker;
   }
 
@@ -381,7 +403,16 @@ function searchPlaces() {
       el.removeChild(el.lastChild);
     }
   }
-}
+};
+
+const sortByDistance = (places) => {
+  places.forEach((data) => {
+    let distance = Math.pow(nowLon.value - data.x, 2) + Math.pow(nowLat.value - data.y, 2);
+    data.distance = distance;
+  });
+  places.sort((a, b) => a.distance - b.distance);
+  return places;
+};
 
 const addDay = () => {
   if (nowDay.value == 6) {
