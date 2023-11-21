@@ -12,5 +12,10 @@ public interface HotPlaceService {
 
 	HotPlaceDto getFavHotPlace(int hotPlaceId) throws Exception;
 	List<HotPlaceDto> getMyHotPlace(String userId) throws Exception;
+	int updateVisitedCount(int hotPlaceId) throws Exception;
+
+	int addHitCount(int hotPlaceId) throws Exception;
+
+	int minHitCount(int hotPalceId) throws Exception;
 	
 }

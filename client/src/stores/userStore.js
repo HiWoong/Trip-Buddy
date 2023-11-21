@@ -80,12 +80,16 @@ export const useUserStore = defineStore("userStore", () => {
     return favorites.value;
   };
 
-  const setFavorite = async (data) => {
+  const setFavorite = async (data, flag) => {
     await setFavorites(
       data,
       (response) => {
         if (response.status === httpStatusCode.OK) {
-          alert("좋아요가 성공적으로 완료되었습니다.");
+          if (flag){
+            alert("좋아요!");
+          } else {
+            alert("취소");
+          }
         }
       },
       (error) => {

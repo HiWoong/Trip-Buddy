@@ -27,7 +27,8 @@ onMounted(async () => {
 });
 
 const logout = async () => {
-  await userLogoutStore(cookies.get("userId"));
+  await userLogoutStore({ userId : cookies.get("userId")}
+    );
   router.replace({ name: "HomeView" });
 };
 

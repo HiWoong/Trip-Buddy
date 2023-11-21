@@ -4,9 +4,9 @@ import AttractionHotPlace from "./AttractionHotPlace.vue";
 import Last from "@/components/common/Last.vue";
 import http from "@/util/http-common.js";
 import { useCookies } from "vue3-cookies";
-const { cookies } = useCookies();
-
 import { useUserStore } from "@/stores/userStore.js";
+
+const { cookies } = useCookies();
 const userStore = useUserStore();
 const { getFavorite, getLikes } = userStore;
 const myFav = ref([]);
@@ -34,6 +34,9 @@ const sortType = () => {
   if (type.value == "created_date") {
     type.value = "hit_count";
     typeString.value = "좋아요순";
+  } else if (type.value == "hit_count") {
+    type.value = "visited_count";
+    typeString.value = "조회순";
   } else {
     type.value = "created_date";
     typeString.value = "최신순";

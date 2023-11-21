@@ -61,6 +61,7 @@ create table hotplaces (
     content varchar(2000) not null,
     image mediumblob,
 	hit_count int not null default 0,
+    visited_count int not null default 0,
     created_date timestamp not null default (current_timestamp),
     updated_date timestamp not null default (current_timestamp),
     foreign key (user_id) references users(user_id) on update cascade on delete cascade

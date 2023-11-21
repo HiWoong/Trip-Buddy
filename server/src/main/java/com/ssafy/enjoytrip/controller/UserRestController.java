@@ -61,9 +61,12 @@ public class UserRestController {
 	}
 
 	@PostMapping("/logout")
-	private ResponseEntity<?> logout(@RequestBody String userId) throws Exception {
+	private ResponseEntity<?> logout(@RequestBody UserDto userDto) throws Exception {
 //		Map<String, Object> resultMap = new HashMap<String, Object>();
-		UserService.deleteRefreshToken(userId);
+
+		System.out.println("userId = " + userDto.getUserId());
+
+		UserService.deleteRefreshToken(userDto.getUserId());
 
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}

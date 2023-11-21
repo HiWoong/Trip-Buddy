@@ -15,6 +15,7 @@ public class HotPlaceDto {
 	private String content;
 	private String image;
 	private int hitCount;
+	private int visitedCount;
 	private String createdDate;
 	private String updatedDate;
 }

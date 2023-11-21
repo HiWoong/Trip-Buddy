@@ -43,4 +43,19 @@ public class HotPlaceServiceImpl implements HotPlaceService {
 		return repo.getMyHotPlace(userId);
 	}
 
+	@Override
+	public int updateVisitedCount(int hotPlaceId) throws Exception {
+		return repo.updateVisitedCount(hotPlaceId);
+	}
+
+	@Override
+	public int addHitCount(int hotPlaceId) throws Exception {
+		return repo.addHitCount(hotPlaceId);
+	}
+
+	@Override
+	public int minHitCount(int hotPalceId) throws Exception {
+		return repo.minHitCount(hotPalceId);
+	}
+
 }

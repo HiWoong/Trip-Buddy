@@ -55,7 +55,42 @@ public class HotPlaceRestController {
 
 		if (list != null) return new ResponseEntity<List<HotPlaceDto>>(list, HttpStatus.OK);
 
-		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
 
+	@PostMapping("/updateVisited")
+	private ResponseEntity<?> updateVisitedCount(@RequestBody HotPlaceDto hotPlaceDto) throws Exception {
+
+		int result = hotPlaceService.updateVisitedCount(hotPlaceDto.getHotplaceId());
+
+		if (result == 1){
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		}
+
+		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+
+	}
+
+	@PostMapping("/addHitCount")
+	private ResponseEntity<?> addHitCount(@RequestBody HotPlaceDto hotPlaceDto) throws Exception {
+
+		int result = hotPlaceService.addHitCount(hotPlaceDto.getHotplaceId());
+
+		if (result == 1){
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+
+		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+	}
+
+	@PostMapping("/minHitCount")
+	private ResponseEntity<?> minHitCount(@RequestBody HotPlaceDto hotPlaceDto) throws Exception {
+		int result = hotPlaceService.minHitCount(hotPlaceDto.getHotplaceId());
+
+		if (result == 1){
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+
+		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+	}
 }

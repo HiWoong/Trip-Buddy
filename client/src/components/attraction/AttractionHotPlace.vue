@@ -1,12 +1,20 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-const isClicked = ref(false);
-const router = useRouter();
+
+import { useUserStore } from "@/stores/userStore.js";
+
+import { updateVisitedCount, addHitCount, minHitCount } from "@/api/hotplaceApi.js";
+
+import { httpStatusCode } from "@/util/http-status";
+
+
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
 
-import { useUserStore } from "@/stores/userStore.js";
+const isClicked = ref(false);
+const router = useRouter();
+
 const userStore = useUserStore();
 const { getFavorite, setFavorite, getLikes } = userStore;
 
@@ -35,20 +43,80 @@ const takePlace = async () => {
       await setFavorite({
         userId: userId,
         favorite: JSON.stringify(abc),
-      });
+      }, true);
+      await addLikeCount({ hotplaceId : props.hotPlace.hotplaceId });
       isLoved.value = true;
     } else {
       // 좋아요 삭제 로직 만들기
-      // alert("좋아하는 마음이 어떻게 변해요?");
-      alert("좋아요는 현재 취소할 수 없습니다.");
+      const abc = props.myFav;
+      for(let i = 0; i < abc.length; i++) {
+        if(abc[i] == props.hotPlace.hotplaceId )  {
+          abc.splice(i, 1);
+          i--;
+        }
+      }
+
+      await setFavorite({
+        userId: userId,
+        favorite: JSON.stringify(abc),
+      }, false);
+      await minLikeCount({ hotplaceId : props.hotPlace.hotplaceId });
+      isLoved.value = false;
     }
   }
 };
 
-const click = () => {
+const click = async() => {
   isClicked.value = !isClicked.value;
+
+  if (isClicked.value){
+    await changeVisitedCount({ hotplaceId : props.hotPlace.hotplaceId });
+  }
   // console.log(isClicked.value);
 };
+
+const changeVisitedCount = async (hotPlaceDto) => {
+  updateVisitedCount(
+    hotPlaceDto,
+    (response) => {
+      if (response.status == httpStatusCode.OK){
+        props.hotPlace.visitedCount++;
+      }
+    },
+    (error) => {
+      console.error(error);
+    }
+  )
+}
+
+const addLikeCount = async (hotPlaceDto) => {
+  addHitCount(
+    hotPlaceDto,
+    (response) => {
+      if (response.status == httpStatusCode.OK){
+        props.hotPlace.hitCount--;
+      }
+    },
+    (error) => {
+      console.error(error);
+    }
+  )
+}
+
+const minLikeCount = async (hotPlaceDto) => {
+  minHitCount(
+    hotPlaceDto,
+    (response) => {
+      if (response.status == httpStatusCode.OK){
+        props.hotPlace.hitCount--;
+      }
+    },
+    (error) => {
+      console.error(error);
+    }
+  )
+}
+
 </script>
 <template>
   <div class="wholeContent">
@@ -68,7 +136,7 @@ const click = () => {
     </div>
     <div class="placeDesc">
       <div class="placeTitle">{{ props.hotPlace.subject }}</div>
-      <div v-show="isClicked" class="placeContent">{{ props.hotPlace.content }}</div>
+      <div v-show="isClicked" class="placeContent">{{ props.hotPlace.content }} {{ props.hotPlace.visitedCount }}</div>
     </div>
   </div>
 </template>

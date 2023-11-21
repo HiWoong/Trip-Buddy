@@ -9,6 +9,7 @@
         <result column="content" property="content" />
         <result column="image" property="image" />
         <result column="hit_count" property="hitCount" />
+        <result column="visited_count" property="visitedCount" />
         <result column="created_date" property="createdDate" />
         <result column="updated_date" property="updatedDate" />
     </resultMap>
@@ -31,4 +32,15 @@
         where user_id = #{userId}
     </select>
 
+    <update id="updateVisitedCount">
+        update hotplaces set visited_count = visited_count + 1 where hotplace_id = #{hotPlaceId}
+    </update>
+
+    <update id="addHitCount">
+        update hotplaces set hit_count = hit_count + 1 where hotplace_id = #{hotPlaceId}
+    </update>
+
+    <update id="minHitCount">
+        update hotplaces set hit_count = hit_count - 1 where hotplace_id = #{hotPlaceId}
+    </update>
 </mapper>

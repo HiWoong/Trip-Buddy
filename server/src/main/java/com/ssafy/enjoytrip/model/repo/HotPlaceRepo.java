@@ -15,4 +15,8 @@ public interface HotPlaceRepo {
 	int createHotPlace(HotPlaceDto hotPlaceDto) throws Exception;
 	HotPlaceDto getFavHotPlace(int hotPlaceId) throws Exception;
 	List<HotPlaceDto> getMyHotPlace(String userId) throws Exception;
+	int updateVisitedCount(int hotPlaceId) throws Exception;
+
+	int addHitCount(int hotPlaceId) throws Exception;
+	int minHitCount(int hotPlaceId) throws Exception;
 }
