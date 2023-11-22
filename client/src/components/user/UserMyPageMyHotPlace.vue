@@ -1,7 +1,36 @@
 <script setup>
+import { deleteHotplace } from "@/api/hotplaceApi";
+import { useRouter } from "vue-router";
+import { httpStatusCode } from "@/util/http-status";
+
+const router = useRouter();
+
 const props = defineProps({
   myHotPlace: Object,
 });
+
+const deleteMyHotplace = async() => {
+  deleteHotplace(
+    props.myHotPlace.hotplaceId,
+    (response) => {
+      if (response.status === httpStatusCode.NOCONTENT){
+        alert("삭제가 완료되었습니다.");
+        router.go();
+      } else {
+        console.log("Unexcepted Error");
+      }
+    },
+    (error) => {
+      console.error(
+        error
+      );
+    }
+  )
+}
+
+const modifyMyHotPlace = () => {
+  alert("수정이 완료되었습니다.")
+}
 </script>
 
 <template>
@@ -18,7 +47,7 @@ const props = defineProps({
           <input @click="modifyMyHotPlace" class="modifyButton" type="button" value="수정" />
         </div>
         <div class="deleteButtonDiv">
-          <input class="deleteButton" type="button" value="삭제" />
+          <input @click="deleteMyHotplace" class="deleteButton" type="button" value="삭제" />
         </div>
       </div>
     </div>
