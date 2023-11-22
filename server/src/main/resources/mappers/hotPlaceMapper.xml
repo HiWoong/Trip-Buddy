@@ -43,4 +43,14 @@
     <update id="minHitCount">
         update hotplaces set hit_count = hit_count - 1 where hotplace_id = #{hotPlaceId}
     </update>
+
+    <update id="updateHotPlace">
+        update hotplaces set subject = #{subject},
+            content = #{content}, update_time = current_timestamp
+            where hotplace_id = #{hotPlaceId}
+    </update>
+
+    <delete id="deleteHotPlace">
+        delete from hotplaces where hotplace_id = #{hotPlaceId}
+    </delete>
 </mapper>
