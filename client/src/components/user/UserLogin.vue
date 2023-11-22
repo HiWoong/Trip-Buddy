@@ -112,6 +112,7 @@ const findPassword = async () => {
   /* background-color: darkorange; */
   margin-bottom: 30px;
   color: gray;
+  cursor: pointer;
 }
 #btn-login {
   background-color: #00ae68;
