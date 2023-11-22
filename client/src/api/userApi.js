@@ -60,6 +60,10 @@ async function getMyHotPlace(userId, success, fail) {
   await http.get(`/hotplaceapi/myHotplace/${userId}`).then(success).catch(fail);
 }
 
+async function createNewPassword(userId, success, fail){
+  await http.get(`/emailapi/${userId}`).then(success).catch(fail);
+}
+
 export {
   join,
   login,
@@ -73,4 +77,5 @@ export {
   getMyFavoriteHotPlace,
   getMyHotPlace,
   boardInfo,
+  createNewPassword,
 };

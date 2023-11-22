@@ -1,4 +1,31 @@
-<script setup></script>
+<script setup>
+  import { ref } from "vue";
+  import { createNewPassword } from "@/api/userApi";
+  import { httpStatusCode } from "@/util/http-status";
+  import { RouterLink, useRouter } from "vue-router";
+
+  const router = useRouter();
+
+  const uid = ref("");
+
+  const sendEmail = () => {
+    createNewPassword(
+      uid.value,
+      (response) => {
+        if (response.status === httpStatusCode.OK){
+          alert("임시 비밀번호가 이메일로 전송되었습니다.")
+          router.push("/user/login");
+        } else {
+          alert("존재하지 않는 사용자 아이디입니다. 다시 한번 확인해주세욧!");
+        }
+      },
+      (error) => {
+        console.log("error : ", error);
+      }
+    )
+  }
+</script>
+
 
 <template>
   <div class="findPasswordLayout">
@@ -46,10 +73,11 @@
             border: 2px solid black;
             border-radius: 15px;
           "
+          v-model="uid"
         />
       </div>
       <div>
-        <input class="submitButton" type="button" value="비밀번호 찾기" />
+        <input class="submitButton" type="button" value="비밀번호 찾기" @click="sendEmail()"/>
       </div>
     </div>
   </div>
