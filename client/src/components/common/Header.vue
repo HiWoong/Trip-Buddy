@@ -100,6 +100,7 @@ const moveHotPlaceWrite = () => {
 
           <div class="menu"></div>
           <div v-if="isLogin == false" id="user_menu">
+            <div class="beforeLogin"></div>
             <div class="beforeLogin">
               <RouterLink id="navDesc" to="" :tooltip="tooltip">도움말</RouterLink>
             </div>
@@ -111,6 +112,9 @@ const moveHotPlaceWrite = () => {
             </div>
           </div>
           <div v-else id="user_menu">
+            <div class="loginUser">
+              <RouterLink id="navDesc" to="" :tooltip="tooltip">도움말</RouterLink>
+            </div>
             <div class="loginUser">
               <RouterLink id="navHotPlace" to="" @click="moveHotPlaceWrite">핫플 자랑</RouterLink>
             </div>
@@ -150,7 +154,7 @@ a {
   align-content: center;
   display: grid;
   width: 100%;
-  grid-template-columns: 200px 100px 100px 100px 100px 1000px 300px;
+  grid-template-columns: 200px 100px 100px 100px 100px 850px 450px;
   position: fixed;
   background-color: white;
   border: 1px solid gainsboro;
