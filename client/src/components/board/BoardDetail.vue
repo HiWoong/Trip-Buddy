@@ -4,7 +4,7 @@ import { useRouter, useRoute } from "vue-router";
 import CommentList from "@/components/comment/CommentList.vue";
 import http from "@/util/http-common.js";
 import CommentWrite from "@/components/comment/CommentWrite.vue";
-import { info } from "@/api/userApi";
+import { boardInfo } from "@/api/userApi";
 import { httpStatusCode } from "@/util/http-status";
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
@@ -42,26 +42,22 @@ onMounted(async () => {
 });
 
 const getUserInfo = async (userId) => {
-  info(
+  boardInfo(
     userId,
     (response) => {
       console.log(response.status);
       if (response.status === httpStatusCode.OK) {
-        console.log("3. getUserInfo data >> ", response.data.userInfo);
-        user.value = response.data.userInfo;
-        if (user.value.profileImage == "" || user.value.profileImage == null) {
-          user.value.profileImage =
-            "https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg";
+        console.log("3. getUserInfo data >> ", response.data.profileImage);
+        user.value = response.data.profileImage;
+        if (user.value == "" || user.value == null) {
+          user.value = "https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg";
         }
       } else {
         console.log("유저 정보 없음!!!!");
       }
     },
     async (error) => {
-      console.error(
-        "getUserInfo() error code [토큰 만료되어 사용 불가능.] ::: ",
-        error.response.status
-      );
+      console.error("게시판 이미지 불러오기 실패");
     }
   );
 };
@@ -101,7 +97,7 @@ const moveModify = () => {
     </div>
     <div class="content">
       <div class="firstContent">
-        <img class="articleUserImage" :src="user.profileImage" />
+        <img class="articleUserImage" :src="user" />
         <div style="font-size: 20px; color: gray">|</div>
         <div style="font-size: 20px; margin-left: 30px">
           {{ article.userId }}

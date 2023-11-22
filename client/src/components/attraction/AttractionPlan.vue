@@ -4,10 +4,14 @@ import { ref, watch, onMounted } from "vue";
 import { VueDraggableNext } from "vue-draggable-next";
 import { useRouter } from "vue-router";
 import axios from "axios";
+import { useAttractionStore } from "@/stores/attractionStore.js";
 // cookies
 import { useCookies } from "vue3-cookies";
+import AttractionLoadVue from "@/components/attraction/AttractionLoad.vue";
 const { cookies } = useCookies();
 const router = useRouter();
+const attractionStore = useAttractionStore();
+const { getLoadOn, setLoadOn } = attractionStore;
 
 var map;
 const keyword = ref("역삼");
@@ -17,7 +21,10 @@ const markers = ref([]);
 const result = ref([]);
 const idx = ref(0);
 const nowDay = ref(2);
-onMounted(() => {
+const loadData = ref();
+const loads = ref([]);
+const totalLoadData = ref({});
+onMounted(async () => {
   if (window.kakao && window.kakao.maps) {
     console.log("loadMap");
     loadMap();
@@ -31,6 +38,8 @@ onMounted(() => {
   lists.innerHTML = 1 + "일차";
   resultList.appendChild(lists);
   nowDay.value = 2;
+
+  if (getLoadOn() == true) await setLoadOn();
 });
 
 watch(result.value, () => {
@@ -127,7 +136,7 @@ const loadMap = () => {
   const container = document.getElementById("map");
   let options = {
     center: new kakao.maps.LatLng(33.450701, 126.570667),
-    level: 3,
+    level: 5,
   };
   map = new kakao.maps.Map(container, options);
   if (navigator.geolocation) {
@@ -143,7 +152,7 @@ const loadMap = () => {
       console.log(nowLon.value);
       let options = {
         center: new kakao.maps.LatLng(nowLat.value, nowLon.value),
-        level: 3,
+        level: 5,
       };
       map = new kakao.maps.Map(container, options);
       new kakao.maps.Marker({ map: map, position: locPosition });
@@ -173,7 +182,7 @@ const searchPlaces = () => {
   const container = document.getElementById("map");
   const options = {
     center: new kakao.maps.LatLng(nowLat.value, nowLon.value),
-    level: 3,
+    level: 5,
   };
   map = new kakao.maps.Map(container, options);
 
@@ -247,7 +256,13 @@ const searchPlaces = () => {
         itemEl.onmouseenter = function () {
           infowindow.close();
         };
-      })(marker, places[i].place_name, places[i].road_address_name, places[i].phone, placePosition);
+      })(
+        marker,
+        places[i].place_name,
+        places[i].road_address_name,
+        places[i].phone,
+        placePosition
+      );
 
       fragment.appendChild(itemEl);
     }
@@ -290,9 +305,9 @@ const searchPlaces = () => {
 
     let fare = document.createElement("button");
     fare.className = "fare";
-    fare.innerHTML = "요금";
+    fare.innerHTML = "길찾기";
     fare.onclick = () => {
-      calFare(place);
+      loadFind(place);
     };
     info.appendChild(fare);
 
@@ -320,7 +335,11 @@ const searchPlaces = () => {
       spriteOrigin: new kakao.maps.Point(0, idx * 46 + 10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
       offset: new kakao.maps.Point(13, 37), // 마커 좌표에 일치시킬 이미지 내에서의 좌표
     };
-    const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions);
+    const markerImage = new kakao.maps.MarkerImage(
+      imageSrc,
+      imageSize,
+      imgOptions
+    );
     const marker = new kakao.maps.Marker({
       position: position, // 마커의 위치
       image: markerImage,
@@ -383,7 +402,8 @@ const searchPlaces = () => {
 
     let title = document.createElement("div");
     title.className = "title";
-    if (place_name.length > 10) title.innerHTML = place_name.substring(0, 10) + "...";
+    if (place_name.length > 10)
+      title.innerHTML = place_name.substring(0, 10) + "...";
     else title.innerHTML = place_name;
 
     let body = document.createElement("div");
@@ -419,12 +439,16 @@ const searchPlaces = () => {
       el.removeChild(el.lastChild);
     }
   }
-  new kakao.maps.Marker({ map: map, position: new kakao.maps.LatLng(nowLat.value, nowLon.value) });
+  new kakao.maps.Marker({
+    map: map,
+    position: new kakao.maps.LatLng(nowLat.value, nowLon.value),
+  });
 };
 
 const sortByDistance = (places) => {
   places.forEach((data) => {
-    let distance = Math.pow(nowLon.value - data.x, 2) + Math.pow(nowLat.value - data.y, 2);
+    let distance =
+      Math.pow(nowLon.value - data.x, 2) + Math.pow(nowLat.value - data.y, 2);
     data.distance = distance;
   });
   places.sort((a, b) => a.distance - b.distance);
@@ -505,7 +529,11 @@ const addPlan = () => {
     router.push("/");
   }
 };
-const calFare = async (data) => {
+const loadFind = async (data) => {
+  if ((await getLoadOn()) == true) {
+    alert("닫기를 눌러주세요.");
+    return;
+  }
   if (nowLat.value == 0 && nowLon.value == 0) {
     alert("현재 위치가 올바르지 않습니다.");
   } else {
@@ -523,9 +551,29 @@ const calFare = async (data) => {
           Authorization: header,
         },
       })
-      .then((data) => console.log(data));
+      .then(({ data }) => (loadData.value = data.routes[0]));
+    loads.value = [];
+    for (let i = 0; i < loadData.value.sections[0].roads.length; i++) {
+      for (
+        let j = 0;
+        j < loadData.value.sections[0].roads[i].vertexes.length;
+        j += 2
+      ) {
+        let x = loadData.value.sections[0].roads[i].vertexes[j];
+        let y = loadData.value.sections[0].roads[i].vertexes[j + 1];
+        loads.value.push(new kakao.maps.LatLng(y, x));
+      }
+    }
+    totalLoadData.value = {
+      allData: loadData.value,
+      loads: loads.value,
+      dx: Number(data.x),
+      dy: Number(data.y),
+      nx: nowLon.value,
+      ny: nowLat.value,
+    };
   }
-  console.log(data.x, data.y);
+  await setLoadOn();
 };
 </script>
 <template>
@@ -535,7 +583,11 @@ const calFare = async (data) => {
         <h5>검색하세요!</h5>
         <div>
           <input type="text" v-model="keyword" id="keyword" />
-          <button id="searchButton" @click="searchPlaces" @keypress="() => searchPlaces()">
+          <button
+            id="searchButton"
+            @click="searchPlaces"
+            @keypress="() => searchPlaces()"
+          >
             검색하기
           </button>
         </div>
@@ -544,6 +596,11 @@ const calFare = async (data) => {
       <ul id="placesList"></ul>
       <div id="pagination"></div>
     </div>
+    <AttractionLoadVue
+      v-if="getLoadOn()"
+      :data="totalLoadData"
+      style="position: absolute; z-index: 101"
+    />
     <div id="map"></div>
     <div id="menu_plan">
       <div id="dayImgSection">
@@ -558,7 +615,12 @@ const calFare = async (data) => {
       </div>
       <div id="selectPlaces">
         <div id="firstDay"></div>
-        <VueDraggableNext id="draggable" class="dragArea" :list="result" :sort="true">
+        <VueDraggableNext
+          id="draggable"
+          class="dragArea"
+          :list="result"
+          :sort="true"
+        >
         </VueDraggableNext>
       </div>
     </div>
@@ -808,7 +870,8 @@ const calFare = async (data) => {
   text-align: center;
   border: none;
   border-radius: 4px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
   width: 80px;
   height: 30px;
   float: right;
@@ -880,7 +943,19 @@ const calFare = async (data) => {
   color: #d7fff1;
 }
 .fare {
-  float: right;
+  padding: 5px 15px;
+  border-radius: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  font-weight: 800;
+  transition: 0.25s;
+  box-sizing: border-box;
+  color: darkgray;
+  border: 3px solid #b99162;
+}
+.fare:hover {
+  background-color: #b99162;
+  color: #d7faff;
 }
 .pickPlace {
   margin: 5px 10px 10px 10px;

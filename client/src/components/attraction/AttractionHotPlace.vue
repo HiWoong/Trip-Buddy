@@ -8,7 +8,6 @@ import { updateVisitedCount, addHitCount, minHitCount } from "@/api/hotplaceApi.
 
 import { httpStatusCode } from "@/util/http-status";
 
-
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
 
@@ -40,37 +39,43 @@ const takePlace = async () => {
     if (!isLoved.value) {
       const abc = props.myFav;
       abc.push(props.hotPlace.hotplaceId);
-      await setFavorite({
-        userId: userId,
-        favorite: JSON.stringify(abc),
-      }, true);
-      await addLikeCount({ hotplaceId : props.hotPlace.hotplaceId });
+      await setFavorite(
+        {
+          userId: userId,
+          favorite: JSON.stringify(abc),
+        },
+        true
+      );
+      await addLikeCount({ hotplaceId: props.hotPlace.hotplaceId });
       isLoved.value = true;
     } else {
       // 좋아요 삭제 로직 만들기
       const abc = props.myFav;
-      for(let i = 0; i < abc.length; i++) {
-        if(abc[i] == props.hotPlace.hotplaceId )  {
+      for (let i = 0; i < abc.length; i++) {
+        if (abc[i] == props.hotPlace.hotplaceId) {
           abc.splice(i, 1);
           i--;
         }
       }
 
-      await setFavorite({
-        userId: userId,
-        favorite: JSON.stringify(abc),
-      }, false);
-      await minLikeCount({ hotplaceId : props.hotPlace.hotplaceId });
+      await setFavorite(
+        {
+          userId: userId,
+          favorite: JSON.stringify(abc),
+        },
+        false
+      );
+      await minLikeCount({ hotplaceId: props.hotPlace.hotplaceId });
       isLoved.value = false;
     }
   }
 };
 
-const click = async() => {
+const click = async () => {
   isClicked.value = !isClicked.value;
 
-  if (isClicked.value){
-    await changeVisitedCount({ hotplaceId : props.hotPlace.hotplaceId });
+  if (isClicked.value) {
+    await changeVisitedCount({ hotplaceId: props.hotPlace.hotplaceId });
   }
   // console.log(isClicked.value);
 };
@@ -79,44 +84,43 @@ const changeVisitedCount = async (hotPlaceDto) => {
   updateVisitedCount(
     hotPlaceDto,
     (response) => {
-      if (response.status == httpStatusCode.OK){
+      if (response.status == httpStatusCode.OK) {
         props.hotPlace.visitedCount++;
       }
     },
     (error) => {
       console.error(error);
     }
-  )
-}
+  );
+};
 
 const addLikeCount = async (hotPlaceDto) => {
   addHitCount(
     hotPlaceDto,
     (response) => {
-      if (response.status == httpStatusCode.OK){
+      if (response.status == httpStatusCode.OK) {
         props.hotPlace.hitCount--;
       }
     },
     (error) => {
       console.error(error);
     }
-  )
-}
+  );
+};
 
 const minLikeCount = async (hotPlaceDto) => {
   minHitCount(
     hotPlaceDto,
     (response) => {
-      if (response.status == httpStatusCode.OK){
+      if (response.status == httpStatusCode.OK) {
         props.hotPlace.hitCount--;
       }
     },
     (error) => {
       console.error(error);
     }
-  )
-}
-
+  );
+};
 </script>
 <template>
   <div class="wholeContent">
@@ -135,8 +139,12 @@ const minLikeCount = async (hotPlaceDto) => {
       />
     </div>
     <div class="placeDesc">
-      <div class="placeTitle">{{ props.hotPlace.subject }}</div>
-      <div v-show="isClicked" class="placeContent">{{ props.hotPlace.content }} {{ props.hotPlace.visitedCount }}</div>
+      <div v-show="isClicked">
+        <div class="placeTitle">{{ props.hotPlace.subject }}</div>
+        <div class="placeContent">
+          {{ props.hotPlace.content }} {{ props.hotPlace.visitedCount }}
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -160,21 +168,27 @@ const minLikeCount = async (hotPlaceDto) => {
 }
 .placeDesc {
   position: absolute;
-  top: 55%;
-  left: 10%;
+  top: 50%;
+  /* left: 10%; */
   width: 100%;
 }
 .placeTitle {
-  font-size: 30px;
+  font-size: 35px;
   font-weight: bold;
-  color: honeydew;
+  color: gray;
+  font-family: "NanumSquareB";
+  margin-left: 10px;
 }
 .placeContent {
   word-break: break-all;
-  width: 200px;
-  height: 90px;
+  width: 230px;
+  height: 95px;
   font-size: 15px;
-  color: beige;
+  color: #212121;
+  background-color: whitesmoke;
+  border-radius: 15px;
+  padding: 5px;
+  margin-left: 10px;
 }
 #mainImage {
   position: relative;

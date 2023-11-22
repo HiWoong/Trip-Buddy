@@ -37,6 +37,11 @@ const router = createRouter({
           name: "AttractionHotPlaceWrite",
           component: () => import("@/components/attraction/AttractionHotPlaceWrite.vue"),
         },
+        {
+          path: "load",
+          name: "AttractionLoad",
+          component: () => import("@/components/attraction/AttractionLoad.vue"),
+        },
       ],
     },
     {
@@ -58,11 +63,6 @@ const router = createRouter({
           path: "join",
           name: "UserJoin",
           component: () => import("@/components/user/UserJoin.vue"),
-        },
-        {
-          path: "plan",
-          name: "UserPlan",
-          component: () => import("@/components/user/UserPlan.vue"),
         },
         {
           path: "myPageInfo",

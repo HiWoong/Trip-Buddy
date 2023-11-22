@@ -150,13 +150,14 @@ const changeModalState = async () => {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 550px;
+  width: 700px;
   background: #fff;
   padding: 15px;
   box-sizing: border-box;
 }
 .planText {
   margin-left: 2px;
+  font-size: 18px;
 }
 .firstContent {
   height: 100px;
@@ -184,7 +185,11 @@ const changeModalState = async () => {
   margin-bottom: 3px;
 }
 .days {
-  font-size: 20px;
+  width: 75px;
+  font-size: 22px;
+  border: 2px dashed skyblue;
+  border-radius: 10px;
+  text-align: center;
 }
 .arrivals {
   margin: 5px 0;
