@@ -151,16 +151,16 @@ const totalDistance = (props.data.allData.summary.distance / 1000).toFixed(1);
   height: 89px;
   margin: 6px 0 0 5px;
   color: darkgray;
-  border: 3px solid rgb(149, 203, 247);
+  border: 3px solid rgb(134, 193, 247);
   border-radius: 10px;
   font-size: 18px;
   box-sizing: border-box;
-  box-shadow: 0 1px 2px rgb(149, 203, 247);
+  box-shadow: 0 1px 2px rgb(134, 193, 247);
   transition: 0.25s;
   font-weight: 800;
 }
 .loadCloseButton:hover {
-  background-color: rgb(149, 227, 247);
+  background-color: rgb(134, 193, 247);
   color: #593f61;
 }
 </style>

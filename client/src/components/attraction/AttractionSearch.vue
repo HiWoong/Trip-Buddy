@@ -9,12 +9,7 @@
         전국 관광지 정보
       </div>
       <!-- 관광지 검색 start -->
-      <form
-        class="d-flex"
-        onsubmit="return false;"
-        role="search"
-        id="search-form"
-      >
+      <form class="d-flex" onsubmit="return false;" role="search" id="search-form">
         <select
           id="search-area"
           name="search-area"
@@ -63,25 +58,15 @@
     <div id="map"></div>
     <template v-if="attractions[0] != null">
       <div class="attractionCards">
-        <div
-          class="attractionCard"
-          v-for="attraction in attractions"
-          :key="attraction.title"
-        >
-          <img
-            :src="attraction.firstImage"
-            style="width: 246px; height: 120px"
-          />
+        <div class="attractionCard" v-for="attraction in attractions" :key="attraction.title">
+          <img :src="attraction.firstImage" style="width: 246px; height: 120px" />
           <div>
             <h5 style="margin-top: 4px" class="fw-bolder">
               {{ attraction.title }}
             </h5>
             {{ attraction.addr1 }}
           </div>
-          <button
-            class="moveButton"
-            @click="moveCenter(attraction.latitude, attraction.longitude)"
-          >
+          <button class="moveButton" @click="moveCenter(attraction.latitude, attraction.longitude)">
             위치 보기
           </button>
         </div>
@@ -338,6 +323,11 @@ const searchAttractions = async (data) => {
   await http.get("/attractionapi/search", { params: data }).then(({ data }) => {
     attractions.value = data;
   });
+  attractions.value.forEach((data) => {
+    if (data.firstImage == null || data.firstImage == "") {
+      data.firstImage = "src/assets/img/noAttractionImage.png";
+    }
+  });
   loadMarkers();
   // loadOverlay();
 };
@@ -428,9 +418,7 @@ const loadMarkers = () => {
   // 배열.reduce( (누적값, 현재값, 인덱스, 요소)=>{ return 결과값}, 초기값);
   const bounds = attractions.value.reduce(
     (bounds, position) =>
-      bounds.extend(
-        new kakao.maps.LatLng(position.latitude, position.longitude)
-      ),
+      bounds.extend(new kakao.maps.LatLng(position.latitude, position.longitude)),
     new kakao.maps.LatLngBounds()
   );
 

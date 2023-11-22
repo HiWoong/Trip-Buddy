@@ -108,6 +108,11 @@ const changeFav = async () => {
   favHotPlaces.value = await getmyFavHotPlaces();
 };
 
+const changeMyFav = async () => {
+  await setmyStorageHotPlace(cookies.get("userId"));
+  mineHotPlaces.value = await getmyStorageHotPlace();
+};
+
 const moveMyPageInfo = () => {
   router.push({ name: "UserMyPageInfo" });
 };
@@ -202,6 +207,7 @@ const getTotalPlans = async (userId) => {
           v-for="mineHotPlace in mineHotPlaces"
           :key="mineHotPlace.hotplaceId"
           :myHotPlace="mineHotPlace"
+          @changeMyFav="changeMyFav"
         />
       </div>
     </div>
