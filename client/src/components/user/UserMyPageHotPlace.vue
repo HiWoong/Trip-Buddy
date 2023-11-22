@@ -1,7 +1,54 @@
 <script setup>
+import { ref, onMounted, watch } from "vue";
+import { useRouter } from "vue-router";
+import { httpStatusCode } from "@/util/http-status";
+import { useUserStore } from "@/stores/userStore.js";
+const router = useRouter();
+const userStore = useUserStore();
+const {
+  setFavorite,
+  getFavorite,
+  getLikes,
+  getFavHotPlace,
+  getmyFavHotPlaces,
+  setmyFavHotPlaces,
+  setmyStorageHotPlace,
+  getmyStorageHotPlace,
+} = userStore;
+import { minHitCount } from "@/api/hotplaceApi.js";
 const props = defineProps({
   favHotPlace: Object,
+  userId: String,
 });
+const emit = defineEmits(["changeFav"]);
+
+const deleteFavorite = async () => {
+  await getFavorite(props.userId);
+  let myFav = await getLikes();
+  console.log(myFav);
+  let newMyFav = myFav.filter((data) => data != props.favHotPlace.hotplaceId);
+  console.log(newMyFav);
+  console.log(props.userId);
+  console.log(props.favHotPlace.hotplaceId);
+  await setFavorite({ userId: props.userId, favorite: JSON.stringify(newMyFav) }, true);
+
+  await getFavorite(props.userId);
+  let newFav = await getLikes();
+  console.log(newFav);
+
+  minHitCount(
+    props.favHotPlace,
+    (response) => {
+      if (response.status == httpStatusCode.OK) {
+        props.favHotPlace.hitCount--;
+      }
+    },
+    (error) => {
+      console.error(error);
+    }
+  );
+  emit("changeFav");
+};
 </script>
 
 <template>
@@ -14,7 +61,7 @@ const props = defineProps({
       <div class="favhotContent">{{ props.favHotPlace.content }}</div>
       <div>{{ props.favHotPlace.createdDate }}</div>
       <div class="deleteButtonDiv">
-        <input class="deleteButton" type="button" value="삭제" />
+        <input @click="deleteFavorite" class="deleteButton" type="button" value="삭제" />
       </div>
     </div>
   </div>

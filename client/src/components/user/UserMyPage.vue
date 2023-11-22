@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useCookies } from "vue3-cookies";
 import UserMyPageHotPlace from "@/components/user/UserMyPageHotPlace.vue";
 import UserMyPageMyHotPlace from "@/components/user/UserMyPageMyHotPlace.vue";
@@ -96,6 +96,18 @@ onMounted(async () => {
   planStyleObject.value = styleObject.value;
 });
 
+const changeFav = async () => {
+  console.log("changeFav");
+  await setmyFavHotPlaces();
+  await getFavorite(userId);
+  myFav.value = await getLikes();
+  myFav.value.forEach(async (hotPlaceId) => {
+    // console.log(hotPlaceId);
+    await getFavHotPlace(hotPlaceId);
+  });
+  favHotPlaces.value = await getmyFavHotPlaces();
+};
+
 const moveMyPageInfo = () => {
   router.push({ name: "UserMyPageInfo" });
 };
@@ -178,6 +190,8 @@ const getTotalPlans = async (userId) => {
           v-for="favHotPlace in favHotPlaces"
           :key="favHotPlace.hotplaceId"
           :favHotPlace="favHotPlace"
+          :userId="userId"
+          @changeFav="changeFav"
         />
       </div>
       <div v-if="planFlag">

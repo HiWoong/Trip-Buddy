@@ -63,18 +63,18 @@ export const useUserStore = defineStore("userStore", () => {
       userId,
       (response) => {
         if (response.status === httpStatusCode.OK) {
-          myStorageHotPlaces.value = response.data
+          myStorageHotPlaces.value = response.data;
         }
       },
       (error) => {
         console.error(error);
       }
-    )
-  }
+    );
+  };
 
   const getmyStorageHotPlace = async () => {
     return myStorageHotPlaces.value;
-  }
+  };
 
   const getLikes = () => {
     return favorites.value;
@@ -85,10 +85,10 @@ export const useUserStore = defineStore("userStore", () => {
       data,
       (response) => {
         if (response.status === httpStatusCode.OK) {
-          if (flag){
-            alert("좋아요!");
+          if (flag) {
+            console.log("성공: 새로운 좋아요 리스트 반영");
           } else {
-            alert("취소");
+            console.log("취소: 새로운 좋아요 리스트 반영");
           }
         }
       },

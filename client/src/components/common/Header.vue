@@ -27,8 +27,7 @@ onMounted(async () => {
 });
 
 const logout = async () => {
-  await userLogoutStore({ userId : cookies.get("userId")}
-    );
+  await userLogoutStore({ userId: cookies.get("userId") });
   router.replace({ name: "HomeView" });
 };
 
@@ -62,7 +61,7 @@ const moveHotPlaceWrite = () => {
 
 // console.log("status : ", getLoginStatus());
 // isLogin.value = getLoginStatus() ? true : false;
-console.log("header var : isLogin : ", isLogin.value);
+// console.log("header var : isLogin : ", isLogin.value);
 </script>
 
 <template>

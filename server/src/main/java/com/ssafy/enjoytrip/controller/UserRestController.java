@@ -188,6 +188,7 @@ public class UserRestController {
 		if(result == 1) return new ResponseEntity<Integer>(1, HttpStatus.OK);
 		else return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
+
 }
 
 
