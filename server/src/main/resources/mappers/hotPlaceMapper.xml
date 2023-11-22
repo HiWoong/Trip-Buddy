@@ -46,8 +46,8 @@
 
     <update id="updateHotPlace">
         update hotplaces set subject = #{subject},
-            content = #{content}, update_time = current_timestamp
-            where hotplace_id = #{hotPlaceId}
+            content = #{content}
+            where hotplace_id = #{hotplaceId}
     </update>
 
     <delete id="deleteHotPlace">

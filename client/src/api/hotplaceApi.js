@@ -35,10 +35,10 @@ async function deleteHotplace(hotplaceId, success, fail) {
     .catch(fail);
 }
 
-async function updateHotplace(hotplaceId, success, fail) {
+async function updateHotplace(hotPlaceDto, success, fail) {
     http.defaults.headers["Authorization"] = cookies.get("accessToken");
     await http
-      .post(`/hotplaceapi/update`)
+      .post(`/hotplaceapi/update`, hotPlaceDto)
       .then(success)
       .catch(fail);
   }

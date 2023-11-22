@@ -1,5 +1,5 @@
 <script setup>
-import { deleteHotplace } from "@/api/hotplaceApi";
+import { deleteHotplace, updateHotplace } from "@/api/hotplaceApi";
 import { useRouter } from "vue-router";
 import { httpStatusCode } from "@/util/http-status";
 
@@ -29,7 +29,26 @@ const deleteMyHotplace = async() => {
 }
 
 const modifyMyHotPlace = () => {
-  alert("수정이 완료되었습니다.")
+  updateHotplace({
+    hotplaceId : props.myHotPlace.hotplaceId,
+    subject : "수정좀하겠습니다123",
+    content : "영차123"
+  },
+  (response) => {
+      if (response.status === httpStatusCode.OK){
+        alert("수정이 완료되었습니다.");
+        router.go();
+      } else {
+        console.log("Unexcepted Error");
+      }
+    },
+    (error) => {
+      console.error(
+        error
+      );
+    }
+
+  )
 }
 </script>
 
