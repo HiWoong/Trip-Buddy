@@ -69,6 +69,16 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public UserDto getUserEmail(String userId) throws Exception {
+		return repo.getUserEmail(userId);
+	}
+
+	@Override
+	public int changePassword(UserDto userDto) throws Exception {
+		return repo.changePassword(userDto);
+	}
+
+	@Override
 	public int updateUser(UserDto UserDto) throws SQLException {
 		return repo.updateUser(UserDto);
 	}

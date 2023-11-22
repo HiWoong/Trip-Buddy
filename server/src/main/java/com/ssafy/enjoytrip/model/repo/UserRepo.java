@@ -2,6 +2,7 @@ package com.ssafy.enjoytrip.model.repo;
 
 
 import com.ssafy.enjoytrip.dto.UserDto;
+import org.apache.catalina.User;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.sql.SQLException;
@@ -21,4 +22,8 @@ public interface UserRepo {
 	int checkDuplId(String userId) throws Exception;
 	String getFavorites(String userId) throws Exception;
 	int setFavorites(UserDto UserDto) throws Exception;
+	UserDto getUserEmail(String userId) throws Exception;
+	int changePassword(UserDto userDto) throws Exception;
+
+
 }

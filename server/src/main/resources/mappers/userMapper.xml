@@ -75,4 +75,13 @@
         update Users set favorite = #{favorite} where user_id = #{userId}
     </update>
 
+    <select id="getUserEmail" resultMap="UserDto">
+        select user_id, user_name, email_id, email_domain from Users
+        where user_id = #{userId}
+    </select>
+
+    <update id="changePassword">
+        update Users set user_password = #{userPwd}
+        where user_id = #{userId}
+    </update>
 </mapper>
