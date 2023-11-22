@@ -101,6 +101,15 @@ public class HotPlaceRestController {
 	@PostMapping("/update")
 	private ResponseEntity<?> updateHotPlace(@RequestBody HotPlaceDto hotPlaceDto) throws Exception {
 
+		System.out.println("hotPlaceDto = " + hotPlaceDto);
+		
+		int result = hotPlaceService.updateHotPlace(hotPlaceDto);
+
+		System.out.println("result = " + result);
+
+		if (result == 1){
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
 
 		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
@@ -108,6 +117,13 @@ public class HotPlaceRestController {
 	@GetMapping("/delete/{hotPlaceId}")
 	private ResponseEntity<?> deleteHotPlace(@PathVariable("hotPlaceId") int hotPlaceId) throws Exception {
 
+		System.out.println("hotPlaceId = " + hotPlaceId);
+
+		int result = hotPlaceService.deleteHotPlace(hotPlaceId);
+
+		if (result == 1){
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
 
 		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
