@@ -21,4 +21,5 @@ public interface HotPlaceRepo {
 	int minHitCount(int hotPlaceId) throws Exception;
 	int updateHotPlace(HotPlaceDto hotPlaceDto) throws Exception;
 	int deleteHotPlace(int hotPlaceId) throws Exception;
+	HotPlaceDto getOne(String sortType) throws Exception;
 }

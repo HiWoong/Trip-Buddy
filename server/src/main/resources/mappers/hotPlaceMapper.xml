@@ -53,4 +53,8 @@
     <delete id="deleteHotPlace">
         delete from hotplaces where hotplace_id = #{hotPlaceId}
     </delete>
+
+    <select id="getOne" resultMap="hotPlaces">
+        select * from hotplaces order by ${sortType} desc limit 1
+    </select>
 </mapper>

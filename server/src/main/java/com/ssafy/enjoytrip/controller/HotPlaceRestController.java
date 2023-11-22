@@ -127,4 +127,12 @@ public class HotPlaceRestController {
 
 		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
+
+	@GetMapping("/getOne")
+	private ResponseEntity<?> getOne(@RequestParam String sortType) throws Exception {
+		HotPlaceDto hotPlaceDto = hotPlaceService.getOne(sortType);
+		if(hotPlaceDto != null) {
+			return new ResponseEntity<HotPlaceDto>(hotPlaceDto, HttpStatus.OK);
+		} else return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+	}
 }

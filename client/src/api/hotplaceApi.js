@@ -5,42 +5,34 @@ const { cookies } = useCookies();
 
 async function updateVisitedCount(hotPlaceDto, success, fail) {
   http.defaults.headers["Authorization"] = cookies.get("accessToken");
-  await http
-    .post(`/hotplaceapi/updateVisited`, hotPlaceDto)
-    .then(success)
-    .catch(fail);
+  await http.post(`/hotplaceapi/updateVisited`, hotPlaceDto).then(success).catch(fail);
 }
 
 async function addHitCount(hotPlaceDto, success, fail) {
   http.defaults.headers["Authorization"] = cookies.get("accessToken");
-  await http
-    .post(`/hotplaceapi/addHitCount`, hotPlaceDto)
-    .then(success)
-    .catch(fail);
+  await http.post(`/hotplaceapi/addHitCount`, hotPlaceDto).then(success).catch(fail);
 }
 
 async function minHitCount(hotPlaceDto, success, fail) {
   http.defaults.headers["Authorization"] = cookies.get("accessToken");
-  await http
-    .post(`/hotplaceapi/minHitCount`, hotPlaceDto)
-    .then(success)
-    .catch(fail);
+  await http.post(`/hotplaceapi/minHitCount`, hotPlaceDto).then(success).catch(fail);
 }
 
 async function deleteHotplace(hotplaceId, success, fail) {
   http.defaults.headers["Authorization"] = cookies.get("accessToken");
+  await http.get(`/hotplaceapi/delete/${hotplaceId}`).then(success).catch(fail);
+}
+
+async function updateHotplace(hotPlaceDto, success, fail) {
+  http.defaults.headers["Authorization"] = cookies.get("accessToken");
+  await http.post(`/hotplaceapi/update`, hotPlaceDto).then(success).catch(fail);
+}
+
+async function getOne(sortType, success, fail) {
   await http
-    .get(`/hotplaceapi/delete/${hotplaceId}`)
+    .get("/hotplaceapi/getOne?sortType=" + sortType)
     .then(success)
     .catch(fail);
 }
 
-async function updateHotplace(hotPlaceDto, success, fail) {
-    http.defaults.headers["Authorization"] = cookies.get("accessToken");
-    await http
-      .post(`/hotplaceapi/update`, hotPlaceDto)
-      .then(success)
-      .catch(fail);
-  }
-
-export { updateVisitedCount, addHitCount, minHitCount, deleteHotplace, updateHotplace };
+export { updateVisitedCount, addHitCount, minHitCount, deleteHotplace, updateHotplace, getOne };

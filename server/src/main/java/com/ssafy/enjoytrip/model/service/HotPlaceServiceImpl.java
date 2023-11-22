@@ -68,5 +68,10 @@ public class HotPlaceServiceImpl implements HotPlaceService {
 		return repo.deleteHotPlace(hotPlaceId);
 	}
 
+	@Override
+	public HotPlaceDto getOne(String sortType) throws Exception {
+		return repo.getOne(sortType);
+	}
+
 
 }

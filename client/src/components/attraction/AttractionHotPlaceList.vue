@@ -1,12 +1,12 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import AttractionHotPlace from "./AttractionHotPlace.vue";
+import AttractionHotPlace from "@/components/attraction/AttractionHotPlace.vue";
 import Last from "@/components/common/Last.vue";
 import http from "@/util/http-common.js";
 import { useCookies } from "vue3-cookies";
 import { useUserStore } from "@/stores/userStore.js";
 import { useRoute } from "vue-router";
-import { useMenuStore } from "@/stores/menuStore.js"
+import { useMenuStore } from "@/stores/menuStore.js";
 import { storeToRefs } from "pinia";
 
 const route = useRoute();
@@ -56,11 +56,10 @@ const sortType = () => {
   loadPlaces();
 };
 
-const paramChange = async() => {
+const paramChange = async () => {
   type.value = menuFlag.value;
   typeString.value = flagName.value;
-}
-
+};
 </script>
 <template>
   <div class="searchOptions">

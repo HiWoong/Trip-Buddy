@@ -8,6 +8,9 @@ import { useAttractionStore } from "@/stores/attractionStore";
 import { useMenuStore } from "@/stores/menuStore.js";
 import { storeToRefs } from "pinia";
 
+import { httpStatusCode } from "@/util/http-status";
+import { getOne } from "@/api/hotplaceApi.js";
+
 const attractionStore = useAttractionStore();
 const { setSidoCode, setTrueClickHome } = attractionStore;
 
@@ -15,12 +18,35 @@ const menuStore = useMenuStore();
 const { menuFlag, flagName } = storeToRefs(menuStore);
 
 const router = useRouter();
+
+const sortNew = ref("");
+const sortLike = ref("");
+const sortVisit = ref("");
+
 onMounted(() => {
   if (sessionStorage.getItem("isLogin") != null) {
     sessionStorage.removeItem("isLogin");
     router.go();
   }
+  sortImage("created_date", sortNew);
+  sortImage("hit_count", sortLike);
+  sortImage("visited_count", sortVisit);
 });
+
+const sortImage = async (sortType, target) => {
+  getOne(
+    sortType,
+    (response) => {
+      if (response.status == httpStatusCode.OK) {
+        target.value = response.data.image;
+      }
+    },
+    (error) => {
+      console.error(error);
+    }
+  );
+};
+
 const slides = ref([
   {
     title: "Seoul",
@@ -111,17 +137,17 @@ const moveHotplaceSequence = async (num) => {
   <!-- <div class="logo">Enjoy Trip</div> -->
   <div class="cards">
     <div class="card" @click="moveHotplaceSequence(1)">
-      <img src="../assets/img/Busan.jpg" alt="#" style="border-radius: 5px; object-fit: cover" />
+      <img :src="sortNew" alt="#" style="border-radius: 5px; object-fit: cover" />
       <div class="title">최신순</div>
       <div class="content">최신순으로 정렬된 핫 플레이스</div>
     </div>
     <div class="card" @click="moveHotplaceSequence(2)">
-      <img src="../assets/img/Daegu.jpg" alt="#" style="border-radius: 5px; object-fit: cover" />
+      <img :src="sortVisit" alt="#" style="border-radius: 5px; object-fit: cover" />
       <div class="title">조회순</div>
       <div class="content">조회순으로 정렬된 핫 플레이스</div>
     </div>
     <div class="card" @click="moveHotplaceSequence(3)">
-      <img src="../assets/img/Gwangju.jpg" alt="#" style="border-radius: 5px; object-fit: cover" />
+      <img :src="sortLike" alt="#" style="border-radius: 5px; object-fit: cover" />
       <div class="title">좋아요순</div>
       <div class="content">좋아요순으로 정렬된 핫 플레이스</div>
     </div>
