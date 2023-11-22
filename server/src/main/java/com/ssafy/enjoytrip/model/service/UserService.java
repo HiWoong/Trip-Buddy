@@ -21,4 +21,7 @@ public interface UserService {
 	String getFavorites(String userId) throws Exception;
 
 	int setFavorites(UserDto UserDto) throws Exception;
+
+	UserDto getUserEmail(String userId) throws Exception;
+	int changePassword(UserDto userDto) throws Exception;
 }
