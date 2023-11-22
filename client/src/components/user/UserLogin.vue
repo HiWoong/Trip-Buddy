@@ -25,6 +25,10 @@ const login = async () => {
   console.log("userinfo : ", userinfo.value.userId, userinfo.value.userPwd);
   await userLoginStore(userinfo.value);
 };
+
+const findPassword = async () => {
+  router.push({ name: "UserFindPassword" });
+};
 </script>
 
 <template>
@@ -55,7 +59,7 @@ const login = async () => {
         v-model="userinfo.userPwd"
       />
     </div>
-    <div id="forgetPassword">비밀번호가 가물가물...</div>
+    <div id="forgetPassword" @click="findPassword">비밀번호가 가물가물...</div>
     <div id="submitLogin">
       <input type="submit" id="btn-login" value="로그인" @click="login" />
     </div>
