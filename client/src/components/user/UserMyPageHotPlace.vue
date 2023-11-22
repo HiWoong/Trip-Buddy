@@ -3,6 +3,8 @@ import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { httpStatusCode } from "@/util/http-status";
 import { useUserStore } from "@/stores/userStore.js";
+import { minHitCount } from "@/api/hotplaceApi.js";
+
 const router = useRouter();
 const userStore = useUserStore();
 const {
@@ -15,7 +17,7 @@ const {
   setmyStorageHotPlace,
   getmyStorageHotPlace,
 } = userStore;
-import { minHitCount } from "@/api/hotplaceApi.js";
+
 const props = defineProps({
   favHotPlace: Object,
   userId: String,
