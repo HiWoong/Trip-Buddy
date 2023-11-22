@@ -98,7 +98,8 @@ const alreadyCheck = () => {
 <template>
   <div class="wholeLayout">
     <div id="title">
-      <h2>LOGO</h2>
+      <!-- <h2>LOGO</h2> -->
+      <img src="../../assets/img/logo.png" alt="" />
     </div>
     <label for="username" style="width: 500px; text-align: start; font-size: 25px">이름</label>
     <div id="name">
@@ -251,8 +252,8 @@ const alreadyCheck = () => {
 #title {
   width: 200px;
   height: 200px;
-  margin-bottom: 40px;
-  background-color: antiquewhite;
+  margin: 0 120px 70px 0;
+  /* background-color: antiquewhite; */
 }
 #name {
   font-size: 20px;
