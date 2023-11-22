@@ -40,7 +40,7 @@ public class HotPlaceRestController {
 //		System.out.println(hotPlaceDto);
 		int result = hotPlaceService.createHotPlace(hotPlaceDto);
 //		System.out.println(result);
-		if(result == 1) return new ResponseEntity<Integer>(1, HttpStatus.OK);
+		if (result == 1) return new ResponseEntity<Integer>(1, HttpStatus.OK);
 		else return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 
@@ -49,7 +49,7 @@ public class HotPlaceRestController {
 //		System.out.println(hotPlaceId);
 		HotPlaceDto favPlace = hotPlaceService.getFavHotPlace(hotPlaceId);
 //		System.out.println(favPlace);
-		if(favPlace != null) return new ResponseEntity<HotPlaceDto>(favPlace, HttpStatus.OK);
+		if (favPlace != null) return new ResponseEntity<HotPlaceDto>(favPlace, HttpStatus.OK);
 		else return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 
@@ -67,7 +67,7 @@ public class HotPlaceRestController {
 
 		int result = hotPlaceService.updateVisitedCount(hotPlaceDto.getHotplaceId());
 
-		if (result == 1){
+		if (result == 1) {
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		}
 
@@ -80,7 +80,7 @@ public class HotPlaceRestController {
 
 		int result = hotPlaceService.addHitCount(hotPlaceDto.getHotplaceId());
 
-		if (result == 1){
+		if (result == 1) {
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 
@@ -91,9 +91,23 @@ public class HotPlaceRestController {
 	private ResponseEntity<?> minHitCount(@RequestBody HotPlaceDto hotPlaceDto) throws Exception {
 		int result = hotPlaceService.minHitCount(hotPlaceDto.getHotplaceId());
 
-		if (result == 1){
+		if (result == 1) {
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
+
+		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+	}
+
+	@PostMapping("/update")
+	private ResponseEntity<?> updateHotPlace(@RequestBody HotPlaceDto hotPlaceDto) throws Exception {
+
+
+		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+	}
+
+	@GetMapping("/delete/{hotPlaceId}")
+	private ResponseEntity<?> deleteHotPlace(@PathVariable("hotPlaceId") int hotPlaceId) throws Exception {
+
 
 		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
