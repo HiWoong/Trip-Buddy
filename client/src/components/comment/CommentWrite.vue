@@ -33,12 +33,7 @@ const createComment = () => {
       <div class="comment">
         <textarea class="commentContent" v-model="content" />
       </div>
-      <input
-        type="button"
-        class="registerButton"
-        @click="createComment"
-        value="작성하기"
-      />
+      <input type="button" class="registerButton" @click="createComment" value="작성하기" />
     </div>
   </div>
 </template>
@@ -92,7 +87,7 @@ const createComment = () => {
 }
 .registerButton:hover {
   box-shadow: 0px 0px 0px 0px rgb(129, 202, 231);
-  margin-top: 15px;
-  margin-bottom: 20px;
+  margin-top: 25px;
+  margin-bottom: 15px;
 }
 </style>

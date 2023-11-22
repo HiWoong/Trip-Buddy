@@ -5,7 +5,7 @@ import { useRouter } from "vue-router";
 import "vueperslides/dist/vueperslides.css";
 
 import { useAttractionStore } from "@/stores/attractionStore";
-import { useMenuStore } from "@/stores/menuStore.js"
+import { useMenuStore } from "@/stores/menuStore.js";
 import { storeToRefs } from "pinia";
 
 const attractionStore = useAttractionStore();
@@ -68,23 +68,23 @@ const goAttraction = async (num) => {
 
 const moveHotplaceSequence = async (num) => {
   // let sequence = "created_date"
-  if (num === 1){
+  if (num === 1) {
     menuFlag.value = "created_date";
     flagName.value = "최신순";
     // await setFlagCreated();
-  } else if (num === 2){
+  } else if (num === 2) {
     menuFlag.value = "visited_count";
     flagName.value = "조회순";
     // await setFlagVisited();
     // sequence = "visited_count";
   } else {
     menuFlag.value = "hit_count";
-    flagName.value = "좋아요순";    
+    flagName.value = "좋아요순";
     // await setFlagHit();
     // sequence = "hit_count";
   }
   router.push({ name: "AttractionHotPlaceList" });
-}
+};
 </script>
 
 <template>
@@ -113,17 +113,17 @@ const moveHotplaceSequence = async (num) => {
     <div class="card" @click="moveHotplaceSequence(1)">
       <img src="../assets/img/Busan.jpg" alt="#" style="border-radius: 5px; object-fit: cover" />
       <div class="title">최신순</div>
-      <div class="content">최신순입니다.</div>
+      <div class="content">최신순으로 정렬된 핫 플레이스</div>
     </div>
     <div class="card" @click="moveHotplaceSequence(2)">
       <img src="../assets/img/Daegu.jpg" alt="#" style="border-radius: 5px; object-fit: cover" />
       <div class="title">조회순</div>
-      <div class="content">조회순입니다.</div>
+      <div class="content">조회순으로 정렬된 핫 플레이스</div>
     </div>
     <div class="card" @click="moveHotplaceSequence(3)">
       <img src="../assets/img/Gwangju.jpg" alt="#" style="border-radius: 5px; object-fit: cover" />
       <div class="title">좋아요순</div>
-      <div class="content">좋아요순입니다.</div>
+      <div class="content">좋아요순으로 정렬된 핫 플레이스</div>
     </div>
   </div>
 </template>
@@ -179,6 +179,7 @@ const moveHotplaceSequence = async (num) => {
   border-radius: 2vh;
   margin-bottom: 3vh;
   box-shadow: 2px 10px 10px 2px rgb(199, 199, 199);
+  cursor: pointer;
 }
 
 img {
@@ -190,7 +191,7 @@ img {
   font-size: 25px;
 }
 .content {
-  margin: auto 0;
+  margin: 25px 0 0 0;
   text-align: center;
   font-size: 15px;
 }

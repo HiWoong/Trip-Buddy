@@ -236,8 +236,8 @@ const moveModify = () => {
 }
 .modifyButton:hover {
   box-shadow: 0px 0px 0px 0px rgb(178, 214, 111);
-  margin-top: 10px;
-  margin-bottom: 0px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .deleteButtonDiv {
@@ -255,8 +255,8 @@ const moveModify = () => {
 }
 .deleteButton:hover {
   box-shadow: 0px 0px 0px 0px rgb(247, 127, 157);
-  margin-top: 10px;
-  margin-bottom: 0px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .listButtonDiv {
@@ -276,13 +276,13 @@ const moveModify = () => {
 }
 .listButton:hover {
   box-shadow: 0px 0px 0px 0px rgb(238, 179, 71);
-  margin-top: 10px;
-  margin-bottom: 0px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 .listButtonElse:hover {
   box-shadow: 0px 0px 0px 0px rgb(238, 179, 71);
-  margin-top: 10px;
-  margin-bottom: 0px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .sixthContent {

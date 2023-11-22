@@ -5,22 +5,22 @@
     <div class="sections">
       <div class="menu">
         <h5 class="menuTitle">Enjoy Trip 소개</h5>
-        <div class="content">Enjoy Trip 소개</div>
-        <div class="content">문의하기</div>
-        <div class="content">사이트 이용 가이드</div>
-        <div class="content">사이트 맵</div>
+        <div class="footerContent">Enjoy Trip 소개</div>
+        <div class="footerContent">문의하기</div>
+        <div class="footerContent">사이트 이용 가이드</div>
+        <div class="footerContent">사이트 맵</div>
       </div>
       <div class="menu">
         <h5 class="menuTitle">주요 내용</h5>
-        <div class="content">공지사항</div>
-        <div class="content">FAQ</div>
-        <div class="content">사이트 버그 제보</div>
+        <div class="footerContent">공지사항</div>
+        <div class="footerContent">FAQ</div>
+        <div class="footerContent">사이트 버그 제보</div>
       </div>
       <div class="menu">
         <h5 class="menuTitle">도움말</h5>
-        <div class="content">이용 약관</div>
-        <div class="content">개인정보 처리방침</div>
-        <div class="content">리소스 및 정책</div>
+        <div class="footerContent">이용 약관</div>
+        <div class="footerContent">개인정보 처리방침</div>
+        <div class="footerContent">리소스 및 정책</div>
       </div>
       <div class="menu"></div>
     </div>
@@ -74,9 +74,10 @@
 .menuTitle {
   margin-bottom: 2px;
 }
-.content {
+.footerContent {
   text-align: start;
-  padding-top: 3px;
+  margin: 15px 0 0 0;
+  /* padding-top: 3px; */
 }
 .copyright {
   width: 400px;

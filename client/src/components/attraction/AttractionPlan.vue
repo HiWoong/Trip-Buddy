@@ -256,13 +256,7 @@ const searchPlaces = () => {
         itemEl.onmouseenter = function () {
           infowindow.close();
         };
-      })(
-        marker,
-        places[i].place_name,
-        places[i].road_address_name,
-        places[i].phone,
-        placePosition
-      );
+      })(marker, places[i].place_name, places[i].road_address_name, places[i].phone, placePosition);
 
       fragment.appendChild(itemEl);
     }
@@ -335,11 +329,7 @@ const searchPlaces = () => {
       spriteOrigin: new kakao.maps.Point(0, idx * 46 + 10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
       offset: new kakao.maps.Point(13, 37), // 마커 좌표에 일치시킬 이미지 내에서의 좌표
     };
-    const markerImage = new kakao.maps.MarkerImage(
-      imageSrc,
-      imageSize,
-      imgOptions
-    );
+    const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions);
     const marker = new kakao.maps.Marker({
       position: position, // 마커의 위치
       image: markerImage,
@@ -402,8 +392,7 @@ const searchPlaces = () => {
 
     let title = document.createElement("div");
     title.className = "title";
-    if (place_name.length > 10)
-      title.innerHTML = place_name.substring(0, 10) + "...";
+    if (place_name.length > 10) title.innerHTML = place_name.substring(0, 10) + "...";
     else title.innerHTML = place_name;
 
     let body = document.createElement("div");
@@ -447,8 +436,7 @@ const searchPlaces = () => {
 
 const sortByDistance = (places) => {
   places.forEach((data) => {
-    let distance =
-      Math.pow(nowLon.value - data.x, 2) + Math.pow(nowLat.value - data.y, 2);
+    let distance = Math.pow(nowLon.value - data.x, 2) + Math.pow(nowLat.value - data.y, 2);
     data.distance = distance;
   });
   places.sort((a, b) => a.distance - b.distance);
@@ -554,11 +542,7 @@ const loadFind = async (data) => {
       .then(({ data }) => (loadData.value = data.routes[0]));
     loads.value = [];
     for (let i = 0; i < loadData.value.sections[0].roads.length; i++) {
-      for (
-        let j = 0;
-        j < loadData.value.sections[0].roads[i].vertexes.length;
-        j += 2
-      ) {
+      for (let j = 0; j < loadData.value.sections[0].roads[i].vertexes.length; j += 2) {
         let x = loadData.value.sections[0].roads[i].vertexes[j];
         let y = loadData.value.sections[0].roads[i].vertexes[j + 1];
         loads.value.push(new kakao.maps.LatLng(y, x));
@@ -583,11 +567,7 @@ const loadFind = async (data) => {
         <h5>검색하세요!</h5>
         <div>
           <input type="text" v-model="keyword" id="keyword" />
-          <button
-            id="searchButton"
-            @click="searchPlaces"
-            @keypress="() => searchPlaces()"
-          >
+          <button id="searchButton" @click="searchPlaces" @keypress="() => searchPlaces()">
             검색하기
           </button>
         </div>
@@ -615,12 +595,7 @@ const loadFind = async (data) => {
       </div>
       <div id="selectPlaces">
         <div id="firstDay"></div>
-        <VueDraggableNext
-          id="draggable"
-          class="dragArea"
-          :list="result"
-          :sort="true"
-        >
+        <VueDraggableNext id="draggable" class="dragArea" :list="result" :sort="true">
         </VueDraggableNext>
       </div>
     </div>
@@ -870,8 +845,7 @@ const loadFind = async (data) => {
   text-align: center;
   border: none;
   border-radius: 4px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   width: 80px;
   height: 30px;
   float: right;
