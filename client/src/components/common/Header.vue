@@ -156,8 +156,8 @@ a {
   width: 100%;
   grid-template-columns: 200px 100px 100px 100px 100px 850px 450px;
   position: fixed;
-  background-color: white;
-  border: 1px solid gainsboro;
+  background-color: rgb(255, 251, 241);
+  border: 1px solid rgb(255, 251, 241);
   border-radius: 3px;
 }
 #logo {

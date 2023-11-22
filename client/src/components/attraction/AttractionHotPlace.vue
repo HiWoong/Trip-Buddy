@@ -73,7 +73,7 @@ const takePlace = async () => {
 
 const click = async () => {
   isClicked.value = !isClicked.value;
-
+  console.log(isClicked.value);
   if (isClicked.value) {
     await changeVisitedCount({ hotplaceId: props.hotPlace.hotplaceId });
   }
@@ -99,7 +99,7 @@ const addLikeCount = async (hotPlaceDto) => {
     hotPlaceDto,
     (response) => {
       if (response.status == httpStatusCode.OK) {
-        props.hotPlace.hitCount--;
+        props.hotPlace.hitCount++;
       }
     },
     (error) => {
@@ -138,11 +138,15 @@ const minLikeCount = async (hotPlaceDto) => {
         style="width: 250px; height: 300px; border-radius: 2vh"
       />
     </div>
-    <div class="placeDesc">
-      <div v-show="isClicked">
-        <div class="placeTitle">{{ props.hotPlace.subject }}</div>
-        <div class="placeContent">
-          {{ props.hotPlace.content }} {{ props.hotPlace.visitedCount }}
+    <div class="placeDesc" @click="click">
+      <div>
+        <div class="placeVisit">{{ props.hotPlace.visitedCount }}</div>
+        <div class="placeHit">{{ props.hotPlace.hitCount }}</div>
+        <div v-show="isClicked">
+          <div class="placeTitle">{{ props.hotPlace.subject }}</div>
+          <div class="placeContent">
+            {{ props.hotPlace.content }}
+          </div>
         </div>
       </div>
     </div>
@@ -168,27 +172,50 @@ const minLikeCount = async (hotPlaceDto) => {
 }
 .placeDesc {
   position: absolute;
-  top: 50%;
+  top: 0;
   /* left: 10%; */
   width: 100%;
+}
+.placeVisit {
+  background-color: transparent;
+  margin: 11px 0 5px 10px;
+  color: #000000;
+  font-size: 15px;
+  font-weight: 800;
+}
+.placeHit {
+  margin: 0 19px 60px 0;
+  text-align: end;
+  color: #fa6464;
+  font-size: 15px;
+  font-weight: 600;
 }
 .placeTitle {
   font-size: 35px;
   font-weight: bold;
-  color: gray;
+  color: whitesmoke;
   font-family: "NanumSquareB";
   margin-left: 10px;
 }
 .placeContent {
   word-break: break-all;
   width: 230px;
-  height: 95px;
+  height: 120px;
   font-size: 15px;
-  color: #212121;
-  background-color: whitesmoke;
+  color: #ffffff;
   border-radius: 15px;
   padding: 5px;
   margin-left: 10px;
+  font-weight: 600;
+  overflow-y: auto;
+}
+.placeContent::-webkit-scrollbar {
+  width: 4px; /* 스크롤바의 너비 */
+}
+.placeContent::-webkit-scrollbar-thumb {
+  height: 10%;
+  /* background: rgb(252, 227, 118); 스크롤바의 색상 */
+  border-radius: 15px;
 }
 #mainImage {
   position: relative;

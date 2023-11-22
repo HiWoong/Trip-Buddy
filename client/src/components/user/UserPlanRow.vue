@@ -135,7 +135,7 @@ const changeModalState = async () => {
   border-radius: 15px;
 }
 .wrap {
-  margin: 0 0 0 -651px;
+  margin: 0 0 0 -659px;
   top: 0;
   position: fixed;
   background: rgba(0, 0, 0, 0.4);
