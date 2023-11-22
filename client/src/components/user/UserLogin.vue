@@ -35,7 +35,7 @@ const findPassword = async () => {
   <div class="wholeLayout">
     <div id="title">
       <!-- <h2>LOGO</h2> -->
-      <img src="../../assets/img/logo.png" alt="" />
+      <img src="../../assets/img/logo.png" alt="" style="width: 300px; height: 300px" />
     </div>
     <label for="userId" style="width: 500px; text-align: start; font-size: 25px">아이디</label>
     <div id="id">
@@ -91,9 +91,9 @@ const findPassword = async () => {
   /* background-color: thistle; */
 }
 #title {
-  width: 200px;
-  height: 200px;
-  margin: 0 120px 70px 0;
+  width: 350px;
+  height: 350px;
+  margin: 0 0 0 50px;
   /* background-color: antiquewhite; */
 }
 #id {

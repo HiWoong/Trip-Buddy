@@ -2,12 +2,9 @@
 import http from "@/util/http-common.js";
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
-// import { storeToRefs } from "pinia";
 import { useUserStore } from "@/stores/userStore.js";
-// import http from "@/util/http-common.js";
 
 const userStore = useUserStore();
-// const { isLogin } = storeToRefs(userStore);
 const { userJoinStore } = userStore;
 const checkPwd = ref("");
 const beforeId = ref("");
@@ -99,7 +96,7 @@ const alreadyCheck = () => {
   <div class="wholeLayout">
     <div id="title">
       <!-- <h2>LOGO</h2> -->
-      <img src="../../assets/img/logo.png" alt="" />
+      <img src="../../assets/img/logo.png" alt="" style="width: 300px; height: 300px" />
     </div>
     <label for="username" style="width: 500px; text-align: start; font-size: 25px">이름</label>
     <div id="name">
@@ -247,13 +244,11 @@ const alreadyCheck = () => {
   flex-direction: column;
   flex-wrap: wrap;
   align-items: center;
-  /* background-color: thistle; */
 }
 #title {
-  width: 200px;
-  height: 200px;
-  margin: 0 120px 70px 0;
-  /* background-color: antiquewhite; */
+  width: 300px;
+  height: 300px;
+  margin: 0 10px 0 0;
 }
 #name {
   font-size: 20px;
@@ -261,7 +256,6 @@ const alreadyCheck = () => {
   margin-bottom: 20px;
 }
 #id {
-  /* background-color: aquamarine;   */
   font-size: 20px;
   width: 750px;
   margin-bottom: 20px;
@@ -269,7 +263,6 @@ const alreadyCheck = () => {
   justify-content: flex-end;
 }
 #password {
-  /* background-color: blueviolet; */
   font-size: 20px;
   width: 500px;
   margin-bottom: 20px;
@@ -280,7 +273,6 @@ const alreadyCheck = () => {
   margin-bottom: 5px;
 }
 #forgetPassword {
-  /* background-color: darkorange; */
   margin-bottom: 30px;
   color: gray;
 }

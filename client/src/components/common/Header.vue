@@ -79,7 +79,7 @@ const moveHotPlaceWrite = () => {
       <nav>
         <div class="grid-container">
           <div id="logo">
-            <RouterLink to="" @click="moveHome">Trip Buddy</RouterLink>
+            <RouterLink to="" @click="moveHome">TRIP BUDDY</RouterLink>
           </div>
           <div class="menu">
             <RouterLink aria-current="page" to="" @click="moveAttractionSearch"
