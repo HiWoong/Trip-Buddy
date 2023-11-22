@@ -126,6 +126,20 @@ public class UserRestController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
+	@GetMapping("getImage/{userId}")
+	private ResponseEntity<?> getImage(@PathVariable("userId") String userId, HttpServletRequest request) throws Exception {
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		UserDto UserDto = UserService.getUserInfo(userId);
+		if(UserDto != null) {
+			resultMap.put("profileImage", UserDto.getProfileImage());
+			status = HttpStatus.OK;
+		} else {
+			status = HttpStatus.NO_CONTENT;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+
 	@PostMapping("/refresh")
 	public ResponseEntity<?> refreshToken(@RequestBody String userId, HttpServletRequest request)
 			throws Exception {

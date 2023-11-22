@@ -5,6 +5,15 @@ export const useAttractionStore = defineStore("attractionStore", () => {
   const sidoCode = ref(0);
   const clickHome = ref(false);
   const isModalOpen = ref(false);
+  const loadOn = ref(false);
+
+  const getLoadOn = () => {
+    return loadOn.value;
+  };
+
+  const setLoadOn = () => {
+    loadOn.value = !loadOn.value;
+  };
 
   const getIsModalOpen = () => {
     return isModalOpen.value;
@@ -41,5 +50,7 @@ export const useAttractionStore = defineStore("attractionStore", () => {
     getClickHome,
     getIsModalOpen,
     setIsModalOpen,
+    setLoadOn,
+    getLoadOn,
   };
 });

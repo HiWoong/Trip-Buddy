@@ -32,6 +32,9 @@ async function info(userId, success, fail) {
   http.defaults.headers["Authorization"] = cookies.get("accessToken");
   await http.get(`/userapi/info/${userId}`).then(success).catch(fail);
 }
+async function boardInfo(userId, success, fail) {
+  await http.get(`/userapi/getImage/${userId}`).then(success).catch(fail);
+}
 
 async function tokenRegeneration(userId, success, fail) {
   http.defaults.headers["refreshToken"] = cookies.get("refreshToken"); //axios header에 refresh-token 셋팅
@@ -69,4 +72,5 @@ export {
   setFavorites,
   getMyFavoriteHotPlace,
   getMyHotPlace,
+  boardInfo,
 };
