@@ -83,10 +83,12 @@ const closeLoad = () => {
   nowMarkers.value = [];
   setLoadOn();
 };
-const minute = Math.round(props.data.allData.summary.duration / 60);
-const hour = Math.floor(minute / 60);
-const second = props.data.allData.summary.duration % 60;
-const totalDistance = (props.data.allData.summary.distance / 1000).toFixed(1);
+let minute = Math.round(props.data.allData.summary.duration / 60);
+let hour = Math.floor(minute / 60);
+minute = hour > 0 ? minute % (hour * 60) : minute;
+let second = props.data.allData.summary.duration % 60;
+let totalDistance = (props.data.allData.summary.distance / 1000).toFixed(1);
+console.log(hour, minute, second, totalDistance);
 </script>
 
 <template>

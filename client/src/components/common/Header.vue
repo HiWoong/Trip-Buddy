@@ -19,6 +19,14 @@ const router = useRouter();
 const attractionStore = useAttractionStore();
 const { setSidoCode } = attractionStore;
 
+const tooltip = ref(
+  `◆ 여행 플래너 저장, Q&A 게시판 등록, 댓글 등록, 핫 플레이스 등록 및 좋아요 기능은 로그인 후 사용 가능합니다.\n\n` +
+    `◆ 여행 플래너는 여행 계획 좌측 상단에 있는 달력 모양 아이콘을 클릭하면 최대 5일차까지 생성할 수 있으며 우측 상단에 있는 다운 아이콘을 클릭하면 계획을 저장할 수 있습니다.\n\n` +
+    `◆ 여행 플래너에서 검색 후 길찾기 버튼을 통해 현재 위치로부터 해당 목적지까지의 택시 비용, 예상 시간 및 총 거리를 알 수 있습니다.\n\n` +
+    `◆ 길찾기는 소형 자동차 기준이며 가장 빠르게 도착하는 경로를 제공합니다.`
+);
+tooltip.value.replace(/\n/g, "<br/>");
+
 onMounted(async () => {
   const ui = cookies.get("userId");
   if (ui) {
@@ -90,18 +98,15 @@ const moveHotPlaceWrite = () => {
             <RouterLink aria-current="page" to="/board">Q&A게시판</RouterLink>
           </div>
 
-          <!-- 보관함 포탈 생성 ! -->
-          <!-- <div class="menu">
-            <RouterLink aria-current="page" to="/user/plan">포탈</RouterLink>
-          </div> -->
-          <!--  -->
-
           <div class="menu"></div>
           <div v-if="isLogin == false" id="user_menu">
-            <div class="userJoin">
+            <div class="beforeLogin">
+              <RouterLink id="navDesc" to="" :tooltip="tooltip">도움말</RouterLink>
+            </div>
+            <div class="beforeLogin">
               <RouterLink id="navJoin" to="/user/join">회원가입</RouterLink>
             </div>
-            <div class="userLogin">
+            <div class="beforeLogin">
               <RouterLink id="navLogin" to="/user/login">로그인</RouterLink>
             </div>
           </div>
@@ -173,13 +178,8 @@ a {
   display: flex;
   align-items: center;
 }
-.userJoin {
-  flex: 1;
-  text-align: center;
-  padding-left: 80px;
-  padding-top: 40px;
-}
-.userLogin {
+
+.beforeLogin {
   flex: 1;
   text-align: center;
   padding-top: 40px;
@@ -188,5 +188,25 @@ a {
   flex: 1;
   text-align: center;
   padding-top: 40px;
+}
+#navDesc {
+  white-space: pre-line;
+}
+[tooltip]:hover {
+  position: relative;
+}
+[tooltip]:hover:after {
+  content: attr(tooltip);
+  position: absolute;
+  width: 500px;
+  height: 255px;
+  text-align: start;
+  right: 50px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+  font-size: 15px;
+  z-index: 999;
+  border-radius: 5px;
+  padding: 5px;
 }
 </style>

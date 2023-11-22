@@ -136,7 +136,7 @@ const loadMap = () => {
   const container = document.getElementById("map");
   let options = {
     center: new kakao.maps.LatLng(33.450701, 126.570667),
-    level: 5,
+    level: 3,
   };
   map = new kakao.maps.Map(container, options);
   if (navigator.geolocation) {
@@ -152,7 +152,7 @@ const loadMap = () => {
       console.log(nowLon.value);
       let options = {
         center: new kakao.maps.LatLng(nowLat.value, nowLon.value),
-        level: 5,
+        level: 3,
       };
       map = new kakao.maps.Map(container, options);
       new kakao.maps.Marker({ map: map, position: locPosition });
@@ -182,7 +182,7 @@ const searchPlaces = () => {
   const container = document.getElementById("map");
   const options = {
     center: new kakao.maps.LatLng(nowLat.value, nowLon.value),
-    level: 5,
+    level: 3,
   };
   map = new kakao.maps.Map(container, options);
 
@@ -455,11 +455,6 @@ const addDay = () => {
 };
 
 const addPlan = () => {
-  let subject = prompt("여행 계획 제목을 입력하세요.", "여행 계획 1");
-  if (subject == null || subject == "") {
-    alert("여행 계획 제목은 필수입니다.");
-    return;
-  }
   const userId = cookies.get("userId");
 
   if (userId == null) {
@@ -467,6 +462,11 @@ const addPlan = () => {
   } else if (result.value.length == 0) {
     alert("최소 하나 이상의 계획을 담아야 합니다.");
   } else {
+    let subject = prompt("여행 계획 제목을 입력하세요.", "여행 계획 1");
+    if (subject == null || subject == "") {
+      alert("여행 계획 제목은 필수입니다.");
+      return;
+    }
     // const plans = ref([]);
     // const plans = Object.assign(result);
     let plans = new Array(5);
@@ -530,7 +530,7 @@ const loadFind = async (data) => {
       .get("https://apis-navi.kakaomobility.com/v1/directions", {
         params: {
           priority: "TIME",
-          car_type: "1",
+          car_type: "5",
           car_fuel: "GASOLINE",
           destination: `${data.x},${data.y}`,
           origin: `${nowLon.value},${nowLat.value}`,
