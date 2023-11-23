@@ -210,7 +210,7 @@ const alreadyCheck = () => {
       >
         <option selected>선택</option>
         <option value="ssafy.com">싸피</option>
-        <option value="google.com">구글</option>
+        <option value="gmail.com">구글</option>
         <option value="naver.com">네이버</option>
         <option value="kakao.com">카카오</option>
       </select>

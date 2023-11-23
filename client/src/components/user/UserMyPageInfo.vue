@@ -88,28 +88,34 @@ const deleteUser = async () => {
 };
 
 const updateUser = () => {
-  if (nowPwd.value.length < 4){
-    alert("비밀번호는 최소 4자리부터 시작해야 합니다.")
-  } else if (nowPwd.value != checkPwd.value){
-    alert("비밀 번호가 다릅니다. 다시 확인해주세요")
-  } else if (newUser.value.userName == "" || newUser.value.emailId == "" || newUser.value.emailDomain == "") {
-    alert("모든 회원 정보를 기입해주세요.")
-  } else{
-  http.post("/userapi/update", {
-    userId : newUser.value.userId,
-    userName : newUser.value.userName,
-    userPwd : nowPwd.value,
-    emailId : newUser.value.emailId,
-    emailDomain : newUser.value.emailDomain,
-    profileImage : newUser.value.profileImage,
-  }).then(({ data }) => {
-    let msg = "사용자 정보 수정에 문제가 발생했습니다.";
-    if (data === 1) {
-      msg = "사용자 정보 수정이 완료되었습니다.";
-      router.go();
-    }
-    alert(msg);
-  });
+  if (nowPwd.value.length < 4) {
+    alert("비밀번호는 최소 4자리부터 시작해야 합니다.");
+  } else if (nowPwd.value != checkPwd.value) {
+    alert("비밀 번호가 다릅니다. 다시 확인해주세요");
+  } else if (
+    newUser.value.userName == "" ||
+    newUser.value.emailId == "" ||
+    newUser.value.emailDomain == ""
+  ) {
+    alert("모든 회원 정보를 기입해주세요.");
+  } else {
+    http
+      .post("/userapi/update", {
+        userId: newUser.value.userId,
+        userName: newUser.value.userName,
+        userPwd: nowPwd.value,
+        emailId: newUser.value.emailId,
+        emailDomain: newUser.value.emailDomain,
+        profileImage: newUser.value.profileImage,
+      })
+      .then(({ data }) => {
+        let msg = "사용자 정보 수정에 문제가 발생했습니다.";
+        if (data === 1) {
+          msg = "사용자 정보 수정이 완료되었습니다.";
+          router.go();
+        }
+        alert(msg);
+      });
   }
 };
 
@@ -232,7 +238,7 @@ function imageToBase64(f) {
       >
         <option selected>선택</option>
         <option value="ssafy.com">싸피</option>
-        <option value="google.com">구글</option>
+        <option value="gmail.com">구글</option>
         <option value="naver.com">네이버</option>
         <option value="kakao.com">카카오</option>
       </select>
