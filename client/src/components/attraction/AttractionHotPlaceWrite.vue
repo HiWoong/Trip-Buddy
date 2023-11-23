@@ -31,8 +31,8 @@ function imageToBase64(f) {
 const hotPlaceWrite = () => {
   if (data.value.image == "../src/assets/img/noImage.png") {
     alert("사진은 필수입니다.");
-  } else if (data.value.subject.length > 7 || data.value.subject.length == 0) {
-    alert("제목은 필수이며 7자 제한입니다.");
+  } else if (data.value.subject.length > 10 || data.value.subject.length == 0) {
+    alert("제목은 필수이며 10자 제한입니다.");
   } else if (data.value.content.length > 200 || data.value.content.length == 0) {
     alert("내용은 필수이며 200자 제한입니다.");
   } else {

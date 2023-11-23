@@ -92,7 +92,7 @@ const modifyComment = () => {
 }
 .registerButton:hover {
   box-shadow: 0px 0px 0px 0px rgb(178, 214, 111);
-  margin-top: 15px;
-  margin-bottom: 20px;
+  margin-top: 25px;
+  margin-bottom: 10px;
 }
 </style>

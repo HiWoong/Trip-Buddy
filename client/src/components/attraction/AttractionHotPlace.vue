@@ -191,7 +191,7 @@ const minLikeCount = async (hotPlaceDto) => {
   font-weight: 600;
 }
 .placeTitle {
-  font-size: 35px;
+  font-size: 25px;
   font-weight: bold;
   color: whitesmoke;
   font-family: "NanumSquareB";
