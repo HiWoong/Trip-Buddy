@@ -68,7 +68,7 @@ const modifyMyHotPlace = () => {
         [{{ props.myHotPlace.hotplaceId }}] {{ props.myHotPlace.subject }}
       </div>
       <div class="myhotContent">{{ props.myHotPlace.content }}</div>
-      <div>{{ props.myHotPlace.createdDate }}</div>
+      <div style="margin-top: 60px">{{ props.myHotPlace.createdDate }}</div>
       <div class="buttons">
         <div class="modifyButtonDiv">
           <input @click="changeModify" class="modifyButton" type="button" value="수정" />
@@ -125,7 +125,7 @@ const modifyMyHotPlace = () => {
   display: flex;
   flex-direction: row;
   width: 1000px;
-  height: 250px;
+  height: 300px;
   border: 3px dashed gray;
   border-radius: 15px;
   padding: 5px;
@@ -146,7 +146,7 @@ const modifyMyHotPlace = () => {
   font-size: 30px;
 }
 .myhotContent {
-  font-size: 20px;
+  font-size: 16px;
   height: 60px;
 }
 .buttons {

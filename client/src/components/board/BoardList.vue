@@ -35,7 +35,7 @@ const onPageChange = (val) => {
 const key = ref("");
 const word = ref("");
 const pgno = ref(1);
-const sort = ref("");
+const sort = ref("register_time");
 
 const searchBoards = () => {
   currentPage.value = 1;

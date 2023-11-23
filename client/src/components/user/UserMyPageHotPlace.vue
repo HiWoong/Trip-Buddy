@@ -61,7 +61,7 @@ const deleteFavorite = async () => {
         [{{ props.favHotPlace.hotplaceId }}] {{ props.favHotPlace.subject }}
       </div>
       <div class="favhotContent">{{ props.favHotPlace.content }}</div>
-      <div>{{ props.favHotPlace.createdDate }}</div>
+      <div style="margin-top: 60px">{{ props.favHotPlace.createdDate }}</div>
       <div class="deleteButtonDiv">
         <input @click="deleteFavorite" class="deleteButton" type="button" value="삭제" />
       </div>
@@ -87,7 +87,7 @@ const deleteFavorite = async () => {
   display: flex;
   flex-direction: row;
   width: 1000px;
-  height: 250px;
+  height: 300px;
   border: 3px dashed gray;
   border-radius: 15px;
   padding: 5px;
@@ -107,12 +107,12 @@ const deleteFavorite = async () => {
   font-size: 30px;
 }
 .favhotContent {
-  font-size: 20px;
+  font-size: 16px;
   height: 60px;
 }
 .deleteButtonDiv {
-  width: 50px;
-  height: 30px;
+  width: 70px;
+  height: 35px;
   margin: 2vh 0 0 65vh;
 }
 .deleteButton {

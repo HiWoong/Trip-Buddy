@@ -53,7 +53,6 @@ const sortType = () => {
   }
   nowPage.value = 1;
   hotPlaces.value = [];
-  loadPlaces();
 };
 
 const paramChange = async () => {
