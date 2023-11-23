@@ -66,13 +66,3 @@ create table hotplaces (
     updated_date timestamp not null default (current_timestamp),
     foreign key (user_id) references users(user_id) on update cascade on delete cascade
 );
-
--- 핫플레이스 별점 테이
-create table stars (
-	star_id int auto_increment primary key,
-	hotplace_id int not null,
-    user_id varchar(20) not null,
-    score int not null,
-    foreign key (hotplace_id) references hotplaces(hotplace_id) on update cascade on delete cascade,
-    foreign key (user_id) references users(user_id) on update cascade on delete cascade
-);
