@@ -24,7 +24,6 @@ public class AttractionServiceImpl implements AttractionService {
         for (AttractionInfoDto l : list) {
             double distance = Math.sqrt(Math.pow(Math.abs(37.0 - l.getLatitude()), 2) + Math.pow(Math.abs(127.0-l.getLongitude()), 2));
             l.setDistance(distance);
-            System.out.println(l.getDistance());
         }
 
         return quickSort(list);

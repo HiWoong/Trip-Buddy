@@ -9,7 +9,6 @@ const props = defineProps({
   articleNo: Number,
 });
 const createComment = () => {
-  console.log(content.value);
   http
     .post("/commentapi/write", {
       content: content.value,
@@ -27,24 +26,67 @@ const createComment = () => {
 };
 </script>
 <template>
-  <label for="comment">Comments:</label>
-
-  <textarea
-    class="form-control"
-    rows="5"
-    id="comment"
-    name="text"
-    v-model="content"
-  ></textarea>
-  <div class="d-flex">
-    <button
-      type="button"
-      id="btn-register"
-      class="btn btn-outline-warning mt-2 ms-auto"
-      @click="createComment"
-    >
-      작성하기
-    </button>
+  <div class="wholeCommentContents">
+    <div class="title">댓글 작성하기</div>
+    <div style="display: flex; height: 120px">
+      <div class="comment">
+        <textarea class="commentContent" v-model="content" />
+      </div>
+      <input type="button" class="registerButton" @click="createComment" value="작성하기" />
+    </div>
   </div>
 </template>
-<style scoped></style>
+<style scoped>
+@font-face {
+  font-family: "NanumSquare";
+  src: url("../../assets/fonts/NanumSquareR.ttf") format("truetype");
+}
+@font-face {
+  font-family: "NanumSquareB";
+  src: url("../../assets/fonts/NanumSquareB.ttf") format("truetype");
+}
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "NanumSquare";
+}
+.wholeCommentContents {
+  margin: 0 16% 0 16%;
+}
+.title {
+  margin: 5px 0 5px 0;
+  display: flex;
+  font-size: 20px;
+}
+.commentContent {
+  padding: 3px;
+  height: 100px;
+  width: 1000px;
+  border: 2px solid gray;
+  border-radius: 10px;
+  font-size: 20px;
+  resize: none;
+}
+.comment {
+  height: 100px;
+  width: 1000px;
+  margin: 0 20px 20px 0;
+  align-items: center;
+}
+.registerButton {
+  height: 50px;
+  width: 100px;
+  margin: 20px 0 0 20px;
+  background-color: rgb(129, 202, 231);
+  border-radius: 5px;
+  transition: all 0.25s;
+  box-shadow: 1px 5px 0px 0px rgb(129, 202, 231);
+  font-size: 16px;
+  font-weight: 600;
+}
+.registerButton:hover {
+  box-shadow: 0px 0px 0px 0px rgb(129, 202, 231);
+  margin-top: 25px;
+  margin-bottom: 15px;
+}
+</style>

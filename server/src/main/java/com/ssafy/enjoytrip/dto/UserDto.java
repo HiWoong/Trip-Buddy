@@ -2,13 +2,10 @@ package com.ssafy.enjoytrip.dto;
 
 import lombok.*;
 
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@Data
-public class MemberDto {
+public class UserDto {
 
 	private String userId;
 	private String userName;
@@ -18,4 +15,5 @@ public class MemberDto {
 	private String joinDate;
 	private String refreshToken;
 	private String profileImage;
+	private String favorite;
 }

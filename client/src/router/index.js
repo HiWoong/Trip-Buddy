@@ -19,13 +19,28 @@ const router = createRouter({
       children: [
         {
           path: "",
-          name: "searchView",
+          name: "AttractionSearch",
           component: () => import("@/components/attraction/AttractionSearch.vue"),
         },
         {
           path: "plan",
           name: "AttractionPlan",
           component: () => import("@/components/attraction/AttractionPlan.vue"),
+        },
+        {
+          path: "hot",
+          name: "AttractionHotPlaceList",
+          component: () => import("@/components/attraction/AttractionHotPlaceList.vue"),
+        },
+        {
+          path: "hotWrite",
+          name: "AttractionHotPlaceWrite",
+          component: () => import("@/components/attraction/AttractionHotPlaceWrite.vue"),
+        },
+        {
+          path: "load",
+          name: "AttractionLoad",
+          component: () => import("@/components/attraction/AttractionLoad.vue"),
         },
       ],
     },
@@ -48,6 +63,16 @@ const router = createRouter({
           path: "join",
           name: "UserJoin",
           component: () => import("@/components/user/UserJoin.vue"),
+        },
+        {
+          path: "myPageInfo",
+          name: "UserMyPageInfo",
+          component: () => import("@/components/user/UserMyPageInfo.vue"),
+        },
+        {
+          path: "findPassword",
+          name: "UserFindPassword",
+          component: () => import("@/components/user/UserFindPassword.vue"),
         },
       ],
     },

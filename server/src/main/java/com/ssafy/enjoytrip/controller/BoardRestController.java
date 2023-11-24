@@ -20,12 +20,13 @@ public class BoardRestController {
 	private final BoardService boardService;
 
 	@GetMapping("/list")
-	private ResponseEntity<?> list(@RequestParam String pgno, @RequestParam String key, @RequestParam String word, @RequestParam String spp) throws Exception {
+	private ResponseEntity<?> list(@RequestParam String pgno, @RequestParam String key, @RequestParam String word, @RequestParam String spp, @RequestParam String sort) throws Exception {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("pgno", pgno + "");
 		map.put("key", key);
 		map.put("word", word);
 		map.put("spp", spp);
+		map.put("sort", sort);
 		List<BoardDto> list = boardService.listArticle(map);
 		return new ResponseEntity<List<BoardDto>>(list, HttpStatus.OK);
 	}
@@ -50,8 +51,6 @@ public class BoardRestController {
 
 	@PostMapping("/write")
 	private ResponseEntity<?> write(@RequestBody BoardDto boardDto) throws Exception {
-
-//		boardDto.setUserId(((MemberDto) session.getAttribute("userinfo")).getUserId());
 
 		int result = boardService.writeArticle(boardDto);
 		if (result == 1) {

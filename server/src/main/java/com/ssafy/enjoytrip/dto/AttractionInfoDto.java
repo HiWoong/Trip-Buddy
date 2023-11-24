@@ -2,10 +2,9 @@ package com.ssafy.enjoytrip.dto;
 
 import lombok.*;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter	@Setter
-@ToString
 public class AttractionInfoDto implements Comparable<AttractionInfoDto>{
 
 	private int contentId;
@@ -27,7 +26,6 @@ public class AttractionInfoDto implements Comparable<AttractionInfoDto>{
 	
 	@Override
 	public int compareTo(AttractionInfoDto o) {
-		// TODO Auto-generated method stub
 		
 		return Double.compare(this.getDistance(), o.getDistance());
 	}

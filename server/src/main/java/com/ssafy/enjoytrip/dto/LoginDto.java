@@ -2,11 +2,9 @@ package com.ssafy.enjoytrip.dto;
 
 import lombok.*;
 
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class LoginDto {
 
 	private String userId;

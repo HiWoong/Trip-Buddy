@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<!-- name space는 MemberRepo의 fully qualified name으로 설정한다. -->
-<mapper namespace="com.ssafy.enjoytrip.model.repo.MemberRepo">
-<!--    <resultMap type="MemberDto" id="loginMember">-->
+<!-- name space는 UserRepo의 fully qualified name으로 설정한다. -->
+<mapper namespace="com.ssafy.enjoytrip.model.repo.UserRepo">
+<!--    <resultMap type="UserDto" id="loginUser">-->
 <!--        <id property="userId" column="user_id" />-->
 <!--        <result property="userPwd" column="user_password" />-->
 <!--        <result property="userName" column="user_name" />-->
 <!--    </resultMap>-->
 
-    <resultMap type="MemberDto" id="memberDto">
+    <resultMap type="UserDto" id="UserDto">
         <id property="userId" column="user_id"/>
         <result property="userName" column="user_name"/>
         <result property="userPwd" column="user_password" />
@@ -20,49 +20,68 @@
         <result property="profileImage" column="profile_image" />
     </resultMap>
 
-    <select id="getUserInfo" parameterType="map" resultMap="memberDto">
-        select user_name, user_id, email_id, email_domain, join_date, profile_image from members
+    <select id="getUserInfo" parameterType="map" resultMap="UserDto">
+        select user_name, user_id, email_id, email_domain, join_date, profile_image from Users
         where user_id = #{userId}
     </select>
 
-    <select id="loginMember" parameterType="map" resultMap="memberDto">
-        select user_id, user_name, token from members
+    <select id="loginUser" parameterType="map" resultMap="UserDto">
+        select user_id, user_name, token from Users
         where user_id= #{userId} and user_password = #{userPwd}
     </select>
 
-    <insert id="joinMember">
-        insert into members (user_name, user_id, user_password, email_id, email_domain, join_date)
+    <insert id="joinUser">
+        insert into Users (user_name, user_id, user_password, email_id, email_domain, join_date)
         values (#{userName}, #{userId}, #{userPwd}, #{emailId}, #{emailDomain}, now())
     </insert>
 
-    <update id="updateMember" >
-        update members SET user_name = #{userName}, user_password = #{userPwd},
+    <update id="updateUser" >
+        update Users SET user_name = #{userName}, user_password = #{userPwd},
         email_id = #{emailId}, email_domain = #{emailDomain}, profile_image = #{profileImage}
         where user_id = #{userId}
     </update>
 
-    <delete id="deleteMember" >
-        delete from members where user_id = #{userId}
+    <delete id="deleteUser" >
+        delete from Users where user_id = #{userId}
     </delete>
 
     <update id="saveRefreshToken" parameterType="map">
-        update members
+        update Users
         set token = #{token}
         where user_id = #{userId}
     </update>
 
     <select id="getRefreshToken" parameterType="string" resultType="string">
         select token
-        from members
+        from Users
         where user_id = #{userId}
     </select>
 
     <update id="deleteRefreshToken" parameterType="map">
-        update members
+        update Users
         set token = #{token, jdbcType=VARCHAR}
         where user_id = #{userId}
     </update>
 
+    <select id="checkDuplId">
+        select count(*) from Users where user_id = #{userId}
+    </select>
 
+    <select id="getFavorites">
+        select favorite from Users where user_id = #{userId}
+    </select>
 
+    <update id="setFavorites">
+        update Users set favorite = #{favorite} where user_id = #{userId}
+    </update>
+
+    <select id="getUserEmail" resultMap="UserDto">
+        select user_id, user_name, email_id, email_domain from Users
+        where user_id = #{userId}
+    </select>
+
+    <update id="changePassword">
+        update Users set user_password = #{userPwd}
+        where user_id = #{userId}
+    </update>
 </mapper>

@@ -1,65 +1,126 @@
 <script setup>
-import http from "@/util/http-common.js";
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
-
-import { storeToRefs } from "pinia";
-import { useUserStore } from "@/stores/userStore.js";
-
-import { info } from "@/api/userApi";
-import { httpStatusCode } from "@/util/http-status";
-
-// cookies
 import { useCookies } from "vue3-cookies";
+import UserMyPageHotPlace from "@/components/user/UserMyPageHotPlace.vue";
+import UserMyPageMyHotPlace from "@/components/user/UserMyPageMyHotPlace.vue";
+import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/userStore.js";
+import { httpStatusCode } from "@/util/http-status";
+import { info } from "@/api/userApi";
+import { totalPlans } from "@/api/planApi";
+import UserPlanRow from "@/components/user/UserPlanRow.vue";
+
 const { cookies } = useCookies();
-
-const userStore = useUserStore();
-const { userDeleteStore } = userStore;
-
-// import { useUserStore} from "@/stores/userStore.js";
-// const userStore = useUserStore();
-
-// const { userInfo } = storeToRefs(userStore);
-// const { getUserInfo } = userStore;
-
 const router = useRouter();
+const userStore = useUserStore();
+const {
+  getFavorite,
+  getLikes,
+  getFavHotPlace,
+  getmyFavHotPlaces,
+  setmyFavHotPlaces,
+  setmyStorageHotPlace,
+  getmyStorageHotPlace,
+} = userStore;
 
-// const newUser = ref({
-//   userId: userInfo.userId,
-//   userName: userInfo.userName,
-//   userPwd: userInfo.userPwd,
-//   emailId: userInfo.emailId,
-//   emailDomain: userInfo.emailDomain,
-//   joinDate: userInfo.joinDate,
-// });
+const userId = cookies.get("userId");
+const myFav = ref([]);
+const favHotPlaces = ref([]);
+const mineHotPlaces = ref([]);
+
+const planFlag = ref(true);
+const myHotPlaceFlag = ref(false);
+const myWritePlaceFlag = ref(false);
 
 const newUser = ref([]);
+const plans = ref([]);
 
-// temp
-const profileImg = ref("https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg");
-//
+const styleObject = ref({
+  backgroundColor: "#332708",
+  fontSize: "30px",
+  color: "whiteSmoke",
+  border: "5px solid #e0a200",
+  "border-radius": "15px",
+});
+
+const planStyleObject = ref({});
+
+const myHotStyleObject = ref({});
+
+const myWriteStyleObject = ref({});
+
+const myHotPlaceC = () => {
+  myHotStyleObject.value = styleObject.value;
+  planStyleObject.value = {};
+  myWriteStyleObject.value = {};
+  myHotPlaceFlag.value = true;
+  planFlag.value = false;
+  myWritePlaceFlag.value = false;
+};
+
+const myWritePlaceC = () => {
+  myWriteStyleObject.value = styleObject.value;
+  planStyleObject.value = {};
+  myHotStyleObject.value = {};
+  myWritePlaceFlag.value = true;
+  planFlag.value = false;
+  myHotPlaceFlag.value = false;
+};
+
+const planC = () => {
+  planStyleObject.value = styleObject.value;
+  myWriteStyleObject.value = {};
+  myHotStyleObject.value = {};
+  planFlag.value = true;
+  myWritePlaceFlag.value = false;
+  myHotPlaceFlag.value = false;
+};
 
 onMounted(async () => {
-  console.log("gogo getUserInfo : ", cookies.get("userId"));
+  await setmyFavHotPlaces();
+  await getFavorite(userId);
+  myFav.value = await getLikes();
+  myFav.value.forEach(async (hotPlaceId) => {
+    await getFavHotPlace(hotPlaceId);
+  });
+  favHotPlaces.value = await getmyFavHotPlaces();
+
+  await setmyStorageHotPlace(cookies.get("userId"));
+  mineHotPlaces.value = await getmyStorageHotPlace();
+
   getUserInfo(cookies.get("userId"));
+  getTotalPlans(cookies.get("userId"));
+
+  planStyleObject.value = styleObject.value;
 });
+
+const changeFav = async () => {
+  await setmyFavHotPlaces();
+  await getFavorite(userId);
+  myFav.value = await getLikes();
+  myFav.value.forEach(async (hotPlaceId) => {
+    await getFavHotPlace(hotPlaceId);
+  });
+  favHotPlaces.value = await getmyFavHotPlaces();
+};
+
+const changeMyFav = async () => {
+  await setmyStorageHotPlace(cookies.get("userId"));
+  mineHotPlaces.value = await getmyStorageHotPlace();
+};
+
+const moveMyPageInfo = () => {
+  router.push({ name: "UserMyPageInfo" });
+};
 
 const getUserInfo = async (userId) => {
   info(
     userId,
     (response) => {
-      console.log(response.status);
       if (response.status === httpStatusCode.OK) {
-        console.log("3. getUserInfo data >> ", response.data.userInfo);
         newUser.value = response.data.userInfo;
-        if (newUser.value.profileImage == ""){
-          newUser.value.profileImage = "https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg";
-        }
-
-        // console.log("new User", newUser.value);
-        // console.log("new User ProfileImg : ", newUser.value.profileImage);
       } else {
-        console.log("유저 정보 없음!!!!");
+        alert("유저 정보가 없습니다.");
       }
     },
     async (error) => {
@@ -67,201 +128,140 @@ const getUserInfo = async (userId) => {
         "getUserInfo() error code [토큰 만료되어 사용 불가능.] ::: ",
         error.response.status
       );
-      // isValidToken.value = false;
-
-      // await tokenRegenerate();
     }
   );
 };
 
-const deleteUser = async() => {
-  await userDeleteStore(cookies.get("userId"));
-  router.replace({ name: "HomeView" });
-}
-
-// const deleteUser = () => {
-//   http.get("/userapi/delete/" + newUser.value.userId).then(({ data }) => {
-//     let msg = "사용자 정보 삭제에 문제가 발생했습니다.";
-//     console.log("delete status : ", data.request.status);
-//     if (data.request.status === httpStatusCode.OK) {
-//       msg = "사용자 정보 삭제가 완료되었습니다.";
-//       isLogin.value = false;
-//       cookies.remove("userId");
-//       cookies.remove("accessToken");
-//       cookies.remove("refreshToken");
-//       router.push({ name: "HomeView" });
-//     }
-//     alert(msg);
-//   });
-// };
-
-const updateUser = () => {
-  /* 
-    여기에서 사용자 정보란이 꽉 찼는지 확인하는 if 문을 넣어야됨.
-    아래 post 는 else 
-  */
-  console.log(newUser.value);
-  http.post("/userapi/update", newUser.value).then(({ data }) => {
-    let msg = "사용자 정보 수정에 문제가 발생했습니다.";
-    if (data === 1) {
-      msg = "사용자 정보 수정이 완료되었습니다.";
-      // userInfo.value = newUser.value;
-      router.go();
+const getTotalPlans = async (userId) => {
+  await totalPlans(
+    userId,
+    (response) => {
+      if (response.status === httpStatusCode.OK) {
+        plans.value = response.data;
+      } else {
+        alert("유저 정보가 없습니다.");
+      }
+    },
+    async (error) => {
+      console.error(
+        "getUserInfo() error code [토큰 만료되어 사용 불가능.] ::: ",
+        error.response.status
+      );
     }
-    alert(msg);
-  });
+  );
 };
-
-const imageUpload = async (files) => {
-  // console.log("files : ", files[0]);
-  imageToBase64(files[0]);
-  // profileImg.value = files[0].name;
-  // profileImg.value = "https://image.yes24.com/goods/105020756/XL";
-  // console.log("profileImg : ", profileImg.value);
-  // this.fileName = files[0];
-  // await this.base64(this.fileName);
-};
-
-function imageToBase64(f) {
-  var reader = new FileReader();
-  reader.readAsDataURL(f);
-  reader.onload = function(e) {
-    // console.log(e);
-    // profileImg.value = e.target.result;
-    newUser.value.profileImage = e.target.result;
-    // console.log("imageToBase64, newUser.value.profileImg : ", newUser.value.profileImg)
-  }
-}
-
-// const base64 = (file) => {
-//   return new Promise(resolve => {
-//     // 업로드된 파일을 읽기 위한 FileReader() 객체 생성
-//     let a = new FileReader()
-//     // 읽기 동작이 성공적으로 완료됐을 때 발생
-//     a.onload = e => {
-//       resolve(e.target.result)
-// 			// 썸네일을 보여주고자 하는 <img>에 id값을 가져와 src에 결과값을 넣어준다.
-//       const previewImage = document.getElementById('preview')
-//       previewImage.src = e.target.result
-//     }
-// 		// file 데이터를 base64로 인코딩한 문자열. 이 문자열을 브라우저가 인식하여 원래 데이터로 만들어준다.
-//     a.readAsDataURL(file)
-//   })
-// };
 </script>
 
 <template>
-  <div class="container mt-5 pt-5">
-    <div class="row justify-content-center mt-5">
-      <div class="col-lg-8 col-md-10 col-sm-12">
-        <h2 class="my-3 py-3 shadow-sm bg-light text-center">
-          <mark class="orange">마이페이지</mark>
-        </h2>
+  <div class="wholeLayout">
+    <div class="menu">
+      <div class="tab-content">
+        <div class="clickMenu" :style="planStyleObject" @click="planC">나의 여행 계획</div>
       </div>
-      <div class="col-lg-8 col-md-10 col-sm-12">
-        <!-- 파일 업로드 -->
-        <div class="mb-3"></div>
-          <img
-              class="avatar me-2 float-md-start bg-light p-2"
-              v-bind:src="newUser.profileImage"
-            />
-        <div class="mb-3">
-          <input multiple @change="imageUpload($event.target.files)" accept="image/*" type="file" />
-          <!-- ref="images" -->
+      <div class="tab-content">
+        <div class="clickMenu" :style="myHotStyleObject" @click="myHotPlaceC">
+          좋아요한 핫플레이스
         </div>
-        <!--  -->
-        <div class="mb-3">
-          <label for="username" class="form-label">이름 : </label>
-          <input
-            type="text"
-            class="form-control"
-            id="userName"
-            name="userName"
-            placeholder="이름..."
-            v-model="newUser.userName"
-          />
+      </div>
+      <div class="tab-content">
+        <div class="clickMenu" :style="myWriteStyleObject" @click="myWritePlaceC">
+          내가 등록한 핫플레이스
         </div>
-        <div class="mb-3">
-          <label for="userid" class="form-label">아이디 : </label>
-          <input
-            type="text"
-            class="form-control"
-            id="userId"
-            name="userId"
-            placeholder="아이디..."
-            v-model="newUser.userId"
-            readonly
-            disabled
-          />
-        </div>
-        <div id="result-view" class="mb-3"></div>
-        <div class="mb-3">
-          <label for="userpwd" class="form-label">비밀번호 : </label>
-          <input
-            type="password"
-            class="form-control"
-            id="userPwd"
-            name="userPwd"
-            placeholder="비밀번호..."
-            v-model="newUser.userPwd"
-          />
-        </div>
-        <div class="mb-3">
-          <label for="pwdcheck" class="form-label">비밀번호확인 : </label>
-          <input
-            type="password"
-            class="form-control"
-            id="pwdCheck"
-            placeholder="비밀번호확인..."
-            v-model="newUser.userPwd"
-          />
-        </div>
-        <div class="mb-3">
-          <label for="emailid" class="form-label">이메일 : </label>
-          <div class="input-group">
-            <input
-              type="text"
-              class="form-control"
-              id="emailId"
-              name="emailId"
-              placeholder="이메일아이디"
-              v-model="newUser.emailId"
-            />
-            <span class="input-group-text"></span>
-            <select
-              class="form-select"
-              id="emailDomain"
-              name="emailDomain"
-              aria-label="이메일 도메인 선택"
-              v-model="newUser.emailDomain"
-            >
-              <option selected>{{ newUser.emailDomain }}</option>
-              <option value="ssafy.com">싸피</option>
-              <option value="google.com">구글</option>
-              <option value="naver.com">네이버</option>
-              <option value="kakao.com">카카오</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-auto text-center">
-          <input
-            type="submit"
-            id="btn-join"
-            class="btn btn-outline-primary mb-3 p-auto"
-            value="수정하기"
-            @click="updateUser"
-          />
-          <input
-            type="button"
-            id="btn-mv-join"
-            class="btn btn-outline-success mb-3 p-auto"
-            value="탈퇴하기"
-            @click="deleteUser"
-          />
-        </div>
+      </div>
+      <button style="border: none; width: 70px; height: 70px; background-color: transparent">
+        <img
+          id="submitImg"
+          src="@/assets/img/settings.png"
+          @click="moveMyPageInfo"
+          style="width: 70px; height: 70px"
+        />
+      </button>
+    </div>
+    <div class="tab">
+      <div v-if="myHotPlaceFlag">
+        <UserMyPageHotPlace
+          v-for="favHotPlace in favHotPlaces"
+          :key="favHotPlace.hotplaceId"
+          :favHotPlace="favHotPlace"
+          :userId="userId"
+          @changeFav="changeFav"
+        />
+      </div>
+      <div v-if="planFlag">
+        <UserPlanRow v-for="plan in plans" :key="plan.planId" v-bind="plan" />
+      </div>
+      <div v-if="myWritePlaceFlag">
+        <UserMyPageMyHotPlace
+          v-for="mineHotPlace in mineHotPlaces"
+          :key="mineHotPlace.hotplaceId"
+          :myHotPlace="mineHotPlace"
+          @changeMyFav="changeMyFav"
+        />
       </div>
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+@font-face {
+  font-family: "NanumSquare";
+  src: url("../../assets/fonts/NanumSquareR.ttf") format("truetype");
+}
+@font-face {
+  font-family: "NanumSquareB";
+  src: url("../../assets/fonts/NanumSquareB.ttf") format("truetype");
+}
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "NanumSquare";
+}
+.wholeLayout {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.menu {
+  width: 1900px;
+  height: 100px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-align: center;
+}
+.tab {
+  margin: 50px 0 0 100px;
+  width: 90%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  overflow-y: scroll;
+}
+.tab::-webkit-scrollbar {
+  width: 10px;
+}
+.tab::-webkit-scrollbar-thumb {
+  height: 10%;
+  background: rgb(252, 227, 118);
+  border-radius: 15px;
+}
+.tab::-webkit-scrollbar-track {
+  background: rgba(233, 214, 161, 0.5);
+}
+.tab-content {
+  display: flex;
+  width: 100%;
+  height: 100px;
+  cursor: pointer;
+}
+.clickMenu {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>

@@ -1,59 +1,105 @@
 <script setup>
 import http from "@/util/http-common.js";
 import { ref, watch, onMounted } from "vue";
+import { VueDraggableNext } from "vue-draggable-next";
+import { useRouter } from "vue-router";
+import axios from "axios";
+import { useAttractionStore } from "@/stores/attractionStore.js";
+import { useCookies } from "vue3-cookies";
+import AttractionLoadVue from "@/components/attraction/AttractionLoad.vue";
+const { cookies } = useCookies();
+const router = useRouter();
+const attractionStore = useAttractionStore();
+const { getLoadOn, setLoadOn } = attractionStore;
+
 var map;
-const keyword = ref("역삼역");
+const keyword = ref("역삼");
+const nowLat = ref(0);
+const nowLon = ref(0);
 const markers = ref([]);
 const result = ref([]);
 const idx = ref(0);
-onMounted(() => {
+const nowDay = ref(2);
+const loadData = ref();
+const loads = ref([]);
+const totalLoadData = ref({});
+onMounted(async () => {
   if (window.kakao && window.kakao.maps) {
-    console.log("loadMap");
     loadMap();
   } else {
-    console.log("loadScript");
     loadScript();
   }
+  let resultList = document.getElementById("firstDay");
+  let lists = document.createElement("div");
+  lists.className = "nowDay";
+  lists.innerHTML = 1 + "일차";
+  resultList.appendChild(lists);
+  nowDay.value = 2;
+
+  if (getLoadOn() == true) await setLoadOn();
 });
 
 watch(result.value, () => {
-  let resultList = document.getElementById("selectPlaces");
+  let resultList = document.getElementById("draggable");
   resultList.innerHTML = "";
   result.value.forEach((data) => {
-    let lists = document.createElement("div");
-    lists.className = "pickPlace";
+    if (data.nowDay == null) {
+      let lists = document.createElement("div");
+      lists.className = "pickPlace";
 
-    let place_name = document.createElement("div");
-    place_name.innerHTML = data.place_name;
+      let place_name = document.createElement("div");
+      place_name.innerHTML = "도착지: " + data.place_name;
+      place_name.className = "pickPlaceName";
 
-    let road_address_name = document.createElement("div");
-    road_address_name.innerHTML = data.road_address_name;
+      let road_address_name = document.createElement("div");
+      road_address_name.innerHTML = data.road_address_name;
 
-    let address_name = document.createElement("div");
-    address_name.innerHTML = data.address_name;
+      let address_name = document.createElement("div");
+      address_name.innerHTML = data.address_name;
+      lists.appendChild(place_name);
+      lists.appendChild(road_address_name);
+      lists.appendChild(address_name);
 
-    place_name.appendChild(road_address_name);
-    place_name.appendChild(address_name);
+      if (data.phone != "" && data.phone != null) {
+        let phone = document.createElement("div");
+        phone.innerHTML = data.phone;
+        phone.style.color = "#009900";
+        lists.appendChild(phone);
+      }
 
-    if (data.phone != "" && data.phone != null) {
-      let phone = document.createElement("div");
-      phone.innerHTML = data.phone;
-      place_name.appendChild(phone);
+      let removePick = document.createElement("button");
+      removePick.className = "removePick";
+      removePick.innerHTML = "삭제";
+      removePick.onclick = () => {
+        removePickPlace(data.address_name, data.index);
+      };
+      lists.appendChild(removePick);
+      resultList.appendChild(lists);
+    } else {
+      let lists = document.createElement("div");
+      lists.className = "nowDay";
+      lists.innerHTML = data.nowDay + "일차";
+      lists.ondblclick = () => {
+        removeNowDay(data.nowDay);
+      };
+      resultList.appendChild(lists);
     }
-    lists.appendChild(place_name);
-
-    let removePick = document.createElement("button");
-    removePick.className = "removePick";
-    removePick.innerHTML = "삭제";
-    removePick.onclick = () => {
-      removePickPlace(data.address_name, data.index);
-    };
-    lists.appendChild(place_name);
-    lists.appendChild(removePick);
-    resultList.appendChild(lists);
   });
-  console.log(result.value);
 });
+
+const removeNowDay = (target) => {
+  if (target != nowDay.value - 1) {
+    alert("가장 뒤 날짜부터 제거해야 합니다.");
+  } else {
+    for (let i = 0; i < result.value.length; i++) {
+      if (result.value[i].nowDay == target) {
+        result.value.splice(i, 1);
+        break;
+      }
+    }
+    nowDay.value--;
+  }
+};
 
 const addPickPlace = (places) => {
   result.value.push({
@@ -61,28 +107,44 @@ const addPickPlace = (places) => {
     road_address_name: places.road_address_name,
     address_name: places.address_name,
     phone: places.phone,
-    index: idx.value++,
+    index: (idx.value++).toString(),
   });
 };
 
 const removePickPlace = (address_name, index) => {
   for (let i = 0; i < result.value.length; i++) {
-    console.log(result.value);
-    if (result.value[i].address_name == address_name && result.value[i].index == index) {
+    if (result.value[i].address_name == address_name && Number(result.value[i].index) == index) {
       result.value.splice(i, 1);
       break;
     }
   }
-  console.log(result.value);
 };
 
 const loadMap = () => {
   const container = document.getElementById("map");
-  const options = {
+  let options = {
     center: new kakao.maps.LatLng(33.450701, 126.570667),
     level: 3,
   };
   map = new kakao.maps.Map(container, options);
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      var lat = position.coords.latitude,
+        lon = position.coords.longitude;
+
+      var locPosition = new kakao.maps.LatLng(lat, lon);
+      nowLat.value = locPosition.Ma;
+      nowLon.value = locPosition.La;
+      let options = {
+        center: new kakao.maps.LatLng(nowLat.value, nowLon.value),
+        level: 3,
+      };
+      map = new kakao.maps.Map(container, options);
+      new kakao.maps.Marker({ map: map, position: locPosition });
+    });
+  } else {
+    alert("현재 위치를 가져올 수 없습니다.");
+  }
   var mapTypeControl = new kakao.maps.MapTypeControl();
 
   map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
@@ -101,13 +163,14 @@ const loadScript = () => {
   document.head.appendChild(script);
 };
 
-function searchPlaces() {
+const searchPlaces = () => {
   const container = document.getElementById("map");
   const options = {
-    center: new kakao.maps.LatLng(33.450701, 126.570667),
+    center: new kakao.maps.LatLng(nowLat.value, nowLon.value),
     level: 3,
   };
   map = new kakao.maps.Map(container, options);
+
   const mapTypeControl = new kakao.maps.MapTypeControl();
 
   map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
@@ -123,11 +186,8 @@ function searchPlaces() {
   }
   ps.keywordSearch(keyword.value, (data, status, pagination) => {
     if (status === kakao.maps.services.Status.OK) {
-      // 정상적으로 검색이 완료됐으면
-      // 검색 목록과 마커를 표출합니다
       displayPlaces(data);
 
-      // 페이지 번호를 표출합니다
       displayPagination(pagination);
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
       alert("검색 결과가 존재하지 않습니다.");
@@ -142,22 +202,16 @@ function searchPlaces() {
     let menuEl = document.getElementById("menu_wrap");
     let fragment = document.createDocumentFragment();
 
-    // 검색 결과 목록에 추가된 항목들을 제거합니다
     removeAllChildNods(listEl);
 
-    // 지도에 표시되고 있는 마커를 제거합니다
     removeMarker();
+    const newPlaces = sortByDistance(places);
     map.setCenter(new kakao.maps.LatLng(places[0].y, places[0].x));
-    for (var i = 0; i < places.length; i++) {
-      // 마커를 생성하고 지도에 표시합니다
+    for (var i = 0; i < newPlaces.length; i++) {
       const placePosition = new kakao.maps.LatLng(places[i].y, places[i].x);
       const marker = addMarker(placePosition, i);
-      const itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
-      console.log(places[i]);
+      const itemEl = getListItem(i, places[i]);
 
-      // 마커와 검색결과 항목에 mouseover 했을때
-      // 해당 장소에 인포윈도우에 장소명을 표시합니다
-      // mouseout 했을 때는 인포윈도우를 닫습니다
       (function (marker, place_name, road_address_name, phone, placePosition) {
         kakao.maps.event.addListener(marker, "click", function () {
           displayInfowindow(marker, place_name, road_address_name, phone);
@@ -181,13 +235,11 @@ function searchPlaces() {
       fragment.appendChild(itemEl);
     }
 
-    // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
     listEl.appendChild(fragment);
     menuEl.scrollTop = 0;
   }
 
-  // 검색결과 항목을 Element로 반환하는 함수입니다
-  function getListItem(index, places) {
+  function getListItem(index, place) {
     let el = document.createElement("li");
 
     let markerbg = document.createElement("span");
@@ -196,32 +248,40 @@ function searchPlaces() {
     let info = document.createElement("div");
     info.className = "info";
     let place_name = document.createElement("h5");
-    place_name.innerHTML = places.place_name;
+    place_name.innerHTML = place.place_name;
     info.appendChild(place_name);
-    if (places.road_address_name) {
+    if (place.road_address_name) {
       let road = document.createElement("span");
-      road.innerHTML = places.road_address_name;
+      road.innerHTML = place.road_address_name;
       let jibun = document.createElement("span");
-      jibun.innerHTML = places.address_name;
+      jibun.innerHTML = place.address_name;
 
       info.appendChild(road);
       info.appendChild(jibun);
     } else {
       let address = document.createElement("span");
-      address.innerHTML = places.address_name;
+      address.innerHTML = place.address_name;
 
       info.appendChild(address);
     }
     let tel = document.createElement("span");
     tel.className = "tel";
-    tel.innerHTML = places.phone;
+    tel.innerHTML = place.phone;
     info.appendChild(tel);
+
+    let fare = document.createElement("button");
+    fare.className = "fare";
+    fare.innerHTML = "길찾기";
+    fare.onclick = () => {
+      loadFind(place);
+    };
+    info.appendChild(fare);
 
     let pick = document.createElement("button");
     pick.className = "pick";
     pick.innerHTML = "담기";
     pick.onclick = () => {
-      addPickPlace(places);
+      addPickPlace(place);
     };
     info.appendChild(pick);
     el.appendChild(markerbg);
@@ -231,41 +291,37 @@ function searchPlaces() {
     return el;
   }
 
-  // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
   function addMarker(position, idx) {
     const imageSrc =
-      "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png"; // 마커 이미지 url, 스프라이트 이미지를 씁니다
-    const imageSize = new kakao.maps.Size(36, 37); // 마커 이미지의 크기
+      "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png";
+    const imageSize = new kakao.maps.Size(36, 37);
     const imgOptions = {
-      spriteSize: new kakao.maps.Size(36, 691), // 스프라이트 이미지의 크기
-      spriteOrigin: new kakao.maps.Point(0, idx * 46 + 10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
-      offset: new kakao.maps.Point(13, 37), // 마커 좌표에 일치시킬 이미지 내에서의 좌표
+      spriteSize: new kakao.maps.Size(36, 691),
+      spriteOrigin: new kakao.maps.Point(0, idx * 46 + 10),
+      offset: new kakao.maps.Point(13, 37),
     };
     const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions);
     const marker = new kakao.maps.Marker({
-      position: position, // 마커의 위치
+      position: position,
       image: markerImage,
+      clickable: true,
     });
 
-    marker.setMap(map); // 지도 위에 마커를 표출합니다
-    markers.value.push(marker); // 배열에 생성된 마커를 추가합니다
-
+    marker.setMap(map);
+    markers.value.push(marker);
     return marker;
   }
 
-  // 지도 위에 표시되고 있는 마커를 모두 제거합니다
   function removeMarker() {
     markers.value.forEach((data) => data.setMap(null));
     markers.value = [];
   }
 
-  // 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
   function displayPagination(pagination) {
     let paginationEl = document.getElementById("pagination");
     let fragment = document.createDocumentFragment();
     let i;
 
-    // 기존에 추가된 페이지번호를 삭제합니다
     while (paginationEl.hasChildNodes()) {
       paginationEl.removeChild(paginationEl.lastChild);
     }
@@ -290,8 +346,6 @@ function searchPlaces() {
     paginationEl.appendChild(fragment);
   }
 
-  // 검색결과 목록 또는 마커를 클릭했을 때 호출되는 함수입니다
-  // 인포윈도우에 장소명을 표시합니다
   function displayInfowindow(marker, place_name, road_address_name, phone) {
     let wrap = document.createElement("div");
     wrap.className = "wrap";
@@ -331,22 +385,127 @@ function searchPlaces() {
     infowindow.open(map, marker);
   }
 
-  // 검색결과 목록의 자식 Element를 제거하는 함수입니다
   function removeAllChildNods(el) {
     while (el.hasChildNodes()) {
       el.removeChild(el.lastChild);
     }
   }
-}
+  new kakao.maps.Marker({
+    map: map,
+    position: new kakao.maps.LatLng(nowLat.value, nowLon.value),
+  });
+};
+
+const sortByDistance = (places) => {
+  places.forEach((data) => {
+    let distance = Math.pow(nowLon.value - data.x, 2) + Math.pow(nowLat.value - data.y, 2);
+    data.distance = distance;
+  });
+  places.sort((a, b) => a.distance - b.distance);
+  return places;
+};
+
+const addDay = () => {
+  if (nowDay.value == 6) {
+    alert("여행 계획은 최대 5일까지만 가능합니다.");
+  } else {
+    result.value.push({
+      nowDay: nowDay.value,
+    });
+    nowDay.value++;
+  }
+};
+
+const addPlan = () => {
+  const userId = cookies.get("userId");
+
+  if (userId == null) {
+    alert("여행 플래너를 이용하려면 로그인이 필요합니다.");
+  } else if (result.value.length == 0) {
+    alert("최소 하나 이상의 계획을 담아야 합니다.");
+  } else {
+    let subject = prompt("여행 계획 제목을 입력하세요.", "여행 계획 1");
+    if (subject == null || subject == "") {
+      alert("여행 계획 제목은 필수입니다.");
+      return;
+    }
+    let plans = new Array(5);
+    for (let i = 0; i < plans.length; i++) {
+      plans[i] = new Array();
+    }
+
+    let temp = plans[0];
+    for (let res of result.value) {
+      if (res.nowDay === undefined) {
+        temp.push(res);
+      } else {
+        temp = plans[res.nowDay - 1];
+      }
+    }
+
+    http.post("planapi/create", {
+      userId: cookies.get("userId"),
+      subject: subject,
+      content1: JSON.stringify(plans[0]),
+      content2: JSON.stringify(plans[1]),
+      content3: JSON.stringify(plans[2]),
+      content4: JSON.stringify(plans[3]),
+      content5: JSON.stringify(plans[4]),
+    });
+
+    alert("등록이 완료되었습니다. 마이페이지에서 확인하세요!");
+
+    router.push("/");
+  }
+};
+const loadFind = async (data) => {
+  if ((await getLoadOn()) == true) {
+    alert("닫기를 눌러주세요.");
+    return;
+  }
+  if (nowLat.value == 0 && nowLon.value == 0) {
+    alert("현재 위치가 올바르지 않습니다.");
+  } else {
+    const header = "KakaoAK" + " " + import.meta.env.VITE_KAKAO_REST_API_TOKEN;
+    await axios
+      .get("https://apis-navi.kakaomobility.com/v1/directions", {
+        params: {
+          priority: "TIME",
+          car_type: "5",
+          car_fuel: "GASOLINE",
+          destination: `${data.x},${data.y}`,
+          origin: `${nowLon.value},${nowLat.value}`,
+        },
+        headers: {
+          Authorization: header,
+        },
+      })
+      .then(({ data }) => (loadData.value = data.routes[0]));
+    loads.value = [];
+    for (let i = 0; i < loadData.value.sections[0].roads.length; i++) {
+      for (let j = 0; j < loadData.value.sections[0].roads[i].vertexes.length; j += 2) {
+        let x = loadData.value.sections[0].roads[i].vertexes[j];
+        let y = loadData.value.sections[0].roads[i].vertexes[j + 1];
+        loads.value.push(new kakao.maps.LatLng(y, x));
+      }
+    }
+    totalLoadData.value = {
+      allData: loadData.value,
+      loads: loads.value,
+      dx: Number(data.x),
+      dy: Number(data.y),
+      nx: nowLon.value,
+      ny: nowLat.value,
+    };
+  }
+  await setLoadOn();
+};
 </script>
-<!-------------------------------------------------------------------------------------------------------------->
-<!-------------------------------------------------------------------------------------------------------------->
-<!-------------------------------------------------------------------------------------------------------------->
 <template>
   <div id="contents">
     <div id="menu_wrap">
       <div class="option">
-        <h5>검색이 하고싶어?</h5>
+        <h5>검색하세요!</h5>
         <div>
           <input type="text" v-model="keyword" id="keyword" />
           <button id="searchButton" @click="searchPlaces" @keypress="() => searchPlaces()">
@@ -358,23 +517,46 @@ function searchPlaces() {
       <ul id="placesList"></ul>
       <div id="pagination"></div>
     </div>
+    <AttractionLoadVue
+      v-if="getLoadOn()"
+      :data="totalLoadData"
+      style="position: absolute; z-index: 101"
+    />
     <div id="map"></div>
     <div id="menu_plan">
-      <h3>여행 계획</h3>
-      <div id="selectPlaces"></div>
+      <div id="dayImgSection">
+        <button style="border: none; background-color: rgb(252, 227, 118)">
+          <img id="submitImg" src="@/assets/img/day.png" @click="addDay" />
+        </button>
+        <div style="font-weight: bold; font-size: 25px">여행 계획</div>
+        <button style="border: none; background-color: rgb(252, 227, 118)">
+          <img id="submitImg" src="@/assets/img/store.png" @click="addPlan" />
+        </button>
+      </div>
+      <div id="selectPlaces">
+        <div id="firstDay"></div>
+        <VueDraggableNext id="draggable" class="dragArea" :list="result" :sort="true">
+        </VueDraggableNext>
+      </div>
     </div>
   </div>
 </template>
-<!-------------------------------------------------------------------------------------------------------------->
-<!-------------------------------------------------------------------------------------------------------------->
-<!-------------------------------------------------------------------------------------------------------------->
 <style>
-.map_wrap,
-.map_wrap * {
+@font-face {
+  font-family: "NanumSquare";
+  src: url("../../assets/fonts/NanumSquareR.ttf") format("truetype");
+}
+@font-face {
+  font-family: "NanumSquareB";
+  src: url("../../assets/fonts/NanumSquareB.ttf") format("truetype");
+}
+* {
   margin: 0;
   padding: 0;
-  /* font-family: "NanumSquare", dotum, "돋움", sans-serif; */
-  font-family: dotum, "돋움", sans-serif;
+  font-family: "NanumSquare", dotum, "돋움", sans-serif;
+}
+.map_wrap,
+.map_wrap * {
   font-size: 12px;
 }
 #menu_wrap {
@@ -383,7 +565,7 @@ function searchPlaces() {
   left: 0;
   bottom: 0;
   width: 330px;
-  margin: 10px 0 30px 10px;
+  margin: 5px 0 0px 10px;
   padding: 5px;
   overflow-y: auto;
   background: rgba(255, 255, 255, 0.7);
@@ -522,7 +704,6 @@ function searchPlaces() {
   padding: 0;
   margin: 0;
   font-family: "NanumSquare";
-  /* font-family: sans-serif; */
   font-weight: 400;
 }
 .wrap .info {
@@ -565,6 +746,45 @@ function searchPlaces() {
   color: #009900;
   font-size: 15px;
 }
+#selectPlaces {
+  overflow-y: auto;
+}
+
+#selectPlaces::-webkit-scrollbar {
+  width: 10px;
+}
+#selectPlaces::-webkit-scrollbar-thumb {
+  height: 10%;
+  background: rgb(252, 227, 118);
+  border-radius: 15px;
+}
+#selectPlaces::-webkit-scrollbar-track {
+  background: rgba(233, 214, 161, 0.5);
+}
+#menu_wrap::-webkit-scrollbar {
+  width: 10px;
+}
+#menu_wrap::-webkit-scrollbar-thumb {
+  height: 10%;
+  background: rgb(252, 227, 118);
+  border-radius: 15px;
+}
+#menu_wrap::-webkit-scrollbar-track {
+  background: rgba(233, 214, 161, 0.5);
+}
+#dayImgSection {
+  height: 50px;
+  background-color: rgb(252, 227, 118);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+#submitImg {
+  width: 35px;
+  height: 35px;
+  left: 0;
+  margin: 0 10px;
+}
 #searchButton {
   transition: 0.5s;
   cursor: pointer;
@@ -582,14 +802,7 @@ function searchPlaces() {
   background: #ccc;
   outline: 0;
 }
-@font-face {
-  font-family: "NanumSquare";
-  src: url("../../assets/fonts/NanumSquareR.ttf") format("truetype");
-}
-@font-face {
-  font-family: "NanumSquareB";
-  src: url("../../assets/fonts/NanumSquareB.ttf") format("truetype");
-}
+
 #keyword {
   width: 70%;
   height: 30px;
@@ -597,23 +810,24 @@ function searchPlaces() {
 }
 #contents {
   width: 100%;
+  height: 880px;
   display: flex;
   justify-content: space-between;
+  margin-bottom: 20px;
 }
 #map {
-  /* width: 1275px;
-    height: 905px; */
-  margin: 10px 0 0 350px;
+  height: 100%;
+  margin: 5px 0 0 350px;
   flex: 2;
+  border-radius: 10px;
 }
 #menu_plan {
-  margin: 10px 0 0 20px;
-  width: 300px;
-  height: 904px;
+  margin: 5px 0 0 10px;
+  width: 310px;
+  height: 100%;
   background-color: ghostwhite;
   text-align: center;
   font-family: "NanumSquareB";
-  /* font-family: sans-serif; */
   flex: 0.5;
   border: 2px solid gray;
   border-radius: 5px;
@@ -637,12 +851,34 @@ function searchPlaces() {
   background-color: #77af9c;
   color: #d7fff1;
 }
+.fare {
+  padding: 5px 15px;
+  border-radius: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  font-weight: 800;
+  transition: 0.25s;
+  box-sizing: border-box;
+  color: darkgray;
+  border: 3px solid #b99162;
+}
+.fare:hover {
+  background-color: #b99162;
+  color: #d7faff;
+}
 .pickPlace {
-  margin: 0 10px 30px 10px;
+  margin: 5px 10px 10px 10px;
   padding: 10px 10px;
   text-align: start;
   border: 2px dotted black;
   border-radius: 10px;
+}
+
+.pickPlaceName {
+  font-size: 20px;
+  font-weight: bold;
+  font-family: "NanumSquareB";
+  color: steelblue;
 }
 
 .removePick {
@@ -661,12 +897,16 @@ function searchPlaces() {
   background-color: #ff823a;
   color: #000a07;
 }
-h3 {
-  background-color: rgb(252, 227, 118);
-}
 input {
   border: 1px solid gray;
   border-radius: 5px;
   padding: 0 0 0 4px;
+}
+.nowDay {
+  height: 27px;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.2);
+  margin: 2px 0 0 0;
+  align-items: center;
 }
 </style>

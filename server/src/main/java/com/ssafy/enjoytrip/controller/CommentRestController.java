@@ -19,9 +19,7 @@ public class CommentRestController {
 
     @GetMapping("/list")
     private ResponseEntity<?> list(@RequestParam("articleNo") int articleNo) throws Exception {
-        System.out.println(articleNo);
         List<CommentDto> comments = commentService.list(articleNo);
-        System.out.println(comments);
         if(comments != null)
             return new ResponseEntity<List<CommentDto>>(comments, HttpStatus.OK);
         else return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
@@ -29,7 +27,6 @@ public class CommentRestController {
 
     @PostMapping("/write")
     private ResponseEntity<?> write(@RequestBody CommentDto commentDto) throws Exception {
-        System.out.println(commentDto);
         String content = commentDto.getContent();
         String userId = commentDto.getUserId();
         int articleNo = commentDto.getArticleNo();
@@ -40,7 +37,6 @@ public class CommentRestController {
 
     @PostMapping("/modify")
     private ResponseEntity<?> modify(@RequestBody CommentDto commentDto) throws Exception {
-        System.out.println(commentDto);
         String content = commentDto.getContent();
         int commentId = commentDto.getCommentId();
         int result = commentService.modifyComment(content, commentId);
@@ -50,7 +46,6 @@ public class CommentRestController {
 
     @GetMapping("/delete/{commentId}")
     private ResponseEntity<?> delete(@PathVariable("commentId") String commentId) throws Exception {
-        System.out.println(commentId);
         int ci = Integer.parseInt(commentId);
         int result = commentService.deleteComment(ci);
 

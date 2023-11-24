@@ -1,82 +1,143 @@
 <template>
-  <div>
-    <nav>
-      <div>
-        <!-- style="font-family: 'NanumSquare'; font-size: 25px" -->
-        <div style="font-family: sans-serif; font-size: 25px" role="alert">전국 관광지 정보</div>
-        <!-- 관광지 검색 start -->
-        <form onsubmit="return false;" role="search" id="search-form">
-          <select id="search-area" name="search-area" v-model="searchOptions.area">
-            <option value="0" selected>선택해주세요</option>
-          </select>
-          <select id="search-content-id" name="search-content-id" v-model="searchOptions.type">
-            <option value="0" selected>관광지 유형</option>
-            <option value="12">관광지</option>
-            <option value="14">문화시설</option>
-            <option value="15">축제공연행사</option>
-            <option value="25">여행코스</option>
-            <option value="28">레포츠</option>
-            <option value="32">숙박</option>
-            <option value="38">쇼핑</option>
-            <option value="39">음식점</option>
-          </select>
-          <input
-            id="searchkeyword"
-            name="searchkeyword"
-            type="search"
-            placeholder="검색어"
-            aria-label="검색어"
-            v-model="searchOptions.word"
-          />
-          <button id="btn-search" type="button" @click="searchAttractions(searchOptions)">
-            검색
-          </button>
-        </form>
+  <div class="container mt-3">
+    <nav class="navbar navbar-light bg-light shadow mb-3">
+      <div
+        class="text-center fw-bold ms-5"
+        style="font-family: 'NanumSquare'; font-size: 25px"
+        role="alert"
+      >
+        전국 관광지 정보
       </div>
+      <form class="d-flex" onsubmit="return false;" role="search" id="search-form">
+        <select
+          id="search-area"
+          name="search-area"
+          class="form-select me-2"
+          v-model="searchOptions.area"
+        >
+          <option value="0">선택해주세요</option>
+        </select>
+        <select
+          id="search-content-id"
+          name="search-content-id"
+          class="form-select me-2"
+          v-model="searchOptions.type"
+        >
+          <option value="0" selected>관광지 유형</option>
+          <option value="12">관광지</option>
+          <option value="14">문화시설</option>
+          <option value="15">축제공연행사</option>
+          <option value="25">여행코스</option>
+          <option value="28">레포츠</option>
+          <option value="32">숙박</option>
+          <option value="38">쇼핑</option>
+          <option value="39">음식점</option>
+        </select>
+        <input
+          id="searchkeyword"
+          name="searchkeyword"
+          class="form-control me-2"
+          type="search"
+          placeholder="검색어"
+          aria-label="검색어"
+          v-model="searchOptions.word"
+        />
+        <button
+          id="btn-search"
+          class="btn btn-outline-success"
+          type="button"
+          @click="searchAttractions(searchOptions)"
+        >
+          검색
+        </button>
+      </form>
     </nav>
-    <div id="map" style="width: 100%; height: 530px"></div>
   </div>
-  <div v-if="attractions[0] != null">
-    <div>
-      <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-        <div v-for="attraction in attractions" :key="attraction.title">
-          <div class="col mb-5" style="height: 400px">
-            <div class="card">
-              <img
-                class="card-img-top"
-                :src="attraction.firstImage"
-                style="width:268px; height: 200px; text-center"
-              />
-              <div class="card-body">
-                <div class="text-center">
-                  <h5 class="fw-bolder">{{ attraction.title }}</h5>
-                  {{ attraction.addr1 }}
-                </div>
-              </div>
-              <div class="card-footer">
-                <div class="text-center">
-                  <button
-                    class="btn btn-outline-dark mt-auto"
-                    @click="moveCenter(attraction.latitude, attraction.longitude)"
-                  >
-                    위치 확인
-                  </button>
-                </div>
-              </div>
-            </div>
+  <div class="searchResults">
+    <div id="map"></div>
+    <template v-if="attractions[0] != null">
+      <div class="attractionCards">
+        <div class="attractionCard" v-for="attraction in attractions" :key="attraction.title">
+          <img :src="attraction.firstImage" style="width: 246px; height: 120px" />
+          <div>
+            <h5 style="margin-top: 4px" class="fw-bolder">
+              {{ attraction.title }}
+            </h5>
+            {{ attraction.addr1 }}
           </div>
+          <button class="moveButton" @click="moveCenter(attraction.latitude, attraction.longitude)">
+            위치 보기
+          </button>
         </div>
       </div>
-    </div>
-  </div>
-  <div v-else>
-    <div></div>
+    </template>
+    <template v-else>
+      <div></div>
+    </template>
   </div>
 </template>
 <style>
-#map {
+@font-face {
+  font-family: "NanumSquare";
+  src: url("../../assets/fonts/NanumSquareR.ttf") format("truetype");
+}
+* {
+  font-family: "NanumSquare";
+}
+.moveButton {
+  border: 2px solid black;
+  border-radius: 5px;
+  margin-top: 10px;
+  padding: 3px;
+  transition: 0.25s;
+  font-weight: 800;
+}
+
+.moveButton:hover {
+  background-color: skyblue;
+  color: #000a07;
+}
+.searchResults {
+  display: flex;
   width: 100%;
-  height: 400px;
+  margin-bottom: 10px;
+}
+.attractionCards {
+  flex: 1;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+.attractionCard {
+  background-color: linen;
+  width: 250px;
+  height: 230px;
+  margin: 10px 0;
+  border: 2px solid gray;
+  border-radius: 5px;
+  font-size: 14px;
+  text-align: center;
+}
+.contents {
+  display: flex;
+  align-items: center;
+}
+#search-area {
+  flex: 1;
+}
+#search-content-id {
+  flex: 1;
+}
+#searchkeyword {
+  flex: 1;
+}
+
+#map {
+  width: 40%;
+  height: 740px;
+  border: 2px solid gray;
+  border-radius: 15px;
+  margin: 10px 20px 20px 20px;
 }
 .wrap {
   position: absolute;
@@ -88,7 +149,7 @@
   text-align: left;
   overflow: hidden;
   font-size: 12px;
-  font-family: "Malgun Gothic", dotum, "돋움", sans-serif;
+  font-family: "NanumSquare";
   line-height: 1.5;
 }
 .wrap * {
@@ -170,17 +231,15 @@
 .info .link {
   color: #5085bb;
 }
-/* @font-face {
-  font-family: "NanumSquare";
-  src: url("../../assets/fonts/NanumSquareR.ttf") format("truetype");
-} */
 </style>
 <script setup>
 import http from "@/util/http-common.js";
-import { ref, watch, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 
+import { useAttractionStore } from "@/stores/attractionStore";
+const attractionStore = useAttractionStore();
+const { getSidoCode, setFalseClickHome, getClickHome } = attractionStore;
 var map;
-// area, type은 필수
 const searchOptions = ref({
   area: "",
   type: "0",
@@ -190,7 +249,7 @@ const searchOptions = ref({
 const attractions = ref([]);
 const markers = ref([]);
 
-onMounted(() => {
+onMounted(async () => {
   if (window.kakao && window.kakao.maps) {
     attractions.value = [];
     loadMap();
@@ -203,18 +262,26 @@ onMounted(() => {
         import.meta.env.VITE_TRIP_SERVICE_KEY +
         "&numOfRows=20&pageNo=1&MobileOS=ETC&MobileApp=AppTest&_type=json"
     )
-    .then((data) => {
-      console.log(data);
+    .then(async (data) => {
       let areas = data.data.response.body.items.item;
       let sel = document.getElementById("search-area");
+      const sidoCode = await getSidoCode();
       areas.forEach((area) => {
         let opt = document.createElement("option");
         opt.setAttribute("value", area.code);
         opt.appendChild(document.createTextNode(area.name));
-
+        if (area.code == sidoCode) {
+          opt.selected = true;
+        }
         sel.appendChild(opt);
       });
     });
+  const isClickHome = await getClickHome();
+  if (isClickHome) {
+    searchOptions.value.area = await getSidoCode();
+    await setFalseClickHome();
+    document.getElementById("btn-search").click();
+  }
 });
 
 const loadMap = () => {
@@ -244,38 +311,30 @@ const loadScript = () => {
 };
 
 const searchAttractions = async (data) => {
-  if (data.area == "" || data.type == "" || data.area == "0" || data.type == "0") {
-    alert("지역과 관광지 유형은 필수 항목입니다.");
+  if (data.area == "" || data.area == "0") {
+    alert("지역은 필수 항목입니다.");
     return;
   }
   await http.get("/attractionapi/search", { params: data }).then(({ data }) => {
     attractions.value = data;
   });
+  attractions.value.forEach((data) => {
+    if (data.firstImage == null || data.firstImage == "") {
+      data.firstImage = "src/assets/img/noAttractionImage.png";
+    }
+  });
   loadMarkers();
-  // loadOverlay();
 };
 const loadMarkers = () => {
-  // 현재 표시되어있는 marker들이 있다면 map에 등록된 marker를 제거한다.
   deleteMarkers();
-
-  // 마커 이미지를 생성합니다
-  //   const imgSrc = require("@/assets/map/markerStar.png");
-  // 마커 이미지의 이미지 크기 입니다
-  //   const imgSize = new kakao.maps.Size(24, 35);
-  //   const markerImage = new kakao.maps.MarkerImage(imgSrc, imgSize);
-
-  // 마커를 생성합니다
   markers.value = [];
   attractions.value.forEach((data) => {
     const marker = new kakao.maps.Marker({
-      map: map, // 마커를 표시할 지도
-      position: new kakao.maps.LatLng(data.latitude, data.longitude), // 마커를 표시할 위치
-      title: data.title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됨.
-      // clickable: true, // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
-      // image: markerImage, // 마커의 이미지
+      map: map,
+      position: new kakao.maps.LatLng(data.latitude, data.longitude),
+      title: data.title,
     });
 
-    // customoverlay 생성, 이때 map을 선언하지 않으면 지도위에 올라가지 않습니다.
     var overlay = new kakao.maps.CustomOverlay({
       position: new kakao.maps.LatLng(data.latitude, data.longitude),
     });
@@ -330,15 +389,12 @@ const loadMarkers = () => {
 
     wrap.appendChild(info);
     overlay.setContent(wrap);
-    // 마커를 클릭했을 때 커스텀 오버레이를 표시합니다
     kakao.maps.event.addListener(marker, "click", function () {
       overlay.setMap(map);
     });
     markers.value.push(marker);
   });
 
-  // 4. 지도를 이동시켜주기
-  // 배열.reduce( (누적값, 현재값, 인덱스, 요소)=>{ return 결과값}, 초기값);
   const bounds = attractions.value.reduce(
     (bounds, position) =>
       bounds.extend(new kakao.maps.LatLng(position.latitude, position.longitude)),

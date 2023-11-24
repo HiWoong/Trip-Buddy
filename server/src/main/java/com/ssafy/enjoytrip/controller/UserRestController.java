@@ -1,8 +1,7 @@
 package com.ssafy.enjoytrip.controller;
 
-import com.ssafy.enjoytrip.dto.LoginDto;
-import com.ssafy.enjoytrip.dto.MemberDto;
-import com.ssafy.enjoytrip.model.service.MemberService;
+import com.ssafy.enjoytrip.dto.UserDto;
+import com.ssafy.enjoytrip.model.service.UserService;
 import com.ssafy.enjoytrip.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,9 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.lang.reflect.Member;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,15 +18,15 @@ import java.util.Map;
 @RequestMapping("/enjoytripapi/userapi")
 @CrossOrigin("*")
 @RequiredArgsConstructor
-public class MemberRestController {
+public class UserRestController {
 
-	private final MemberService memberService;
+	private final UserService UserService;
 	private final JWTUtil jwtUtil;
 
 	@PostMapping("/join")
-	private ResponseEntity<?> join(@RequestBody MemberDto memberDto) throws Exception {
+	private ResponseEntity<?> join(@RequestBody UserDto UserDto) throws Exception {
 
-		int result = memberService.joinMember(memberDto);
+		int result = UserService.joinUser(UserDto);
 		if(result == 1)
 			return new ResponseEntity<Integer>(result, HttpStatus.CREATED);
 		else
@@ -38,23 +34,19 @@ public class MemberRestController {
 	}
 
 	@PostMapping("/login")
-	private ResponseEntity<?> login(@RequestBody MemberDto memberDto) throws Exception {
-		MemberDto loginMember = memberService.loginMember(memberDto);
+	private ResponseEntity<?> login(@RequestBody UserDto UserDto) throws Exception {
+		UserDto loginUser = UserService.loginUser(UserDto);
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
 
-		System.out.println("memberDto : " + memberDto);
-		System.out.println("loginMember = " + loginMember);
+		if(loginUser != null) {
+			String accessToken = jwtUtil.createAccessToken(loginUser.getUserId());
+			String refreshToken = jwtUtil.createAccessToken(loginUser.getUserId());
 
-		if(loginMember != null) {
-			String accessToken = jwtUtil.createAccessToken(loginMember.getUserId());
-			String refreshToken = jwtUtil.createAccessToken(loginMember.getUserId());
-
-			memberService.saveRefreshToken(loginMember.getUserId(), refreshToken);
+			UserService.saveRefreshToken(loginUser.getUserId(), refreshToken);
 
 			resultMap.put("accessToken", accessToken);
 			resultMap.put("refreshToken", refreshToken);
-			System.out.println("resultMap = " + resultMap);
 			status = HttpStatus.CREATED;
 		} else {
 			resultMap.put("message", "아이디 혹은 패스워드가 잘못되었습니다.");
@@ -64,24 +56,22 @@ public class MemberRestController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
-	@GetMapping("/logout/{userId}")
-	private ResponseEntity<?> logout(@PathVariable("userId") String userId) throws Exception {
-//		Map<String, Object> resultMap = new HashMap<String, Object>();
-		memberService.deleteRefreshToken(userId);
+	@PostMapping("/logout")
+	private ResponseEntity<?> logout(@RequestBody UserDto userDto) throws Exception {
+
+		UserService.deleteRefreshToken(userDto.getUserId());
 
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
 	@PostMapping("/update")
-	private ResponseEntity<?> update(@RequestBody MemberDto memberDto, HttpServletRequest request) throws Exception {
+	private ResponseEntity<?> update(@RequestBody UserDto UserDto, HttpServletRequest request) throws Exception {
 
 		if (jwtUtil.checkToken(request.getHeader("Authorization"))){
-
-//			System.out.println("memberDto.getProfileImage() = " + memberDto.getProfileImage());
 			
-			int result = memberService.updateMember(memberDto);
+			int result = UserService.updateUser(UserDto);
 			if(result == 1)
-				return new ResponseEntity<Integer>(result, HttpStatus.CREATED);
+				return new ResponseEntity<Integer>(result, HttpStatus.OK);
 			else
 				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 		}
@@ -93,7 +83,7 @@ public class MemberRestController {
 	private ResponseEntity<?> delete(@PathVariable("userId") String userId, HttpServletRequest request) throws Exception {
 
 		if (jwtUtil.checkToken(request.getHeader("Authorization"))){
-			int result = memberService.deleteMember(userId);
+			int result = UserService.deleteUser(userId);
 			if(result == 1){
 				return new ResponseEntity<Integer>(result, HttpStatus.NO_CONTENT);
 			}
@@ -108,19 +98,27 @@ public class MemberRestController {
 	private ResponseEntity<?> info(@PathVariable("userId") String userId, HttpServletRequest request) throws Exception {
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
-//		System.out.println("userId = " + userId);
-//		System.out.println(request.getHeader("Authorization"));
 		if (jwtUtil.checkToken(request.getHeader("Authorization"))) {
-//			log.info("사용 가능한 토큰!!!");
-//          로그인 사용자 정보.
-			MemberDto memberDto = memberService.getUserInfo(userId);
-			resultMap.put("userInfo", memberDto);
-//			System.out.println("memberDto.getProfileImage() = " + memberDto.getProfileImage());
+			UserDto UserDto = UserService.getUserInfo(userId);
+			resultMap.put("userInfo", UserDto);
 			status = HttpStatus.OK;
 		} else {
 			log.error("사용 불가능 토큰!!!");
-//			System.out.println("fdifsjlnfseifesflseifseifksfsfjskfsjhjfksfhjeskfesf");
 			status = HttpStatus.UNAUTHORIZED;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+
+	@GetMapping("getImage/{userId}")
+	private ResponseEntity<?> getImage(@PathVariable("userId") String userId, HttpServletRequest request) throws Exception {
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		UserDto UserDto = UserService.getUserInfo(userId);
+		if(UserDto != null) {
+			resultMap.put("profileImage", UserDto.getProfileImage());
+			status = HttpStatus.OK;
+		} else {
+			status = HttpStatus.NO_CONTENT;
 		}
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
@@ -133,7 +131,7 @@ public class MemberRestController {
 		String token = request.getHeader("refreshToken");
 		log.debug("token : {}, userId : {}", token, userId);
 		if (jwtUtil.checkToken(token)) {
-			if (token.equals(memberService.getRefreshToken(userId))) {
+			if (token.equals(UserService.getRefreshToken(userId))) {
 				String accessToken = jwtUtil.createAccessToken(userId);
 				log.debug("token : {}", accessToken);
 				log.debug("정상적으로 액세스토큰 재발급!!!");
@@ -146,6 +144,28 @@ public class MemberRestController {
 		}
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
+
+	@GetMapping("check/{userId}")
+	public ResponseEntity<?> checkDuplId(@PathVariable("userId") String userId) throws Exception {
+		int isDupl = UserService.checkDuplId(userId);
+		if(isDupl == 0) return new ResponseEntity<Integer>(1, HttpStatus.OK);
+		else return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+	}
+
+	@GetMapping("favorite/{userId}")
+	public ResponseEntity<?> getFavorites(@PathVariable("userId") String userId) throws Exception {
+		String favorites = UserService.getFavorites(userId);
+		if(favorites != null) return new ResponseEntity<String>(favorites, HttpStatus.OK);
+		else return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+	}
+
+	@PostMapping("favorite")
+	public ResponseEntity<?> setFavorites(@RequestBody UserDto UserDto) throws Exception {
+		int result = UserService.setFavorites(UserDto);
+		if(result == 1) return new ResponseEntity<Integer>(1, HttpStatus.OK);
+		else return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+	}
+
 }
 
 
