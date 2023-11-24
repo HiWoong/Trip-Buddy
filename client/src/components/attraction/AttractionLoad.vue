@@ -1,31 +1,22 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useAttractionStore } from "@/stores/attractionStore.js";
-import { useRouter } from "vue-router";
 const props = defineProps({
   data: Object,
 });
 const attractionStore = useAttractionStore();
-const { getLoadOn, setLoadOn } = attractionStore;
+const { setLoadOn } = attractionStore;
 var map;
 var polyline;
-const router = useRouter();
 const nowMarkers = ref([]);
 const emit = defineEmits(["loadFind"]);
 
 onMounted(async () => {
   if (window.kakao && window.kakao.maps) {
-    console.log("AttractionLoad loadMap");
-    // loadMap();
     loadMap();
   } else {
-    console.log("AttractionLoad loadScript");
     loadScript();
   }
-  // console.log(props.data);
-  console.log("taxi", props.data.allData.summary.fare.taxi);
-  console.log("duration", props.data.allData.summary.duration);
-  console.log("distance", props.data.allData.summary.distance);
 
   nowMarkers.value.push(
     new kakao.maps.Marker({
@@ -88,7 +79,6 @@ let hour = Math.floor(minute / 60);
 minute = hour > 0 ? minute % (hour * 60) : minute;
 let second = props.data.allData.summary.duration % 60;
 let totalDistance = (props.data.allData.summary.distance / 1000).toFixed(1);
-console.log(hour, minute, second, totalDistance);
 </script>
 
 <template>

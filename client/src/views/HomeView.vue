@@ -93,28 +93,21 @@ const goAttraction = async (num) => {
 };
 
 const moveHotplaceSequence = async (num) => {
-  // let sequence = "created_date"
   if (num === 1) {
     menuFlag.value = "created_date";
     flagName.value = "최신순";
-    // await setFlagCreated();
   } else if (num === 2) {
     menuFlag.value = "visited_count";
     flagName.value = "조회순";
-    // await setFlagVisited();
-    // sequence = "visited_count";
   } else {
     menuFlag.value = "hit_count";
     flagName.value = "좋아요순";
-    // await setFlagHit();
-    // sequence = "hit_count";
   }
   router.push({ name: "AttractionHotPlaceList" });
 };
 </script>
 
 <template>
-  <!-- fixed-height="863px" -->
   <vueper-slides
     fixed-height="430px"
     autoplay
@@ -123,7 +116,6 @@ const moveHotplaceSequence = async (num) => {
     fade
     :touchable="false"
   >
-    <!-- @click="test(slide.title)" -->
     <vueper-slide
       v-for="(slide, i) in slides"
       :key="i"
@@ -134,7 +126,6 @@ const moveHotplaceSequence = async (num) => {
       class="mainPhoto"
     />
   </vueper-slides>
-  <!-- <div class="logo">Enjoy Trip</div> -->
   <div class="cards">
     <div class="card" @click="moveHotplaceSequence(1)">
       <img :src="sortNew" alt="#" style="border-radius: 5px; object-fit: cover" />
@@ -159,9 +150,6 @@ const moveHotplaceSequence = async (num) => {
   margin: 0;
   padding: 0;
 }
-/* #slideShow {
-  margin-top: 57px;
-} */
 .mainPhoto {
   cursor: pointer;
 }
@@ -195,7 +183,6 @@ const moveHotplaceSequence = async (num) => {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-  /* background-color: antiquewhite; */
 }
 .card {
   background-color: rgb(222, 222, 222);

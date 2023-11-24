@@ -32,7 +32,6 @@ public class BoardServiceImpl implements BoardService {
 		param.put("start", start);
 		param.put("listsize", spp);
 		param.put("sort", map.get("sort"));
-		System.out.println("param: " + param);
 		return repo.listArticle(param);
 	}
 

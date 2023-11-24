@@ -1,9 +1,7 @@
 <script setup>
 import http from "@/util/http-common.js";
-import { ref, watch, onMounted } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { info } from "@/api/userApi";
-import { httpStatusCode } from "@/util/http-status";
 
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
@@ -134,14 +132,12 @@ const hotPlaceWrite = () => {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  /* background-color: thistle; */
 }
 #image {
   width: 700px;
   height: 700px;
   margin-left: 100px;
   margin-bottom: 40px;
-  /* background-color: antiquewhite; */
   border-radius: 70%;
 }
 #contents {
@@ -155,12 +151,6 @@ const hotPlaceWrite = () => {
 #hotContent {
   width: 500px;
 }
-/* #button {
-  
-  width: 150px;
-  height: 150px;
-  background-color: antiquewhite;
-} */
 .button {
   margin: 0 0 0 18vh;
   background: #3d4c53;
@@ -169,7 +159,6 @@ const hotPlaceWrite = () => {
   height: 50px;
   overflow: hidden;
   text-align: center;
-  /* transition: 0.1s; */
   cursor: pointer;
   border-radius: 3px;
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
@@ -185,7 +174,6 @@ const hotPlaceWrite = () => {
   color: #292929;
 }
 .button:active {
-  /*Clicked and held*/
   box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.3);
 }
 </style>

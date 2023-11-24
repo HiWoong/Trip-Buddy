@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted } from "vue";
 import { useCookies } from "vue3-cookies";
 import UserMyPageHotPlace from "@/components/user/UserMyPageHotPlace.vue";
 import UserMyPageMyHotPlace from "@/components/user/UserMyPageMyHotPlace.vue";
@@ -81,12 +81,10 @@ onMounted(async () => {
   await getFavorite(userId);
   myFav.value = await getLikes();
   myFav.value.forEach(async (hotPlaceId) => {
-    // console.log(hotPlaceId);
     await getFavHotPlace(hotPlaceId);
   });
   favHotPlaces.value = await getmyFavHotPlaces();
 
-  // mystorage hotplace
   await setmyStorageHotPlace(cookies.get("userId"));
   mineHotPlaces.value = await getmyStorageHotPlace();
 
@@ -97,12 +95,10 @@ onMounted(async () => {
 });
 
 const changeFav = async () => {
-  console.log("changeFav");
   await setmyFavHotPlaces();
   await getFavorite(userId);
   myFav.value = await getLikes();
   myFav.value.forEach(async (hotPlaceId) => {
-    // console.log(hotPlaceId);
     await getFavHotPlace(hotPlaceId);
   });
   favHotPlaces.value = await getmyFavHotPlaces();
@@ -121,12 +117,10 @@ const getUserInfo = async (userId) => {
   info(
     userId,
     (response) => {
-      console.log(response.status);
       if (response.status === httpStatusCode.OK) {
-        console.log("3. getUserInfo data >> ", response.data.userInfo);
         newUser.value = response.data.userInfo;
       } else {
-        console.log("유저 정보 없음!!!!");
+        alert("유저 정보가 없습니다.");
       }
     },
     async (error) => {
@@ -142,16 +136,10 @@ const getTotalPlans = async (userId) => {
   await totalPlans(
     userId,
     (response) => {
-      console.log(response.status);
       if (response.status === httpStatusCode.OK) {
-        console.log("plans >> ", response.data);
-        console.log(plans.value);
         plans.value = response.data;
-
-        // console.log("new User", newUser.value);
-        // console.log("new User ProfileImg : ", newUser.value.profileImage);
       } else {
-        console.log("유저 정보 없음!!!!");
+        alert("유저 정보가 없습니다.");
       }
     },
     async (error) => {
@@ -252,15 +240,15 @@ const getTotalPlans = async (userId) => {
   overflow-y: scroll;
 }
 .tab::-webkit-scrollbar {
-  width: 10px; /* 스크롤바의 너비 */
+  width: 10px;
 }
 .tab::-webkit-scrollbar-thumb {
   height: 10%;
-  background: rgb(252, 227, 118); /* 스크롤바의 색상 */
+  background: rgb(252, 227, 118);
   border-radius: 15px;
 }
 .tab::-webkit-scrollbar-track {
-  background: rgba(233, 214, 161, 0.5); /*스크롤바 뒷 배경 색상*/
+  background: rgba(233, 214, 161, 0.5);
 }
 .tab-content {
   display: flex;

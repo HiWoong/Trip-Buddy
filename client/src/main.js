@@ -12,6 +12,4 @@ const app = createApp(App);
 app.use(createPinia());
 app.use(router);
 
-// Vue.use(VueCookies);
-
 app.mount("#app");

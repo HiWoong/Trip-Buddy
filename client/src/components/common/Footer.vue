@@ -53,7 +53,6 @@
 }
 .sections {
   margin: 0 0 0 150px;
-  /* background-color: silver; */
   width: 70%;
   height: 300px;
   display: inherit;
@@ -66,7 +65,6 @@
   display: inline-block;
   width: 250px;
   height: 200px;
-  /* background-color: cadetblue; */
   margin: 50px 0;
   text-align: start;
   font-size: 15px;
@@ -77,12 +75,10 @@
 .footerContent {
   text-align: start;
   margin: 15px 0 0 0;
-  /* padding-top: 3px; */
 }
 .copyright {
   width: 400px;
   height: 100px;
-  /* background-color: bisque; */
   margin: 0 190px;
 }
 </style>

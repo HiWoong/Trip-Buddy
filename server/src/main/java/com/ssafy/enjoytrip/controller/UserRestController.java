@@ -39,9 +39,6 @@ public class UserRestController {
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
 
-		System.out.println("UserDto : " + UserDto);
-		System.out.println("loginUser = " + loginUser);
-
 		if(loginUser != null) {
 			String accessToken = jwtUtil.createAccessToken(loginUser.getUserId());
 			String refreshToken = jwtUtil.createAccessToken(loginUser.getUserId());
@@ -50,7 +47,6 @@ public class UserRestController {
 
 			resultMap.put("accessToken", accessToken);
 			resultMap.put("refreshToken", refreshToken);
-			System.out.println("resultMap = " + resultMap);
 			status = HttpStatus.CREATED;
 		} else {
 			resultMap.put("message", "아이디 혹은 패스워드가 잘못되었습니다.");
@@ -62,9 +58,6 @@ public class UserRestController {
 
 	@PostMapping("/logout")
 	private ResponseEntity<?> logout(@RequestBody UserDto userDto) throws Exception {
-//		Map<String, Object> resultMap = new HashMap<String, Object>();
-
-		System.out.println("userId = " + userDto.getUserId());
 
 		UserService.deleteRefreshToken(userDto.getUserId());
 
@@ -74,11 +67,7 @@ public class UserRestController {
 	@PostMapping("/update")
 	private ResponseEntity<?> update(@RequestBody UserDto UserDto, HttpServletRequest request) throws Exception {
 
-//		System.out.println("UserDto = " + UserDto);
-
 		if (jwtUtil.checkToken(request.getHeader("Authorization"))){
-
-//			System.out.println("UserDto.getProfileImage() = " + UserDto.getProfileImage());
 			
 			int result = UserService.updateUser(UserDto);
 			if(result == 1)
@@ -109,18 +98,12 @@ public class UserRestController {
 	private ResponseEntity<?> info(@PathVariable("userId") String userId, HttpServletRequest request) throws Exception {
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
-//		System.out.println("userId = " + userId);
-//		System.out.println(request.getHeader("Authorization"));
 		if (jwtUtil.checkToken(request.getHeader("Authorization"))) {
-//			log.info("사용 가능한 토큰!!!");
-//          로그인 사용자 정보.
 			UserDto UserDto = UserService.getUserInfo(userId);
 			resultMap.put("userInfo", UserDto);
-//			System.out.println("UserDto.getProfileImage() = " + UserDto.getProfileImage());
 			status = HttpStatus.OK;
 		} else {
 			log.error("사용 불가능 토큰!!!");
-//			System.out.println("fdifsjlnfseifesflseifseifksfsfjskfsjhjfksfhjeskfesf");
 			status = HttpStatus.UNAUTHORIZED;
 		}
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
@@ -164,27 +147,21 @@ public class UserRestController {
 
 	@GetMapping("check/{userId}")
 	public ResponseEntity<?> checkDuplId(@PathVariable("userId") String userId) throws Exception {
-		System.out.println(userId);
 		int isDupl = UserService.checkDuplId(userId);
-		System.out.println(isDupl);
 		if(isDupl == 0) return new ResponseEntity<Integer>(1, HttpStatus.OK);
 		else return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 
 	@GetMapping("favorite/{userId}")
 	public ResponseEntity<?> getFavorites(@PathVariable("userId") String userId) throws Exception {
-		System.out.println(userId);
 		String favorites = UserService.getFavorites(userId);
-		System.out.println(favorites);
 		if(favorites != null) return new ResponseEntity<String>(favorites, HttpStatus.OK);
 		else return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 
 	@PostMapping("favorite")
 	public ResponseEntity<?> setFavorites(@RequestBody UserDto UserDto) throws Exception {
-		System.out.println(UserDto);
 		int result = UserService.setFavorites(UserDto);
-		System.out.println(result);
 		if(result == 1) return new ResponseEntity<Integer>(1, HttpStatus.OK);
 		else return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}

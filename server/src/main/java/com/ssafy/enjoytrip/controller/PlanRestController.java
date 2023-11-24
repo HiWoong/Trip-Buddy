@@ -21,8 +21,6 @@ public class PlanRestController {
 
     @PostMapping("/create")
     private ResponseEntity<?> createPlan(@RequestBody PlanDto planDto) throws Exception{
-
-//        System.out.println("planDto = " + planDto);
         int result = planService.createPlan(planDto);
 
         return new ResponseEntity<Void>(HttpStatus.CREATED);
@@ -31,10 +29,6 @@ public class PlanRestController {
     @GetMapping("/view/{userId}")
     private ResponseEntity<?> viewTotalPlan(@PathVariable("userId") String userId) throws Exception {
         List<PlanDto> list = planService.viewTotalPlan(userId);
-        
-//        for (PlanDto p : list){
-//            System.out.println("p = " + p);
-//        }
         if (list != null){
             return new ResponseEntity<List<PlanDto>>(list, HttpStatus.OK);
         }

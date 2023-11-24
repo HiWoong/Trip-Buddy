@@ -1,31 +1,30 @@
 <script setup>
-  import { ref } from "vue";
-  import { createNewPassword } from "@/api/userApi";
-  import { httpStatusCode } from "@/util/http-status";
-  import { RouterLink, useRouter } from "vue-router";
+import { ref } from "vue";
+import { createNewPassword } from "@/api/userApi";
+import { httpStatusCode } from "@/util/http-status";
+import { useRouter } from "vue-router";
 
-  const router = useRouter();
+const router = useRouter();
 
-  const uid = ref("");
+const uid = ref("");
 
-  const sendEmail = () => {
-    createNewPassword(
-      uid.value,
-      (response) => {
-        if (response.status === httpStatusCode.OK){
-          alert("임시 비밀번호가 이메일로 전송되었습니다.")
-          router.push("/user/login");
-        } else {
-          alert("존재하지 않는 사용자 아이디입니다. 다시 한번 확인해주세욧!");
-        }
-      },
-      (error) => {
-        console.log("error : ", error);
+const sendEmail = () => {
+  createNewPassword(
+    uid.value,
+    (response) => {
+      if (response.status === httpStatusCode.OK) {
+        alert("임시 비밀번호가 이메일로 전송되었습니다.");
+        router.push("/user/login");
+      } else {
+        alert("존재하지 않는 사용자 아이디입니다. 다시 한번 확인해주세욧!");
       }
-    )
-  }
+    },
+    (error) => {
+      console.log("error : ", error);
+    }
+  );
+};
 </script>
-
 
 <template>
   <div class="findPasswordLayout">
@@ -77,7 +76,7 @@
         />
       </div>
       <div>
-        <input class="submitButton" type="button" value="비밀번호 찾기" @click="sendEmail()"/>
+        <input class="submitButton" type="button" value="비밀번호 찾기" @click="sendEmail()" />
       </div>
     </div>
   </div>
@@ -104,7 +103,6 @@
   height: 900px;
   align-items: center;
   padding: 150px 0 0 0;
-  /* background-color: antiquewhite; */
 }
 .submitButton {
   width: 300px;
@@ -112,7 +110,6 @@
   margin: 35px 0 0 0;
   border: 4px solid magenta;
   border-radius: 10px;
-  /* background-color: rgb(255, 213, 255); */
   color: darkgray;
   font-size: 22px;
   transition: 0.2s;

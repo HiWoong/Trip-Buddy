@@ -5,7 +5,6 @@ import { VueDraggableNext } from "vue-draggable-next";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import { useAttractionStore } from "@/stores/attractionStore.js";
-// cookies
 import { useCookies } from "vue3-cookies";
 import AttractionLoadVue from "@/components/attraction/AttractionLoad.vue";
 const { cookies } = useCookies();
@@ -26,10 +25,8 @@ const loads = ref([]);
 const totalLoadData = ref({});
 onMounted(async () => {
   if (window.kakao && window.kakao.maps) {
-    console.log("loadMap");
     loadMap();
   } else {
-    console.log("loadScript");
     loadScript();
   }
   let resultList = document.getElementById("firstDay");
@@ -88,7 +85,6 @@ watch(result.value, () => {
       resultList.appendChild(lists);
     }
   });
-  console.log(result.value);
 });
 
 const removeNowDay = (target) => {
@@ -111,25 +107,17 @@ const addPickPlace = (places) => {
     road_address_name: places.road_address_name,
     address_name: places.address_name,
     phone: places.phone,
-    // index: idx.value++,
     index: (idx.value++).toString(),
-    //
   });
 };
 
 const removePickPlace = (address_name, index) => {
   for (let i = 0; i < result.value.length; i++) {
-    console.log(result.value);
-    if (
-      result.value[i].address_name == address_name &&
-      // result.value[i].index == index
-      Number(result.value[i].index) == index
-    ) {
+    if (result.value[i].address_name == address_name && Number(result.value[i].index) == index) {
       result.value.splice(i, 1);
       break;
     }
   }
-  console.log(result.value);
 };
 
 const loadMap = () => {
@@ -140,16 +128,13 @@ const loadMap = () => {
   };
   map = new kakao.maps.Map(container, options);
   if (navigator.geolocation) {
-    // GeoLocation을 이용해서 접속 위치를 얻어옵니다
     navigator.geolocation.getCurrentPosition(function (position) {
-      var lat = position.coords.latitude, // 위도
-        lon = position.coords.longitude; // 경도
+      var lat = position.coords.latitude,
+        lon = position.coords.longitude;
 
       var locPosition = new kakao.maps.LatLng(lat, lon);
       nowLat.value = locPosition.Ma;
       nowLon.value = locPosition.La;
-      console.log(nowLat.value);
-      console.log(nowLon.value);
       let options = {
         center: new kakao.maps.LatLng(nowLat.value, nowLon.value),
         level: 3,
@@ -201,11 +186,8 @@ const searchPlaces = () => {
   }
   ps.keywordSearch(keyword.value, (data, status, pagination) => {
     if (status === kakao.maps.services.Status.OK) {
-      // 정상적으로 검색이 완료됐으면
-      // 검색 목록과 마커를 표출합니다
       displayPlaces(data);
 
-      // 페이지 번호를 표출합니다
       displayPagination(pagination);
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
       alert("검색 결과가 존재하지 않습니다.");
@@ -220,24 +202,16 @@ const searchPlaces = () => {
     let menuEl = document.getElementById("menu_wrap");
     let fragment = document.createDocumentFragment();
 
-    // 검색 결과 목록에 추가된 항목들을 제거합니다
     removeAllChildNods(listEl);
 
-    // 지도에 표시되고 있는 마커를 제거합니다
     removeMarker();
     const newPlaces = sortByDistance(places);
-    console.log(newPlaces);
     map.setCenter(new kakao.maps.LatLng(places[0].y, places[0].x));
     for (var i = 0; i < newPlaces.length; i++) {
-      // 마커를 생성하고 지도에 표시합니다
       const placePosition = new kakao.maps.LatLng(places[i].y, places[i].x);
       const marker = addMarker(placePosition, i);
-      const itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
-      console.log(places[i]);
+      const itemEl = getListItem(i, places[i]);
 
-      // 마커와 검색결과 항목에 mouseover 했을때
-      // 해당 장소에 인포윈도우에 장소명을 표시합니다
-      // mouseout 했을 때는 인포윈도우를 닫습니다
       (function (marker, place_name, road_address_name, phone, placePosition) {
         kakao.maps.event.addListener(marker, "click", function () {
           displayInfowindow(marker, place_name, road_address_name, phone);
@@ -261,12 +235,10 @@ const searchPlaces = () => {
       fragment.appendChild(itemEl);
     }
 
-    // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
     listEl.appendChild(fragment);
     menuEl.scrollTop = 0;
   }
 
-  // 검색결과 항목을 Element로 반환하는 함수입니다
   function getListItem(index, place) {
     let el = document.createElement("li");
 
@@ -319,44 +291,37 @@ const searchPlaces = () => {
     return el;
   }
 
-  // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
   function addMarker(position, idx) {
     const imageSrc =
-      "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png"; // 마커 이미지 url, 스프라이트 이미지를 씁니다
-    const imageSize = new kakao.maps.Size(36, 37); // 마커 이미지의 크기
+      "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png";
+    const imageSize = new kakao.maps.Size(36, 37);
     const imgOptions = {
-      spriteSize: new kakao.maps.Size(36, 691), // 스프라이트 이미지의 크기
-      spriteOrigin: new kakao.maps.Point(0, idx * 46 + 10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
-      offset: new kakao.maps.Point(13, 37), // 마커 좌표에 일치시킬 이미지 내에서의 좌표
+      spriteSize: new kakao.maps.Size(36, 691),
+      spriteOrigin: new kakao.maps.Point(0, idx * 46 + 10),
+      offset: new kakao.maps.Point(13, 37),
     };
     const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions);
     const marker = new kakao.maps.Marker({
-      position: position, // 마커의 위치
+      position: position,
       image: markerImage,
       clickable: true,
     });
-    kakao.maps.event.addListener(marker, "click", function () {
-      console.log(marker.n.La, marker.n.Ma);
-    });
 
-    marker.setMap(map); // 지도 위에 마커를 표출합니다
-    markers.value.push(marker); // 배열에 생성된 마커를 추가합니다
+    marker.setMap(map);
+    markers.value.push(marker);
     return marker;
   }
 
-  // 지도 위에 표시되고 있는 마커를 모두 제거합니다
   function removeMarker() {
     markers.value.forEach((data) => data.setMap(null));
     markers.value = [];
   }
 
-  // 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
   function displayPagination(pagination) {
     let paginationEl = document.getElementById("pagination");
     let fragment = document.createDocumentFragment();
     let i;
 
-    // 기존에 추가된 페이지번호를 삭제합니다
     while (paginationEl.hasChildNodes()) {
       paginationEl.removeChild(paginationEl.lastChild);
     }
@@ -381,8 +346,6 @@ const searchPlaces = () => {
     paginationEl.appendChild(fragment);
   }
 
-  // 검색결과 목록 또는 마커를 클릭했을 때 호출되는 함수입니다
-  // 인포윈도우에 장소명을 표시합니다
   function displayInfowindow(marker, place_name, road_address_name, phone) {
     let wrap = document.createElement("div");
     wrap.className = "wrap";
@@ -422,7 +385,6 @@ const searchPlaces = () => {
     infowindow.open(map, marker);
   }
 
-  // 검색결과 목록의 자식 Element를 제거하는 함수입니다
   function removeAllChildNods(el) {
     while (el.hasChildNodes()) {
       el.removeChild(el.lastChild);
@@ -467,41 +429,20 @@ const addPlan = () => {
       alert("여행 계획 제목은 필수입니다.");
       return;
     }
-    // const plans = ref([]);
-    // const plans = Object.assign(result);
     let plans = new Array(5);
     for (let i = 0; i < plans.length; i++) {
       plans[i] = new Array();
     }
 
-    // plans.value.add({
-    //   nowDay : 1
-    // })
     let temp = plans[0];
     for (let res of result.value) {
       if (res.nowDay === undefined) {
-        // temp.value.push(res.value);
-        // console.log("temp.value", temp.value);
         temp.push(res);
-        console.log("temp : ", temp);
-        // console.log(res.place_name);
       } else {
         temp = plans[res.nowDay - 1];
-        console.log(res.nowDay);
       }
     }
 
-    console.log(JSON.stringify(plans[0]));
-    console.log(JSON.stringify(plans[1]));
-    console.log(JSON.stringify(plans[2]));
-    console.log(JSON.stringify(plans[3]));
-    console.log(JSON.stringify(plans[4]));
-
-    // const plans = JSON.parse(JSON.stringify(result));
-    // plans.value.unshift({
-    //   nowDay : 1
-    // });
-    // console.log("addPlan, result : ", result.value);
     http.post("planapi/create", {
       userId: cookies.get("userId"),
       subject: subject,
@@ -589,7 +530,6 @@ const loadFind = async (data) => {
         </button>
         <div style="font-weight: bold; font-size: 25px">여행 계획</div>
         <button style="border: none; background-color: rgb(252, 227, 118)">
-          <!-- 여기에서 포스트하자! -->
           <img id="submitImg" src="@/assets/img/store.png" @click="addPlan" />
         </button>
       </div>
@@ -602,11 +542,18 @@ const loadFind = async (data) => {
   </div>
 </template>
 <style>
+@font-face {
+  font-family: "NanumSquare";
+  src: url("../../assets/fonts/NanumSquareR.ttf") format("truetype");
+}
+@font-face {
+  font-family: "NanumSquareB";
+  src: url("../../assets/fonts/NanumSquareB.ttf") format("truetype");
+}
 * {
   margin: 0;
   padding: 0;
   font-family: "NanumSquare", dotum, "돋움", sans-serif;
-  /* font-family: dotum, "돋움", sans-serif; */
 }
 .map_wrap,
 .map_wrap * {
@@ -757,7 +704,6 @@ const loadFind = async (data) => {
   padding: 0;
   margin: 0;
   font-family: "NanumSquare";
-  /* font-family: sans-serif; */
   font-weight: 400;
 }
 .wrap .info {
@@ -805,26 +751,26 @@ const loadFind = async (data) => {
 }
 
 #selectPlaces::-webkit-scrollbar {
-  width: 10px; /* 스크롤바의 너비 */
+  width: 10px;
 }
 #selectPlaces::-webkit-scrollbar-thumb {
   height: 10%;
-  background: rgb(252, 227, 118); /* 스크롤바의 색상 */
+  background: rgb(252, 227, 118);
   border-radius: 15px;
 }
 #selectPlaces::-webkit-scrollbar-track {
-  background: rgba(233, 214, 161, 0.5); /*스크롤바 뒷 배경 색상*/
+  background: rgba(233, 214, 161, 0.5);
 }
 #menu_wrap::-webkit-scrollbar {
-  width: 10px; /* 스크롤바의 너비 */
+  width: 10px;
 }
 #menu_wrap::-webkit-scrollbar-thumb {
-  height: 10%; /* 스크롤바의 길이 */
-  background: rgb(252, 227, 118); /* 스크롤바의 색상 */
+  height: 10%;
+  background: rgb(252, 227, 118);
   border-radius: 15px;
 }
 #menu_wrap::-webkit-scrollbar-track {
-  background: rgba(233, 214, 161, 0.5); /*스크롤바 뒷 배경 색상*/
+  background: rgba(233, 214, 161, 0.5);
 }
 #dayImgSection {
   height: 50px;
@@ -856,14 +802,7 @@ const loadFind = async (data) => {
   background: #ccc;
   outline: 0;
 }
-@font-face {
-  font-family: "NanumSquare";
-  src: url("../../assets/fonts/NanumSquareR.ttf") format("truetype");
-}
-@font-face {
-  font-family: "NanumSquareB";
-  src: url("../../assets/fonts/NanumSquareB.ttf") format("truetype");
-}
+
 #keyword {
   width: 70%;
   height: 30px;
@@ -877,8 +816,6 @@ const loadFind = async (data) => {
   margin-bottom: 20px;
 }
 #map {
-  /* width: 1275px;
-    height: 905px; */
   height: 100%;
   margin: 5px 0 0 350px;
   flex: 2;
@@ -888,11 +825,9 @@ const loadFind = async (data) => {
   margin: 5px 0 0 10px;
   width: 310px;
   height: 100%;
-  /* height: 904px; */
   background-color: ghostwhite;
   text-align: center;
   font-family: "NanumSquareB";
-  /* font-family: sans-serif; */
   flex: 0.5;
   border: 2px solid gray;
   border-radius: 5px;
@@ -940,7 +875,6 @@ const loadFind = async (data) => {
 }
 
 .pickPlaceName {
-  /* text-align: center; */
   font-size: 20px;
   font-weight: bold;
   font-family: "NanumSquareB";

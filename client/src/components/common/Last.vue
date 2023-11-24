@@ -2,7 +2,7 @@
   <div ref="trigger"></div>
 </template>
 <script setup>
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 const trigger = ref();
 const options = {
   root: null,

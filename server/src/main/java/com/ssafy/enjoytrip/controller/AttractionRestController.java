@@ -27,7 +27,6 @@ public class AttractionRestController {
     private ResponseEntity<?> kakao(@RequestParam String area, @RequestParam String type, @RequestParam String word) {
         List<AttractionInfoDto> attractions = attarctionService.search(Integer.parseInt(area), Integer.parseInt(type),
                 word);
-        System.out.println(attractions);
         if (attractions != null)
             return new ResponseEntity<List<AttractionInfoDto>>(attractions, HttpStatus.OK);
         else

@@ -9,7 +9,6 @@ const props = defineProps({
   articleNo: Number,
 });
 const createComment = () => {
-  console.log(content.value);
   http
     .post("/commentapi/write", {
       content: content.value,

@@ -27,7 +27,6 @@ public class BoardRestController {
 		map.put("word", word);
 		map.put("spp", spp);
 		map.put("sort", sort);
-		System.out.println(map);
 		List<BoardDto> list = boardService.listArticle(map);
 		return new ResponseEntity<List<BoardDto>>(list, HttpStatus.OK);
 	}
@@ -52,8 +51,6 @@ public class BoardRestController {
 
 	@PostMapping("/write")
 	private ResponseEntity<?> write(@RequestBody BoardDto boardDto) throws Exception {
-
-//		boardDto.setUserId(((MemberDto) session.getAttribute("userinfo")).getUserId());
 
 		int result = boardService.writeArticle(boardDto);
 		if (result == 1) {

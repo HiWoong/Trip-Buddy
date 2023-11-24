@@ -1,9 +1,7 @@
-// import { localAxios } from "@/util/http-commons";
 import http from "@/util/http-common.js";
 
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
-// const local = localAxios();
 
 async function join(user, success, fail) {
   await http.post(`/userapi/join`, user).then(success).catch(fail);
@@ -37,7 +35,7 @@ async function boardInfo(userId, success, fail) {
 }
 
 async function tokenRegeneration(userId, success, fail) {
-  http.defaults.headers["refreshToken"] = cookies.get("refreshToken"); //axios header에 refresh-token 셋팅
+  http.defaults.headers["refreshToken"] = cookies.get("refreshToken");
   await http.post(`/userapi/refresh`, userId).then(success).catch(fail);
 }
 
@@ -60,7 +58,7 @@ async function getMyHotPlace(userId, success, fail) {
   await http.get(`/hotplaceapi/myHotplace/${userId}`).then(success).catch(fail);
 }
 
-async function createNewPassword(userId, success, fail){
+async function createNewPassword(userId, success, fail) {
   await http.get(`/emailapi/${userId}`).then(success).catch(fail);
 }
 

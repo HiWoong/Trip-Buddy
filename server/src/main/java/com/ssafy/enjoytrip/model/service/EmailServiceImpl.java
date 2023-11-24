@@ -16,7 +16,6 @@ public class EmailServiceImpl implements EmailService{
     public void sendMessage(UserDto userDto) throws Exception {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(userDto.getEmailId() + "@" + userDto.getEmailDomain());
-//        message.setFrom();
         message.setSubject(userDto.getUserName() +"님의 새로운 비밀번호 입니다.");
         message.setText(userDto.getUserPwd());
 

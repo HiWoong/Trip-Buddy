@@ -44,12 +44,7 @@ watch(nowPwd, (newVal, oldVal) => {
   }
 });
 
-// temp
-const profileImg = ref("https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg");
-//
-
 onMounted(async () => {
-  console.log("gogo getUserInfo : ", cookies.get("userId"));
   getUserInfo(cookies.get("userId"));
 });
 
@@ -57,16 +52,14 @@ const getUserInfo = async (userId) => {
   info(
     userId,
     (response) => {
-      console.log(response.status);
       if (response.status === httpStatusCode.OK) {
-        console.log("3. getUserInfo data >> ", response.data.userInfo);
         newUser.value = response.data.userInfo;
         if (newUser.value.profileImage == "" || newUser.value.profileImage == null) {
           newUser.value.profileImage =
             "https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg";
         }
       } else {
-        console.log("유저 정보 없음!!!!");
+        alert("유저 정보가 없습니다.");
       }
     },
     async (error) => {
@@ -274,13 +267,11 @@ function imageToBase64(f) {
   flex-direction: column;
   flex-wrap: wrap;
   align-items: center;
-  /* background-color: thistle; */
 }
 #title {
   width: 200px;
   height: 200px;
   margin-bottom: 40px;
-  /* background-color: antiquewhite; */
   border-radius: 70%;
 }
 #name {
@@ -289,13 +280,11 @@ function imageToBase64(f) {
   margin-bottom: 20px;
 }
 #id {
-  /* background-color: aquamarine; */
   font-size: 20px;
   width: 500px;
   margin-bottom: 20px;
 }
 #password {
-  /* background-color: blueviolet; */
   font-size: 15px;
   width: 500px;
   margin-bottom: 20px;
@@ -306,7 +295,6 @@ function imageToBase64(f) {
   margin-bottom: 5px;
 }
 #forgetPassword {
-  /* background-color: darkorange; */
   margin-bottom: 30px;
   color: gray;
 }

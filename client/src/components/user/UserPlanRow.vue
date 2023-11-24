@@ -1,8 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { RouterView } from "vue-router";
-import http from "@/util/http-common.js";
 
 import { deletePlanByPlanId } from "@/api/planApi";
 import { httpStatusCode } from "@/util/http-status";
@@ -35,7 +33,6 @@ plans.push(props.content2.slice(1, -1).split("},"));
 plans.push(props.content3.slice(1, -1).split("},"));
 plans.push(props.content4.slice(1, -1).split("},"));
 plans.push(props.content5.slice(1, -1).split("},"));
-// console.log("palns , before : ", plans);
 
 for (let i = 0; i < plans.length; i++) {
   for (let j = 0; j < plans[i].length; j++) {
@@ -58,7 +55,7 @@ const deletePlan = () => {
       if (response.status === httpStatusCode.NOCONTENT) {
         router.go();
       } else {
-        console.log("계획 정보 없음!!!!");
+        alert("삭제가 제대로 되지 않았습니다.");
       }
     },
     async (error) => {

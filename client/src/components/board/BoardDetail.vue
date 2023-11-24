@@ -13,7 +13,6 @@ const router = useRouter();
 const route = useRoute();
 
 const uid = cookies.get("userId");
-console.log(uid);
 
 const article = ref({
   articleNo: Number,
@@ -37,7 +36,6 @@ onMounted(async () => {
     .then(({ data }) => {
       comments.value = data;
     });
-  console.log("gogo getUserInfo : ", article.value.userId);
   getUserInfo(article.value.userId);
 });
 
@@ -45,19 +43,17 @@ const getUserInfo = async (userId) => {
   boardInfo(
     userId,
     (response) => {
-      console.log(response.status);
       if (response.status === httpStatusCode.OK) {
-        console.log("3. getUserInfo data >> ", response.data.profileImage);
         user.value = response.data.profileImage;
         if (user.value == "" || user.value == null) {
           user.value = "https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg";
         }
       } else {
-        console.log("유저 정보 없음!!!!");
+        alert("유저 정보 없음!!!!");
       }
     },
     async (error) => {
-      console.error("게시판 이미지 불러오기 실패");
+      console.error(error);
     }
   );
 };
@@ -68,9 +64,6 @@ const deleteArticle = () => {
     if (data === 1) {
       msg = "삭제가 완료되었습니다.";
     }
-
-    console.log(route.params.articleNo);
-
     alert(msg);
     moveList();
   });

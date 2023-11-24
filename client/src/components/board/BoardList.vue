@@ -1,7 +1,6 @@
 <script setup>
-import { ref, onMounted, onBeforeMount } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { RouterView } from "vue-router";
 import http from "@/util/http-common.js";
 
 import BoardListRow from "@/components/board/BoardListRow.vue";
@@ -25,7 +24,6 @@ const param = ref({
 });
 
 const onPageChange = (val) => {
-  console.log(val + "번 페이지로 이동 준비 끝!!!");
   currentPage.value = val;
   param.value.pgno = val;
   getArticleList();
@@ -34,7 +32,6 @@ const onPageChange = (val) => {
 
 const key = ref("");
 const word = ref("");
-const pgno = ref(1);
 const sort = ref("register_time");
 
 const searchBoards = () => {
@@ -167,7 +164,6 @@ const moveWrite = () => {
   margin: 10px 0 0 0;
   width: 100%;
   height: 50px;
-  /* background-color: aliceblue; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -306,32 +302,22 @@ const moveWrite = () => {
 }
 .articleNo {
   width: 100px;
-  /* border: 1px solid #292929;
-  border-radius: 5px; */
   margin: 0 50px 0 10px;
 }
 .articleTitle {
   width: 500px;
-  /* border: 1px solid #292929;
-  border-radius: 5px; */
   margin: 0 50px 0 50px;
 }
 .articleAuthor {
   width: 200px;
-  /* border: 1px solid #292929;
-  border-radius: 5px; */
   margin: 0 10px 0 10px;
 }
 .articleHit {
   width: 100px;
-  /* border: 1px solid #292929;
-  border-radius: 5px; */
   margin: 0 10px 0 10px;
 }
 .articleDate {
   width: 345px;
-  /* border: 1px solid #292929;
-  border-radius: 5px; */
 }
 
 .nextSection {

@@ -1,18 +1,11 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { storeToRefs } from "pinia";
 import { useUserStore } from "@/stores/userStore.js";
-import { jwtDecode } from "jwt-decode";
-
-// cookies
-import { useCookies } from "vue3-cookies";
-const { cookies } = useCookies();
 
 const router = useRouter();
 
 const userStore = useUserStore();
-// const { isLogin } = storeToRefs(userStore);
 const { userLoginStore } = userStore;
 
 const userinfo = ref({
@@ -21,8 +14,6 @@ const userinfo = ref({
 });
 
 const login = async () => {
-  console.log("login ing!!!! !!!");
-  console.log("userinfo : ", userinfo.value.userId, userinfo.value.userPwd);
   await userLoginStore(userinfo.value);
 };
 
@@ -34,7 +25,6 @@ const findPassword = async () => {
 <template>
   <div class="wholeLayout">
     <div id="title">
-      <!-- <h2>LOGO</h2> -->
       <img src="../../assets/img/logo.png" alt="" style="width: 300px; height: 300px" />
     </div>
     <label for="userId" style="width: 500px; text-align: start; font-size: 25px">아이디</label>
@@ -88,28 +78,23 @@ const findPassword = async () => {
   flex-direction: column;
   flex-wrap: wrap;
   align-items: center;
-  /* background-color: thistle; */
 }
 #title {
   width: 350px;
   height: 350px;
   margin: 0 0 0 50px;
-  /* background-color: antiquewhite; */
 }
 #id {
-  /* background-color: aquamarine; */
   font-size: 20px;
   width: 500px;
   margin-bottom: 30px;
 }
 #password {
-  /* background-color: blueviolet; */
   font-size: 20px;
   width: 500px;
   margin-bottom: 15px;
 }
 #forgetPassword {
-  /* background-color: darkorange; */
   margin-bottom: 30px;
   color: gray;
   cursor: pointer;

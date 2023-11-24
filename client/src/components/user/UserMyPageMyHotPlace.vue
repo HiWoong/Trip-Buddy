@@ -1,10 +1,8 @@
 <script setup>
 import { ref } from "vue";
 import { deleteHotplace, updateHotplace } from "@/api/hotplaceApi";
-import { useRouter } from "vue-router";
 import { httpStatusCode } from "@/util/http-status";
 
-const router = useRouter();
 const isModify = ref(false);
 
 const props = defineProps({
@@ -26,9 +24,8 @@ const deleteMyHotplace = async () => {
       if (response.status === httpStatusCode.NOCONTENT) {
         alert("삭제가 완료되었습니다.");
         emit("changeMyFav");
-        // router.go();
       } else {
-        console.log("Unexcepted Error");
+        alert("삭제가 제대로 되지 않았습니다.");
       }
     },
     (error) => {
@@ -50,7 +47,7 @@ const modifyMyHotPlace = () => {
         changeModify();
         emit("changeMyFav");
       } else {
-        console.log("Unexcepted Error");
+        alert("수정이 제대로 되지 않았습니다.");
       }
     },
     (error) => {

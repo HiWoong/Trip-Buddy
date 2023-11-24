@@ -1,6 +1,5 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
 
 import { useUserStore } from "@/stores/userStore.js";
 
@@ -12,10 +11,9 @@ import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
 
 const isClicked = ref(false);
-const router = useRouter();
 
 const userStore = useUserStore();
-const { getFavorite, setFavorite, getLikes } = userStore;
+const { setFavorite } = userStore;
 
 const props = defineProps({
   hotPlace: Object,
@@ -49,7 +47,6 @@ const takePlace = async () => {
       await addLikeCount({ hotplaceId: props.hotPlace.hotplaceId });
       isLoved.value = true;
     } else {
-      // 좋아요 삭제 로직 만들기
       const abc = props.myFav;
       for (let i = 0; i < abc.length; i++) {
         if (abc[i] == props.hotPlace.hotplaceId) {
@@ -73,11 +70,9 @@ const takePlace = async () => {
 
 const click = async () => {
   isClicked.value = !isClicked.value;
-  console.log(isClicked.value);
   if (isClicked.value) {
     await changeVisitedCount({ hotplaceId: props.hotPlace.hotplaceId });
   }
-  // console.log(isClicked.value);
 };
 
 const changeVisitedCount = async (hotPlaceDto) => {
@@ -173,7 +168,6 @@ const minLikeCount = async (hotPlaceDto) => {
 .placeDesc {
   position: absolute;
   top: 0;
-  /* left: 10%; */
   width: 100%;
 }
 .placeVisit {
@@ -210,11 +204,10 @@ const minLikeCount = async (hotPlaceDto) => {
   overflow-y: auto;
 }
 .placeContent::-webkit-scrollbar {
-  width: 4px; /* 스크롤바의 너비 */
+  width: 4px;
 }
 .placeContent::-webkit-scrollbar-thumb {
   height: 10%;
-  /* background: rgb(252, 227, 118); 스크롤바의 색상 */
   border-radius: 15px;
 }
 #mainImage {

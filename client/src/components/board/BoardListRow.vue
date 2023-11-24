@@ -41,32 +41,22 @@ const moveArticle = () => {
 }
 .articleNo {
   width: 100px;
-  /* border: 1px solid #292929;
-  border-radius: 5px; */
   margin: 0 50px 0 10px;
 }
 .articleTitle {
   width: 500px;
-  /* border: 1px solid #292929;
-  border-radius: 5px; */
   margin: 0 50px 0 50px;
   cursor: pointer;
 }
 .articleAuthor {
   width: 200px;
-  /* border: 1px solid #292929;
-  border-radius: 5px; */
   margin: 0 10px 0 10px;
 }
 .articleHit {
   width: 100px;
-  /* border: 1px solid #292929;
-  border-radius: 5px; */
   margin: 0 10px 0 10px;
 }
 .articleDate {
   width: 345px;
-  /* border: 1px solid #292929;
-  border-radius: 5px; */
 }
 </style>

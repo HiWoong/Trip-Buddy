@@ -31,7 +31,6 @@ public class EmailRestController {
         }
 
         String newPassword = randomStringGenerator.generate();
-        System.out.println("newPassword = " + newPassword);
         userDto.setUserPwd(newPassword);
         userService.changePassword(userDto);
         emailService.sendMessage(userDto);

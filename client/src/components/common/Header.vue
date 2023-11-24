@@ -1,11 +1,10 @@
 <script setup>
-import http from "@/util/http-common.js";
 import { ref, onMounted } from "vue";
 import { RouterLink, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "@/stores/userStore.js";
 import { useAttractionStore } from "@/stores/attractionStore";
-// cookies
+
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
 
@@ -66,16 +65,11 @@ const moveHotPlace = () => {
 const moveHotPlaceWrite = () => {
   router.replace({ name: "AttractionHotPlaceWrite" });
 };
-
-// console.log("status : ", getLoginStatus());
-// isLogin.value = getLoginStatus() ? true : false;
-// console.log("header var : isLogin : ", isLogin.value);
 </script>
 
 <template>
   <div>
     <div>
-      <!-- header -->
       <nav>
         <div class="grid-container">
           <div id="logo">

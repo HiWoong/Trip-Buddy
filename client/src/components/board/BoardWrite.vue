@@ -1,10 +1,8 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { RouterView } from "vue-router";
 import http from "@/util/http-common.js";
 
-// cookies
 import { useCookies } from "vue3-cookies";
 const { cookies } = useCookies();
 
@@ -12,7 +10,6 @@ const router = useRouter();
 
 const subject = ref("");
 const content = ref("");
-// const userinfo = JSON.parse(sessionStorage.getItem("userinfo"));
 
 const createArticle = () => {
   http
@@ -111,7 +108,6 @@ const moveList = () => {
   margin: 50px 0 0 50vh;
 }
 .titleC {
-  /* margin: 0 0 0 20vh; */
   width: 1000px;
   text-align: start;
   font-size: 25px;

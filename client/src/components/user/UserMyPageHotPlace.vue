@@ -1,22 +1,11 @@
 <script setup>
-import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { httpStatusCode } from "@/util/http-status";
 import { useUserStore } from "@/stores/userStore.js";
 import { minHitCount } from "@/api/hotplaceApi.js";
 
-const router = useRouter();
 const userStore = useUserStore();
-const {
-  setFavorite,
-  getFavorite,
-  getLikes,
-  getFavHotPlace,
-  getmyFavHotPlaces,
-  setmyFavHotPlaces,
-  setmyStorageHotPlace,
-  getmyStorageHotPlace,
-} = userStore;
+const { setFavorite, getFavorite, getLikes } = userStore;
 
 const props = defineProps({
   favHotPlace: Object,
@@ -27,16 +16,11 @@ const emit = defineEmits(["changeFav"]);
 const deleteFavorite = async () => {
   await getFavorite(props.userId);
   let myFav = await getLikes();
-  console.log(myFav);
   let newMyFav = myFav.filter((data) => data != props.favHotPlace.hotplaceId);
-  console.log(newMyFav);
-  console.log(props.userId);
-  console.log(props.favHotPlace.hotplaceId);
   await setFavorite({ userId: props.userId, favorite: JSON.stringify(newMyFav) }, true);
 
   await getFavorite(props.userId);
   let newFav = await getLikes();
-  console.log(newFav);
 
   minHitCount(
     props.favHotPlace,

@@ -3,20 +3,9 @@ import { useRouter } from "vue-router";
 import { defineStore } from "pinia";
 import { jwtDecode } from "jwt-decode";
 
-import {
-  join,
-  login,
-  logout,
-  update,
-  withdraw,
-  info,
-  tokenRegeneration,
-  getFavorites,
-  getMyFavoriteHotPlace,
-} from "@/api/userApi";
+import { join, login, logout, withdraw, getFavorites, getMyFavoriteHotPlace } from "@/api/userApi";
 import { httpStatusCode } from "@/util/http-status";
 
-// cookies
 import { useCookies } from "vue3-cookies";
 import { getMyHotPlace, setFavorites } from "../api/userApi";
 const { cookies } = useCookies();
@@ -46,8 +35,6 @@ export const useUserStore = defineStore("userStore", () => {
         if (response.status === httpStatusCode.OK) {
           let { data } = response;
           myFavHotPlaces.value.push(data);
-          // myFavHotPlaces.value.push(data);
-          // console.log(myFavHotPlaces);
         }
       },
       (error) => {
@@ -85,11 +72,7 @@ export const useUserStore = defineStore("userStore", () => {
       data,
       (response) => {
         if (response.status === httpStatusCode.OK) {
-          if (flag) {
-            console.log("성공: 새로운 좋아요 리스트 반영");
-          } else {
-            console.log("취소: 새로운 좋아요 리스트 반영");
-          }
+          alert("성공적으로 수행되었습니다.");
         }
       },
       (error) => {
@@ -103,11 +86,8 @@ export const useUserStore = defineStore("userStore", () => {
       userId,
       (response) => {
         if (response.status === httpStatusCode.OK) {
-          // console.log(response);
           let { data } = response;
           favorites.value = data;
-          // let arr = JSON.parse(data);
-          // console.log(arr);
         }
       },
       (error) => {
@@ -120,33 +100,24 @@ export const useUserStore = defineStore("userStore", () => {
     await login(
       loginUser,
       (response) => {
-        console.log("login ok!!!!", response.status);
-        console.log("login ok!!!!", httpStatusCode.CREATE);
         if (response.status === httpStatusCode.CREATE) {
           let { data } = response;
-          // console.log("data", data);
           let accessToken = data["accessToken"];
           let refreshToken = data["refreshToken"];
-          console.log("accessToken", accessToken);
-          console.log("refreshToken", refreshToken);
           isLogin.value = true;
           isLoginError.value = false;
           isValidToken.value = true;
-          console.log(userInfo.value);
           cookies.set("accessToken", accessToken, 3600);
           cookies.set("refreshToken", refreshToken);
           makeUserIdCookieStore(cookies.get("accessToken"));
           router.push("/");
         } else {
-          console.log("로그인 실패했다");
           isLogin.value = false;
           isLoginError.value = true;
           isValidToken.value = false;
         }
       },
       (error) => {
-        console.log("아이디와 비밀번호를 다시 확인하도록");
-        alert("아이디와 비밀번호를 확인하도록");
         console.error(error);
       }
     );
@@ -162,23 +133,20 @@ export const useUserStore = defineStore("userStore", () => {
           cookies.remove("accessToken");
           cookies.remove("refreshToken");
         } else {
-          alert.error("유저 정보가 없습니다.");
+          alert("유저 정보가 없습니다.");
         }
       },
       (error) => {
         alert("아이디와 비밀번호를 확인해주세요 !");
-        console.log(error);
       }
     );
   };
 
   const userDeleteStore = async (userId) => {
-    // console.log("userStore.userDeleteStore => userId : ", userId);
     await withdraw(
       userId,
       (response) => {
         if (response.status === httpStatusCode.NOCONTENT) {
-          console.log("userStore.userDeleteStore => status : ", response.status);
           isLogin.value = false;
           cookies.remove("userId");
           cookies.remove("accessToken");
@@ -188,14 +156,13 @@ export const useUserStore = defineStore("userStore", () => {
         }
       },
       (error) => {
-        console.log(error);
+        console.error(error);
       }
     );
   };
 
   const makeUserIdCookieStore = (token) => {
     let decodeToken = jwtDecode(token);
-    console.log(decodeToken.userId);
     cookies.set("userId", decodeToken.userId, 3600);
   };
 
@@ -207,11 +174,11 @@ export const useUserStore = defineStore("userStore", () => {
           alert("사용자 정보 등록이 완료되었습니다.");
           router.push("/");
         } else {
-          console.log("Error status : ", response.status);
+          console.error("Error status : ", response.status);
         }
       },
       (error) => {
-        alert("중복된 아이디입니다!");
+        console.error(error);
       }
     );
   };

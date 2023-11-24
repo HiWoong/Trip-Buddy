@@ -1,7 +1,6 @@
 <script setup>
 import http from "@/util/http-common.js";
 import { ref, watch } from "vue";
-import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/userStore.js";
 
 const userStore = useUserStore();
@@ -11,8 +10,6 @@ const beforeId = ref("");
 const idFlag = ref(false);
 const pwdFlag = ref(false);
 const pwdText = ref("비밀번호가 보고싶어요...");
-
-const router = useRouter();
 
 const user = ref({
   userId: "",
@@ -80,7 +77,6 @@ const checkId = () => {
     alert("4자리 미만의 ID는 우리와 함께 갈 수 없습니다.");
   else {
     http.get(`/userapi/check/${user.value.userId}`).then(({ data }) => {
-      console.log(data);
       if (data == 1) {
         idFlag.value = true;
       } else alert("4자리 이상이지만 참신하지 않은 ID입니다.");
@@ -95,7 +91,6 @@ const alreadyCheck = () => {
 <template>
   <div class="wholeLayout">
     <div id="title">
-      <!-- <h2>LOGO</h2> -->
       <img src="../../assets/img/logo.png" alt="" style="width: 300px; height: 300px" />
     </div>
     <label for="username" style="width: 500px; text-align: start; font-size: 25px">이름</label>

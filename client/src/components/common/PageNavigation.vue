@@ -7,9 +7,7 @@ const emit = defineEmits(["pageChange"]);
 const navigationSize = props.totalPage;
 
 const startPage = computed(() => {
-  // return parseInt((props.currentPage - 1) / navigationSize) * navigationSize + 1;
   let topPage = parseInt((props.currentPage - 1) / navigationSize) * navigationSize + 1;
-  console.log("topPage : " + topPage);
   return topPage;
 });
 
@@ -17,17 +15,8 @@ const endPage = computed(() => {
   let bottomPage =
     parseInt((props.currentPage - 1) / navigationSize) * navigationSize + navigationSize;
 
-  // bottomPage = totalPage <= bottomPage ? totalPage : bottomPage;
   bottomPage = bottomPage <= props.totalPage ? bottomPage : props.totalPage;
-  console.log("currentPage : ", props.currentPage);
-  console.log("bottomPage : ", bottomPage);
-  // return bottomPage;
   return bottomPage;
-  // return props.totalPage < lastPage ? lastPage : props.totalPage;
-});
-
-const endRange = computed(() => {
-  return parseInt((props.totalPage - 1) / navigationSize) * navigationSize < props.currentPage;
 });
 
 function range(start, end) {
@@ -37,7 +26,6 @@ function range(start, end) {
 }
 
 function onPageChange(pg) {
-  console.log("onPageChange" + pg + "로 이동!!!");
   emit("pageChange", pg);
 }
 </script>

@@ -5,11 +5,8 @@ import Last from "@/components/common/Last.vue";
 import http from "@/util/http-common.js";
 import { useCookies } from "vue3-cookies";
 import { useUserStore } from "@/stores/userStore.js";
-import { useRoute } from "vue-router";
 import { useMenuStore } from "@/stores/menuStore.js";
 import { storeToRefs } from "pinia";
-
-const route = useRoute();
 
 const { cookies } = useCookies();
 const userStore = useUserStore();
@@ -31,7 +28,6 @@ onMounted(async () => {
 });
 
 const loadPlaces = async () => {
-  // console.log(nowPage.value);
   await http
     .get("/hotplaceapi/list?pgno=" + nowPage.value + "&sort=" + type.value)
     .then(({ data }) => {
@@ -140,7 +136,6 @@ const paramChange = async () => {
 }
 
 .DivHotPlaces {
-  /* background-color: #1b1d25; */
   width: 100%;
   display: flex;
   flex-wrap: wrap;

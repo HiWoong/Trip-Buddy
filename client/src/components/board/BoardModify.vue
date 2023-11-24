@@ -111,7 +111,6 @@ const moveDetail = () => {
   margin: 50px 0 0 50vh;
 }
 .titleC {
-  /* margin: 0 0 0 20vh; */
   width: 1000px;
   text-align: start;
   font-size: 25px;

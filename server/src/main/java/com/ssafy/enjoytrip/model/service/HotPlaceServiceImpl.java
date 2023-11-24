@@ -24,7 +24,6 @@ public class HotPlaceServiceImpl implements HotPlaceService {
 		param.put("start", (pgno-1)*12);
 		param.put("listsize", 12);
 		param.put("sort", map.get("sort"));
-		System.out.println(param);
 		return repo.listHotPlace(param);
 	}
 
